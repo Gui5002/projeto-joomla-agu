@@ -1,0 +1,11 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'JS SUPPORT TICKET' => 'JS Support Ticket',
+  'JS_SUPPORT_TICKET' => 'JS Support Ticket',
+  'JS_TICKETS_DESCRIPTION' => 'Ticket Tracking Component.',
+  'com_jssupportticket' => 'JS Support Ticket',
+  'COM_JS_SUPPORT_TICKET' => 'JS Support Ticket',
+  'COM_JSSUPPORTTICKET' => 'JS Support Ticket',
+  'COM_JS_TICKETS_DESCRIPTION' => 'Ticket Tracking Component.',
+);

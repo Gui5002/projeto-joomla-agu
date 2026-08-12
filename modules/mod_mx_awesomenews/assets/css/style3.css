@@ -1,0 +1,350 @@
+
+.row {
+display: -ms-flexbox;
+display: flex;
+-ms-flex-wrap: wrap;
+flex-wrap: wrap;
+margin-right: -5px;
+margin-left: -5px;
+}
+
+.mos-img img {display: none !important;}
+.news-section {
+	position: relative;
+}
+
+.news-section .more-box {
+	position: relative;
+	display: block;
+	padding-top: 30px;
+	text-align: center;
+	padding-bottom: 10px;
+}
+
+.img-slice-wrap {
+	position: relative;
+}
+
+.img-slice-wrap .inner-box {
+	position: relative;
+	display: block;
+	text-align: center;
+}
+
+.img-slice-wrap .image-box {
+	position: relative;
+	display: block;
+	overflow: hidden;
+}
+
+.img-slice-wrap .image-box img {
+	display: block;
+	width: 100%;
+	-webkit-filter: grayscale(100%);
+	-ms-filter: grayscale(100%);
+	-moz-filter: grayscale(100%);
+	-webkit-transition: all 500ms ease;
+	-moz-transition: all 500ms ease;
+	-ms-transition: all 500ms ease;
+	-o-transition: all 500ms ease;
+	transition: all 500ms ease;
+	border-radius: 7px;
+}
+
+.img-slice-wrap .inner-box:hover .image-box img {
+	-webkit-filter: grayscale(0%);
+	-ms-filter: grayscale(0%);
+	-moz-filter: grayscale(0%);
+}
+
+.img-slice-wrap .lower-box {
+	position: relative;
+	padding: 0px 20px 0px;
+}
+
+.img-slice-wrap .post-meta {
+	position: relative;
+	top: -30px;
+	margin: 0 30px -3px;
+}
+
+.img-slice-wrap .post-meta ul {
+	position: relative;
+	display: block;
+	padding: 10px 5px 5px;
+	margin: 0 0 10px 0px;
+	background: #ffffff;
+	border-radius: 7px;
+	box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
+}
+
+.img-slice-wrap .post-meta ul li {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 7px 10px;
+	font-size: 15px;
+	text-transform: uppercase;
+}
+
+.img-slice-wrap .post-meta ul li .far,
+.img-slice-wrap .post-meta ul li .fa {
+	position: relative;
+	color: #ffaa17;
+	font-size: 14px;
+	padding-right: 3px;
+	vertical-align: middle;
+}
+
+.img-slice-wrap .lower-box h5 {
+	text-transform: uppercase;
+	font-size: 30px;
+	color: #222429;
+	margin-bottom: 25px;
+	line-height: 30px;
+}
+
+.img-slice-wrap .lower-box h5 a {
+	color: #222429;
+	transition: 500ms;
+}
+
+.img-slice-wrap .lower-box h5 a:hover {
+	color: #ffaa17;
+	text-decoration: underline;
+}
+
+.img-slice-wrap .lower-box .text {
+	position: relative;
+	top: -5px;
+	color: #686a6f;
+	display: block;
+	font-weight: 300;
+	line-height: 1.5em;
+	letter-spacing: 0.1em;
+}
+
+.img-slice-wrap .lower-box .link-box {
+	position: relative;
+	margin-top: 20px;
+}
+
+.img-slice-wrap .lower-box .link-box a {
+	position: relative;
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	line-height: 40px;
+	text-align: center;
+	font-size: 26px;
+	color: #ffffff;
+	background: #d3d3d4;
+	border-radius: 50%;
+	-webkit-transition: all 500ms ease;
+	-moz-transition: all 500ms ease;
+	-ms-transition: all 500ms ease;
+	-o-transition: all 500ms ease;
+	transition: all 500ms ease;
+}
+
+.img-slice-wrap .lower-box .link-box a span {
+	font-weight: 700;
+	vertical-align: middle;
+}
+
+.img-slice-wrap .lower-box .link-box a:hover {
+	background: #ffaa17;
+	color: #fff;
+	opacity: 1;
+}
+
+.img-slice-wrap-two {
+	position: relative;
+	margin-bottom: 40px;
+}
+
+.img-slice-wrap-two .inner-box {
+	position: relative;
+	display: block;
+}
+
+.img-slice-wrap-two .image-box {
+	position: relative;
+	display: block;
+	overflow: hidden;
+}
+
+.img-slice-wrap-two .image-box img {
+	display: block;
+	width: 100%;
+	-webkit-filter: grayscale(100%);
+	-ms-filter: grayscale(100%);
+	-moz-filter: grayscale(100%);
+	-webkit-transition: all 500ms ease;
+	-moz-transition: all 500ms ease;
+	-ms-transition: all 500ms ease;
+	-o-transition: all 500ms ease;
+	transition: all 500ms ease;
+	border-radius: 7px;
+}
+
+.img-slice-wrap-two .inner-box:hover .image-box img {
+	-webkit-filter: grayscale(0%);
+	-ms-filter: grayscale(0%);
+	-moz-filter: grayscale(0%);
+}
+
+.img-slice-wrap-two .lower-box {
+	position: relative;
+	padding: 30px 0px 0px;
+}
+
+.img-slice-wrap-two .post-meta {
+	position: relative;
+	display: block;
+}
+
+.img-slice-wrap-two .post-meta ul {
+	position: relative;
+	display: block;
+}
+
+.img-slice-wrap-two .post-meta ul li {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 20px 5px 0px;
+	font-size: 16px;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+}
+
+.img-slice-wrap-two .post-meta ul li .fa {
+	position: relative;
+	top: -2px;
+	color: #ffaa17;
+	font-size: 14px;
+	padding-right: 3px;
+	vertical-align: middle;
+}
+
+.img-slice-wrap-two .lower-box h4 {
+	text-transform: uppercase;
+	font-size: 40px;
+	line-height: 1.1em;
+	color: #222429;
+	margin-bottom: 30px;
+}
+
+.img-slice-wrap-two .lower-box h4 a {
+	color: #222429;
+}
+
+.img-slice-wrap-two .lower-box h4 a:hover {
+	color: #ffaa17;
+	text-decoration: underline;
+}
+
+.img-slice-wrap-two .lower-box .text {
+	position: relative;
+	top: -5px;
+	display: block;
+	font-weight: 300;
+	line-height: 1.6em;
+	letter-spacing: 0.1em;
+}
+
+.img-slice-wrap-two .lower-box .link-box {
+	position: relative;
+	margin-top: 20px;
+}
+
+.img-slice-wrap-two .lower-box .link-box a {
+	position: relative;
+	display: inline-block;
+	text-transform: uppercase;
+	font-size: 20px;
+	color: #222429;
+	letter-spacing: 1px;
+}
+
+.img-slice-wrap-two .lower-box .link-box a:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+}
+
+
+
+.img-slice-wrap-three {
+	position: relative;
+	margin-bottom: 30px;
+}
+
+.img-slice-wrap-three .inner-box {
+	position: relative;
+	display: block;
+	padding: 50px 50px 40px;
+	background: #f4f5f8;
+	border-radius: 7px;
+}
+
+.img-slice-wrap-three .quote-icon {
+	position: relative;
+	display: block;
+	top: 30px;
+	font-weight: 400;
+	font-size: 150px;
+	line-height: 0.40em;
+	color: #ffaa17;
+	margin-bottom: 10px;
+}
+
+.img-slice-wrap-three .link-icon {
+	position: relative;
+	display: block;
+	font-weight: 400;
+	font-size: 40px;
+	line-height: 1em;
+	color: #ffaa17;
+	margin-bottom: 15px;
+}
+
+.img-slice-wrap-three .inner-box h4 {
+	text-transform: uppercase;
+	font-size: 40px;
+	line-height: 1.1em;
+	color: #222429;
+	font-weight: 400;
+	margin-bottom: 0px;
+}
+
+.img-slice-wrap-three .inner-box h4 a {
+	color: #222429;
+}
+
+.img-slice-wrap-three .inner-box:hover h4 a {
+	color: #ffaa17;
+	text-decoration: underline;
+}
+
+.img-slice-wrap-three .inner-box .text {
+	position: relative;
+	top: -5px;
+	display: block;
+	font-weight: 300;
+	line-height: 1.6em;
+	letter-spacing: 0.1em;
+	margin: 0;
+}
+
+.img-slice-wrap-three .over-link {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+}

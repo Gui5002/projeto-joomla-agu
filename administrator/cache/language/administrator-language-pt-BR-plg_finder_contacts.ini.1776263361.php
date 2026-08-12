@@ -1,0 +1,20 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'PLG_FINDER_CONTACTS' => 'Busca Inteligente - Contatos',
+  'PLG_FINDER_CONTACTS_FIELD_SEARCH_ARCHIVED_DESC' => 'Ao alterar esta configuração, você precisa executar o comando de indexação na Busca Inteligente para que isso tenha efeito.',
+  'PLG_FINDER_CONTACTS_FIELD_SEARCH_ARCHIVED_LABEL' => 'Pesquisar Conteúdo Arquivado',
+  'PLG_FINDER_CONTACTS_TAXONOMIES_CATEGORY' => 'Categoria',
+  'PLG_FINDER_CONTACTS_TAXONOMIES_COUNTRY' => 'País',
+  'PLG_FINDER_CONTACTS_TAXONOMIES_LABEL' => 'Taxonomias para indexar',
+  'PLG_FINDER_CONTACTS_TAXONOMIES_LANGUAGE' => 'Idioma',
+  'PLG_FINDER_CONTACTS_TAXONOMIES_REGION' => 'Estado',
+  'PLG_FINDER_CONTACTS_TAXONOMIES_TYPE' => 'Tipo',
+  'PLG_FINDER_CONTACTS_XML_DESCRIPTION' => 'Este plugin indexa os contatos do Joomla!',
+  'PLG_FINDER_QUERY_FILTER_BRANCH_P_CONTACT' => 'Contatos',
+  'PLG_FINDER_QUERY_FILTER_BRANCH_P_COUNTRY' => 'Países',
+  'PLG_FINDER_QUERY_FILTER_BRANCH_P_REGION' => 'Regiões',
+  'PLG_FINDER_QUERY_FILTER_BRANCH_S_CONTACT' => 'Contato',
+  'PLG_FINDER_QUERY_FILTER_BRANCH_S_COUNTRY' => 'País',
+  'PLG_FINDER_QUERY_FILTER_BRANCH_S_REGION' => 'Estado',
+);

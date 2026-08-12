@@ -1,0 +1,6 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'PLG_SYSTEM_ADMINEXILE' => 'System - AdminExile',
+  'PLG_SYSTEM_ADMINEXILE_XML_DESCRIPTION' => 'AdminExile is a Joomla! plugin that helps you secure your administrator backend.',
+);

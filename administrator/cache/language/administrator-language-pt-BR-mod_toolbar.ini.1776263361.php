@@ -1,0 +1,8 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'MOD_TOOLBAR' => 'Barra de Ferramentas',
+  'MOD_TOOLBAR_FIELD_TOOLBAR_LABEL' => 'Identificador de barra de ferramentas',
+  'MOD_TOOLBAR_FIELD_TOOLBAR_DESCRIPTION' => 'A barra de ferramentas padrão no administrador é chamada \'barra de ferramentas\', se você tiver uma extensão que gere barras de ferramentas próprias, você pode criar um módulo próprio com a barra de ferramentas com o identificador da barra de ferramentas dele. A barra de ferramentas padrão nunca deve ser removida!',
+  'MOD_TOOLBAR_XML_DESCRIPTION' => 'Este módulo mostra os ícones na barra de ferramentas, utilizados para controlar as ações através do painel administrativo.',
+);

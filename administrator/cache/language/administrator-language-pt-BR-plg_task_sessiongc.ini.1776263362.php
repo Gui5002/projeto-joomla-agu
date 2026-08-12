@@ -1,0 +1,12 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'PLG_TASK_SESSIONGC' => 'Tarefa - limpeza de dados de sessão',
+  'PLG_TASK_SESSIONGC_DESC' => 'Plugin de tarefas que limpa os dados e metadados expirados dependendo de sessão do gerenciador definida na Configuração Global.',
+  'PLG_TASK_SESSIONGC_ENABLE_SESSION_GC_DESC' => 'Quando ativado, este plugin tentará limpar dados expirados.',
+  'PLG_TASK_SESSIONGC_ENABLE_SESSION_GC_LABEL' => 'Ativar limpeza de dados de sessão',
+  'PLG_TASK_SESSIONGC_ENABLE_SESSION_METADATA_GC_DESC' => 'Quando ativado, este plugin irá limpar metadados de sessão opcionais do banco de dados. Note que esta operação não será executado quando a controladora de banco de dados está em uso, enquanto que os dados são liberados como parte da operação de limpeza de dados de sessão.',
+  'PLG_TASK_SESSIONGC_ENABLE_SESSION_METADATA_GC_LABEL' => 'Ativar limpeza de metadados de sessão',
+  'PLG_TASK_SESSIONGC_TITLE' => 'Tarefa - limpeza de dados de sessão',
+  'PLG_TASK_SESSIONGC_XML_DESCRIPTION' => 'Plugin de tarefas que limpa os dados e metadados expirados dependendo de sessão do gerenciador definida na Configuração Global.',
+);

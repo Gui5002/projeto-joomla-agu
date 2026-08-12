@@ -1,0 +1,21 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'COM_NEWSFEEDS' => 'Newsfeeds',
+  'COM_NEWSFEEDS_CATEGORIES' => 'Categorias',
+  'COM_NEWSFEEDS_CATEGORIES_VIEW_DEFAULT_DESC' => 'Exibe uma lista de todas as categorias na árvore das fontes de notícias selecionada.',
+  'COM_NEWSFEEDS_CATEGORIES_VIEW_DEFAULT_OPTION' => 'Padrão',
+  'COM_NEWSFEEDS_CATEGORIES_VIEW_DEFAULT_TITLE' => 'Listar todas as categorias em uma árvore de categorias de fontes de notícias',
+  'COM_NEWSFEEDS_CATEGORY_VIEW_DEFAULT_DESC' => 'Exibe todas as fontes de notícias de uma categoria.',
+  'COM_NEWSFEEDS_CATEGORY_VIEW_DEFAULT_OPTION' => 'Padrão',
+  'COM_NEWSFEEDS_CATEGORY_VIEW_DEFAULT_TITLE' => 'Lista fontes de notícias em uma Categoria',
+  'COM_NEWSFEEDS_CONTENT_TYPE_CATEGORY' => 'Categoria da Fontes de Notícias',
+  'COM_NEWSFEEDS_CONTENT_TYPE_NEWSFEED' => 'Fonte de Notícias',
+  'COM_NEWSFEEDS_FEEDS' => 'Notícias',
+  'COM_NEWSFEEDS_NEWSFEED_VIEW_DEFAULT_DESC' => 'Exibe uma única fonte de notícias.',
+  'COM_NEWSFEEDS_NEWSFEED_VIEW_DEFAULT_OPTION' => 'Padrão',
+  'COM_NEWSFEEDS_NEWSFEED_VIEW_DEFAULT_TITLE' => 'Uma Fonte de Notícias',
+  'COM_NEWSFEEDS_TAGS_CATEGORY' => 'Categoria da Fontes de Notícias',
+  'COM_NEWSFEEDS_TAGS_NEWSFEED' => 'Fonte de Notícias',
+  'COM_NEWSFEEDS_XML_DESCRIPTION' => 'Este componente gerencia feeds para notícias RSS e Atom.',
+);

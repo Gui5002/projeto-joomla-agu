@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<field
+		name="template"
+		type="editor"
+		label=""
+		filter="JComponentHelper::filterText"
+		buttons="true"
+		hide="readmore,pagebreak,module,article,contact,menu"
+	/>
+</form>

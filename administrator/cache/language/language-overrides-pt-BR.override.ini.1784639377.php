@@ -1,0 +1,8 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'JGLOBAL_SEARCH' => 'Buscar',
+  'MOD_FINDER_SEARCHBUTTON_TEXT' => 'Buscar',
+  'MOD_FINDER_SEARCH_VALUE' => 'Buscar',
+  'MOD-FINDER-SEARCHWORD149' => 'Buscar...',
+);

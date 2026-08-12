@@ -1,0 +1,33 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "mod_simple_tag_filter",
+  "version": "1.0.0",
+  "description": "Simple Tag Filter",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "mod_simple_tag_filter",
+      "type": "style",
+      "uri": "mod_simple_tag_filter/filters.min.css"
+    },
+    {
+      "name": "mod_simple_tag_filter",
+      "type": "script",
+      "uri": "mod_simple_tag_filter/filters.min.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "defer": true
+      }
+    },
+    {
+      "name": "mod_simple_tag_filter",
+      "type": "preset",
+      "dependencies": [
+        "mod_simple_tag_filter#style",
+        "mod_simple_tag_filter#script"
+      ]
+    }
+  ]
+}

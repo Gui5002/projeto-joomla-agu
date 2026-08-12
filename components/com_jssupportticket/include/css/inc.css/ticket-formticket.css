@@ -1,0 +1,100 @@
+/* AddTicketForm */
+    div.field-calendar div.input-group-append button.btn-outline-secondary {background-color: #fff!important;border-color: #4f6df5!important;color: #4f6df5!important;}
+    div.field-calendar div.input-group-append button.btn-outline-secondary:hover{background-color: #fff!important;border-color: #2b2b2b!important;color: #2b2b2b!important;}
+    div.field-calendar.input-group input{border-radius: 0;height: 50px;}
+    #ticket_duedate_btn{height: 50px;}
+    #ticket_duedate_btn:hover {border-color: #2b2b2b;color: #2b2b2b;background-color: #fff;}
+	div#js-tk-formwrapper{width: 100%; float: left;}
+    form#adminForm {    padding: 10px 0 10px;}
+    div.js-ticket-search-heading-main-wrp {float: left;width: 100%;padding: 10px;}
+    div.js-ticket-search-heading-main-wrp div.js-ticket-heading-left {float: left;width: 70%;padding: 15px 10px;line-height: initial;}
+    div.js-ticket-search-heading-main-wrp div.js-ticket-heading-right {float: left;width: 30%;text-align: right;}
+    div.js-ticket-search-heading-main-wrp div.js-ticket-heading-right a.js-ticket-add-download-btn {display: inline-block;padding: 15px 25px;text-decoration: none;outline: 0px;line-height: initial;}	
+    div.js-ticket-top-search-wrp.second-style {margin-top: 20px;margin-bottom: : 20px;}
+    div.js-ticket-top-search-wrp.second-style {float: left;width: 100%;}
+    form.js-ticket-form {display: inline-block;width: 100%;padding: 20px 0 10px;}
+    div.js-ticket-from-field-wrp {float: left;width: calc(100% / 2 - 10px);margin: 0px 5px;margin-bottom: 20px;}
+    div.js-ticket-from-field-wrp.js-ticket-from-field-wrp-full-width {float: left;width: calc(100% / 1 - 10px);margin-bottom: 20px;}
+    div.js-ticket-from-field-wrp {position: relative;}
+    div.js-ticket-from-field-wrp div.js-ticket-from-field-title {float: left;width: 100%;margin-bottom: 5px;}
+    div.js-ticket-from-field {float: left;width: 100%; position: relative;}
+    div.js-ticket-select-user-field {float: left;width: 100%;position: relative;margin-bottom: 10px;}
+    div.js-ticket-select-user-field input#username-text {width: 100%;}
+    div#js-tk-formwrapper div.js-ticket-from-field input.js-ticket-form-field-input {float: left;width: 100%;border-radius: 0px;padding: 10px;line-height: initial;height: 50px;}
+    div.js-ticket-select-user-btn {float: left;width: 35%;position: absolute;top: 0;right: 0;}
+    div.js-ticket-select-user-btn a#userpopup {display: inline-block;width: 100%;text-align: center;padding: 15px 12px;text-decoration: none;outline: 0px;line-height: initial;height: 50px;}
+    div.js-ticket-from-field-wrp div.js-ticket-from-field input.js-ticket-form-field-input {float: left;width: 100%;border-radius: 0px;padding: 10px;line-height: initial;height: 50px;}
+    div.js-form-submit-btn-wrp {float: left;width: calc(100% - 20px);margin: 0px 10px;text-align: center;padding: 25px 0px 10px 0px;}
+    div.js-form-submit-btn-wrp a.js-ticket-cancel-button {display: inline-block;padding: 20px 10px;min-width: 120px;border-radius: 0px;line-height: initial;text-decoration: none;}
+    div.js-form-submit-btn-wrp input.js-save-button {padding: 20px 10px;margin-right: 10px;min-width: 120px;border-radius: 0px;line-height: initial;}
+    div.jsst-main-up-wrapper input, div.jsst-main-up-wrapper button, div.jsst-main-up-wrapper select, div.jsst-main-up-wrapper textarea {font-family: inherit;font-size: inherit;line-height: inherit;}
+    .input-append{width: 100%; margin-bottom: 0px;}
+    div.input-append input {float: left;width: calc(100% - 41px);border-radius: 0px;padding: 10px;line-height: initial;height: 50px;margin-bottom: 0px;}
+    div.input-append button {height: 50px;border-radius: 0px;}
+    /* add ticket*/
+    div.js-ticket-add-form-wrapper {float: left;width: 100%;}
+    div#js-tk-formwrapper div.js-form-title {float: left;width: 100%;margin-bottom: 5px;}
+    div#js-tk-formwrapper div.js-form-value {float: left;width: 100%;}
+    div#js-tk-formwrapper div.js-form-value input.js-form-input-field {float: left;width: 100%;border-radius: 0px;padding: 10px;line-height: initial;height: 50px;}
+    div#js-tk-formwrapper div.js-form-value select.js-form-select-field {float: left;width: 100%;border-radius: 0px;padding: 10px;line-height: initial;height: 50px;margin-bottom: 0px;background-image: url(../../../include/images/selecticon.png);background-repeat: no-repeat;background-position: calc(100% - 12px);-webkit-appearance: none;-moz-appearance: none;appearance: none;background-size: 13px;}
+    div#js-tk-formwrapper div.js-form-value select.js-form-select-field.js-form-multi-select-field {background-image: none;}
+    div#js-tk-formwrapper div.js-form-title {display: inline-block;width: 100%;text-transform: capitalize;}
+    div#js-tk-formwrapper div.js-form-value {display: inline-block;width: 100%; margin-bottom: 15px;}
+    div#js-tk-formwrapper div.js-form-value div.js-ticket-signature-radio-box-wrp {float: left;width: 100%;border: 1px solid #d1d1d1;}
+    div#js-tk-formwrapper div.js-form-value div.js-ticket-signature-radio-box-wrp div.js-ticket-signature-radio-box {display: inline-block;margin: 10px;}
+    div#js-tk-formwrapper div.js-form-value div.js-ticket-signature-radio-box-wrp div.js-ticket-radio-box {display: inline-block;margin: 10px;}
+    div#js-tk-formwrapper div.js-form-value div.js-ticket-signature-radio-box-wrp div.js-ticket-signature-radio-box input {display: inline-block;margin: 0;vertical-align: middle;}
+    div#js-tk-formwrapper div.js-form-value div.js-ticket-signature-radio-box-wrp div.js-ticket-radio-box input {display: inline-block;margin: 0;vertical-align: middle;}
+    div#js-tk-formwrapper div.js-form-value div.js-ticket-signature-radio-box-wrp div.js-ticket-signature-radio-box label {display: inline-block;margin: 5px;vertical-align: middle;}
+    div#js-tk-formwrapper div.js-form-value div.js-ticket-signature-radio-box-wrp div.js-ticket-radio-box label {display: inline-block;margin: 5px;vertical-align: middle;}
+    div.js-padding-null{padding-left: 6px;padding-right: 6px;}
+    div.js-col-md-12.js-form-wrapper.js-padding-null{float:left;width: 100%;}
+    div.js-attachment-files {float: left;width: 100%;padding: 0px 0px;margin-bottom: 5px;}
+    span.js-attachment-file-box {float: left;width: calc(100% / 3 - 10px);padding: 5px 5px;margin: 5px 5px;position: relative;}
+    span.js-attachment-file-box input.js-form-input-field-attachment  {width: 100%;max-width: 100%;max-height: 100%;}
+    span.js-attachment-file-box span.js-attachment-remove {background: url(../../images/close.png) no-repeat;background-size: 100% 100%;position: absolute;width: 25px;height: 25px;top: 5px;right: 1px;cursor: pointer;}
+    span.js-attachment-option {display: inline-block;float: left;line-height: 25px;margin-top: 10px;width: 100%;font-size: 14px;}
+    span#js-attachment-add {position: relative;display: inline-block;padding: 13px 10px;cursor: pointer;margin-top: 10px;min-width: 120px;text-align: center;line-height: initial;}
+    div.js-form-submit-btn-wrp {margin-top: 10px;}
+    div.js-ticket-form-btn-wrp input.js-ticket-save-button {padding: 20px 10px;margin-right: 10px;min-width: 120px;border-radius: 0px;line-height: initial;}
+    div.js-form-submit-btn-wrp a.js-ticket-cancel-button {display: inline-block;padding: 20px 10px;min-width: 120px;border-radius: 0px;line-height: initial;text-decoration: none;}
+    div#js-tk-formwrapper div.js-append-premade {width: 80%;display: inline-block;}   
+    div#js-tk-formwrapper div.js-append-premadecheck {width: calc(100% - 80% - 5px);display: inline-block;padding: 8px;float: right;min-height: 50px;margin-left: 5px;}
+    div#js-tk-formwrapper div.js-append-premadecheck input#append {margin-right: 5px !important;vertical-align: text-bottom;}
+    div.js-append-premadecheck label {display: inline-block;margin: 0;}
+    /* popup*/
+    div#userpopupblack {background: rgba(0,0,0,0.7);position: fixed;width: 100%;height: 100%;top: 0px;left: 0px;z-index: 9989;}
+    div#userpopup {position: fixed;top: 50%;left: 50%;width: 60%;max-height: 70%;padding-top: 0px;z-index: 99999;overflow-y: auto;overflow-x: hidden;transform: translate(-50%,-50%);}
+    div.jsst-popup-header {width: 100%;font-size: 20px;float: left;padding: 20px 10px;font-weight: bold;line-height: initial;}
+    div.popup-header-close-img {position: absolute;top: 22px;right: 22px;background-image: url(../../images/close-icon-white.png);background-size: 100%;width: 20px;height: 20px;opacity: 1;cursor: pointer;}
+    div.js-ticket-popup-search-wrp {float: left;width: calc(100% - 10px);padding: 30px 5px 15px;}
+    form#userpopupsearch {margin-bottom: 0px;}
+    div.js-ticket-search-top {float: left;width: 100%;}
+    div.js-ticket-search-top div.js-ticket-search-left {float: left;width: 70%;}
+    div.js-ticket-search-top div.js-ticket-search-left div.js-ticket-search-fields-wrp {float: left;width: 100%;padding: 0px;}
+    div.js-ticket-search-top div.js-ticket-search-left div.js-ticket-search-fields-wrp input.js-ticket-search-input-fields {float: left;width: calc(100% / 3 - 10px);margin: 0px 5px;padding: 10px;border-radius: 0px;line-height: initial;height: 50px;}
+    div.js-ticket-search-top div.js-ticket-search-right {float: left;width: 30%;}
+    div.js-ticket-search-top div.js-ticket-search-right div.js-ticket-search-btn-wrp {float: left;width: 100%;}
+    div.js-ticket-search-top div.js-ticket-search-right div.js-ticket-search-btn-wrp input.js-ticket-search-btn {width: calc(100% / 2 - 5px);padding: 13px 0;border-radius: 0px;line-height: initial;height: 50px;float: left;margin-right: 5px;}
+    div.js-ticket-search-top div.js-ticket-search-right div.js-ticket-search-btn-wrp input.js-ticket-reset-btn {width: calc(100% / 2 - 5px);padding: 13px 0;border-radius: 0px;line-height: initial;height: 50px;float: left;}
+    #records {float: left;width: 100%;padding: 0px 10px;}
+    div.js-ticket-table-wrp {float: left;width: 100%;padding: 0;}
+    div.js-ticket-table-wrp div.js-ticket-table-header {float: left;width: 100%;}
+    div.js-ticket-table-header {background-color: #ecf0f5;border: 0 !important;border-bottom: 1px solid #d1d1d1 !important;}
+    div.js-ticket-table-body {float: left;width: 100%;}
+    div#records div.jsst_userpages {text-align: right;padding: 5px;margin: 10px 5px;width: calc(100% - 10px);float: left;}
+    div.js-ticket-table-wrp div.js-ticket-table-header div.js-ticket-table-header-col:first-child {width: 15%;}
+    div.js-ticket-table-wrp div.js-ticket-table-header div.js-ticket-table-header-col {padding: 15px;text-align: left;width: 27%;float: left;line-height: initial;}
+    div.js-ticket-table-body div.js-ticket-data-row {border: 0 !important;border-bottom: 1px solid #d1d1d1 !important;}
+    div.js-ticket-table-body div.js-ticket-data-row {float: left;width: 100%;}
+    div.js-ticket-table-body div.js-ticket-data-row div.js-ticket-table-body-col:first-child {width: 15%;}
+    div.js-ticket-table-body div.js-ticket-data-row div.js-ticket-table-body-col {padding: 15px;text-align: left;float: left;width: 27%;line-height: initial;}
+    span.js-ticket-display-block {display: none;}
+    div#records div.jsst_userpages {text-align: right;padding: 5px;margin: 10px 5px;width: calc(100% - 10px);float: left;}
+    div#records div.jsst_userpages span.jsst_userlink {display: inline-block;padding: 5px 15px;margin-left: 5px;    border: 1px solid #2b2b2b;margin-bottom: 0px;}
+    div#records div.jsst_userpages a.jsst_userlink {display: inline-block;padding: 5px 15px;margin-left: 5px;text-decoration: none;background: rgba(0, 0, 0, 0.05) none repeat scroll 0 0;border: 1px solid #b8b8b8;background: -moz-linear-gradient(top, #ffffff 0%, #f2f2f2 100%);background: -o-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);background: -ms-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);background: linear-gradient(to bottom, #ffffff 0%,#f2f2f2 100%);filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#ffffff", endColorstr="#f2f2f2",GradientType=0 );color: #373435;}
+    div#records div.jsst_userpages a.jsst_userlink:hover {background: #4f6df5;color: #fff;}
+    div.input-append button{background-color: #fff!important;border-color: #4f6df5!important;color: #4f6df5!important;}
+    #ticket_duedate{height: 50px;border-radius: 0;}
+    div.input-append button{height: 50px;border-radius: 0;}
+    div.input-append button:hover{background-color: #fff!important;border-color: #2b2b2b!important;color: #2b2b2b!important;}

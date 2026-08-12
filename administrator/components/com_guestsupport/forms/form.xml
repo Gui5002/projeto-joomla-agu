@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="standalone">
+		<field
+			name="input_class"
+			type="text"
+			label="COM_GUESTSUPPORT_FORMS_INPUT_FIELDS_CSS_CLASS"
+			default="r-gs-input"
+			required="true"
+		/>
+	</fieldset>
+
+	<fieldset name="submit_button">
+		<field
+			name="verify_otp_text"
+			type="text"
+			label="COM_GUESTSUPPORT_FORMS_VERIFY_EMAIL_BUTTON_TEXT"
+			default="Continue"
+			required="true"
+		/>
+		<field
+			name="submit_text"
+			type="text"
+			label="COM_GUESTSUPPORT_FORMS_SUBMIT_BUTTON_TEXT"
+			default="Create Ticket"
+			required="true"
+		/>
+		<field
+			name="submit_class"
+			type="text"
+			label="COM_GUESTSUPPORT_FORMS_SUBMIT_BUTTON_CSS_CLASS"
+			default="r-gs-button r-gs-submit-button"
+			required="true"
+		/>
+	</fieldset>
+
+	<fieldset name="file_upload">
+		<field
+			name="fileupload"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_ENABLE_FILE_UPLOAD"
+			default="1"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="upload_filelimit"
+			type="number"
+			label="COM_GUESTSUPPORT_FORMS_ALLOW_MAXIMUM_FILE_UPLOAD"
+			description="COM_GUESTSUPPORT_FORMS_ALLOW_MAXIMUM_FILE_UPLOAD_DESC"
+			default="5"
+			required="true"
+		/>
+		<field
+			name="upload_filesize"
+			type="number"
+			label="COM_GUESTSUPPORT_FORMS_TOTAL_FILES_SIZE"
+			description="COM_GUESTSUPPORT_FORMS_TOTAL_FILES_SIZE_DESC"
+			default="1000"
+			required="true"
+		/>
+		<field
+			name="allowed_filetypes"
+			type="textarea"
+			rows="3"
+			cols="30"
+			label="COM_GUESTSUPPORT_FORMS_ALLOWED_FILE_TYPES"
+			description="COM_GUESTSUPPORT_FORMS_TOTAL_FILES_SIZE_DESC"
+			default="jpg,jpeg,png,gif"
+			required="true"
+		/>
+		<field
+			name="fileupload_label"
+			type="text"
+			label="COM_GUESTSUPPORT_FORMS_FILE_UPLOAD_LABEL"
+			default="Upload Files"
+			required="true"
+		/>
+		<field
+			name="fileupload_help"
+			type="textarea"
+			rows="3"
+			cols="30"
+			label="COM_GUESTSUPPORT_FORMS_FILE_UPLOAD_HELP_TEXT_LABEL"
+			description=""
+			default="Maximum 5 images in jpg, jpeg, png and gif format and total images size not more than 1 MB."
+			required="true"
+		/>
+	</fieldset>
+
+	<fieldset name="features">
+		<field
+			name="recaptcha"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_ENABLE_RECAPTCHA"
+			description=""
+			default="1"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="verify_email"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_ENABLE_EMAIL_VERIFICATION"
+			description="COM_GUESTSUPPORT_FORMS_EMAIL_VERIFICATION_DESC"
+			default="0"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="suggest_docs"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_ENABLE_KNOWLEDGE_BASE"
+			description="COM_GUESTSUPPORT_FORMS_ENABLE_KNOWLEDGE_BASE_DESC"
+			default="0"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="suggest_docs_cats"
+			type="category"
+			label="COM_GUESTSUPPORT_FORMS_KNOWLEDGE_BASE_CATEGORIES_LABEL"
+			multiple="true"
+			extension="com_content"
+			layout="joomla.form.field.list-fancy-select"
+			hint="COM_GUESTSUPPORT_FORMS_KNOWLEDGE_BASE_CATEGORIES_PLACEHOLDER"
+			published="1"
+		/>
+	</fieldset>
+
+	<fieldset name="ticket_view">
+		<field
+			name="params[top_text]"
+			type="textarea"
+			rows="3"
+			cols="30"
+			label="COM_GUESTSUPPORT_FORMS_TOP_TEXT"
+			description=""
+			default=""
+		/>
+		<field
+			name="params[display_ticket_id]"
+			type="list"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_TICKET_ID"
+			default="short"
+			>
+			<option value="short">COM_GUESTSUPPORT_FORMS_DISPLAY_TICKET_ID_OPTION_SHORT</option>
+			<option value="default">COM_GUESTSUPPORT_FORMS_DISPLAY_TICKET_ID_OPTION_DEFAULT</option>
+			<option value="none">COM_GUESTSUPPORT_FORMS_DISPLAY_TICKET_ID_OPTION_NONE</option>
+		</field>
+		<field
+			name="params[display_ticket_status]"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_TICKET_STATUS"
+			default="1"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="params[display_email]"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_EMAIL"
+			default="1"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="params[display_form_name]"
+			type="list"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_FORM_NAME"
+			default="both"
+			validate="options"
+			>
+			<option value="both">COM_GUESTSUPPORT_FORMS_DISPLAY_TO_BOTH</option>
+			<option value="agents">COM_GUESTSUPPORT_FORMS_DISPLAY_TO_AGENT</option>
+			<option value="users">COM_GUESTSUPPORT_FORMS_DISPLAY_TO_USER</option>
+			<option value="none">COM_GUESTSUPPORT_FORMS_DISPLAY_TO_NONE</option>
+		</field>
+		<field
+			name="params[display_department]"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_DEPARTMENT"
+			default="1"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="params[display_ticket_creation_date]"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_TICKET_CREATED_DATE"
+			default="1"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="params[ticket_creation_date_format]"
+			type="text"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_TICKET_CREATION_DATE_FORMAT"
+			description="COM_GUESTSUPPORT_FORMS_DISPLAY_TICKET_VIEW_DATE_FORMAT_HELP"
+			default="M d, Y h:iA"
+			required="true"
+		/>
+		<field
+			name="params[display_last_updated_date]"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_LAST_UPDATED_DATE"
+			default="1"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="params[last_updated_date_format]"
+			type="text"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_LAST_UPDATED_DATE_FORMAT"
+			description="COM_GUESTSUPPORT_FORMS_DISPLAY_TICKET_VIEW_DATE_FORMAT_HELP"
+			default="M d, Y h:iA"
+			required="true"
+		/>
+		<field
+			name="params[display_custom_fields]"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_CUSTOM_FIELDS_DATA"
+			description="COM_GUESTSUPPORT_FORMS_DISPLAY_CUSTOM_FIELDS_DATA_DESC"
+			default="1"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="params[display_other_tickets]"
+			type="list"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_OTHER_TICKETS"
+			default="both"
+			validate="options"
+			>
+			<option value="both">COM_GUESTSUPPORT_FORMS_DISPLAY_TO_BOTH</option>
+			<option value="agents">COM_GUESTSUPPORT_FORMS_DISPLAY_TO_AGENT</option>
+			<option value="users">COM_GUESTSUPPORT_FORMS_DISPLAY_TO_USER</option>
+			<option value="none">COM_GUESTSUPPORT_FORMS_DISPLAY_TO_NONE</option>
+		</field>
+		<field
+			name="params[noof_other_tickets]"
+			type="number"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_NOF_OTHER_TICKETS"
+			description=""
+			default="10"
+			required="true"
+		/>
+		<field
+			name="params[bottom_text]"
+			type="textarea"
+			rows="3"
+			cols="30"
+			label="COM_GUESTSUPPORT_FORMS_DISPLAY_BOTTOM_TEXT"
+			description=""
+			default=""
+		/>
+	</fieldset>
+</form>

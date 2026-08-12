@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" method="upgrade">
+	<name>com_guestsupport</name>
+	<author>RcaTheme.com</author>
+	<creationDate>Feb 22, 2026</creationDate>
+	<copyright>(C) 2026 RcaTheme.com, All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>support@rcatheme.com</authorEmail>
+	<authorUrl>https://www.rcatheme.com</authorUrl>
+	<version>1.1.8</version>
+	<description>COM_GUESTSUPPORT_XML_DESCRIPTION</description>
+	<namespace path="src">Joomla\Component\Guestsupport</namespace>
+
+	<scriptfile>script.php</scriptfile>
+
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+
+	<files folder="site">
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+	<languages folder="site">
+		<language tag="en-GB">language/en-GB/com_guestsupport.ini</language>
+	</languages>
+	<media destination="com_guestsupport" folder="media">
+		<filename>joomla.asset.json</filename>
+		<folder>js</folder>
+		<folder>css</folder>
+	</media>
+	<administration>
+		<menu>com_guestsupport</menu>
+		<submenu>
+			<!--
+				Note that all & must be escaped to &amp; for the file to be valid
+				XML and be parsed by the installer
+			-->
+			<menu
+				link="option=com_guestsupport&amp;view=tickets"
+				view="tickets"
+				img="class:guestsupport-tickets"
+				alt="Guest Support/Tickets"
+				>
+				com_guestsupport_tickets
+			</menu>
+			<menu
+				link="option=com_guestsupport&amp;view=departments"
+				view="departments"
+				img="class:guestsupport-departments"
+				alt="Guest Support/Departments"
+				>
+				com_guestsupport_departments
+			</menu>
+			<menu
+				link="option=com_guestsupport&amp;view=forms"
+				view="forms"
+				img="class:guestsupport-forms"
+				alt="Guest Support/Forms"
+				>
+				com_guestsupport_forms
+			</menu>
+			<menu
+				link="option=com_guestsupport&amp;view=settings"
+				view="settings"
+				img="class:guestsupport-settings"
+				alt="Guest Support/Settings"
+				>
+				com_guestsupport_settings
+			</menu>
+			<menu
+				link="option=com_guestsupport&amp;view=emailsettings"
+				view="emailsettings"
+				img="class:guestsupport-emailsettings"
+				alt="Guest Support/Email Settings"
+				>
+				com_guestsupport_emailsettings
+			</menu>
+			<menu
+				link="option=com_guestsupport&amp;view=emailintegration"
+				view="emailintegration"
+				img="class:guestsupport-emailintegration"
+				alt="Guest Support/Email Integration"
+				>
+				com_guestsupport_emailintegration
+			</menu>
+			<menu
+				link="option=com_guestsupport&amp;view=emailtemplates"
+				view="emailtemplates"
+				img="class:guestsupport-emailtemplates"
+				alt="Guest Support/Email Templates"
+				>
+				com_guestsupport_emailtemplates
+			</menu>
+			<menu
+				link="option=com_guestsupport&amp;view=support"
+				view="support"
+				img="class:guestsupport-support"
+				alt="Guest Support/About And Support"
+				>
+				com_guestsupport_support
+			</menu>
+		</submenu>
+		<files folder="administrator">
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+			<folder>forms</folder>
+			<folder>helpers</folder>
+			<folder>services</folder>
+			<folder>sql</folder>
+			<folder>src</folder>
+			<folder>tmpl</folder>
+		</files>
+		<languages folder="administrator">
+			<language tag="en-GB">language/en-GB/com_guestsupport.ini</language>
+			<language tag="en-GB">language/en-GB/com_guestsupport.sys.ini</language>
+		</languages>
+	</administration>
+	<updateservers>
+        <server type="extension" priority="1" name="com_guestsupport"><![CDATA[https://www.rcatheme.com/index.php?option=com_subscription&task=update.xml&item=com_guestsupport]]></server>
+    </updateservers>
+</extension>

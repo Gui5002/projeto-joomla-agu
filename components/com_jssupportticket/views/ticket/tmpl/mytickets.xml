@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="My Tickets">
+		<message>
+			<![CDATA[My tickets.]]>
+		</message>
+	</layout>
+	<state>
+		<name>My Tickets</name>
+		<description>My tickets.</description>
+	</state>
+</metadata>

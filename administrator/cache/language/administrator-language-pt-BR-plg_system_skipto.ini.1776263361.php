@@ -1,0 +1,27 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'PLG_SYSTEM_SKIPTO' => 'Sistema - Navegação de Pular Para',
+  'PLG_SYSTEM_SKIPTO_ACCESS_KEY' => 'Chave de acesso é $key',
+  'PLG_SYSTEM_SKIPTO_HEADING' => 'Contorno da Página',
+  'PLG_SYSTEM_SKIPTO_HEADING_LEVEL' => 'Nível de cabeçalho',
+  'PLG_SYSTEM_SKIPTO_HEADING_MOFN' => ' ($m de $n)',
+  'PLG_SYSTEM_SKIPTO_HEADING_NONE' => 'Nenhum cabeçalho para pular de',
+  'PLG_SYSTEM_SKIPTO_LANDMARK_ASIDE' => 'Reserva',
+  'PLG_SYSTEM_SKIPTO_LANDMARK_FOOTER' => 'Rodapé',
+  'PLG_SYSTEM_SKIPTO_LANDMARK_FORM' => 'Formulário',
+  'PLG_SYSTEM_SKIPTO_LANDMARK_HEADER' => 'Cabeçalho',
+  'PLG_SYSTEM_SKIPTO_LANDMARK' => 'Pontos de referência',
+  'PLG_SYSTEM_SKIPTO_LANDMARK_MAIN' => 'Principal',
+  'PLG_SYSTEM_SKIPTO_LANDMARK_NAV' => 'Navegação',
+  'PLG_SYSTEM_SKIPTO_LANDMARK_NONE' => 'Não há marcas de referências para os quais pular',
+  'PLG_SYSTEM_SKIPTO_LANDMARK_REGION' => 'Estado',
+  'PLG_SYSTEM_SKIPTO_LANDMARK_SEARCH' => 'Busca',
+  'PLG_SYSTEM_SKIPTO_MENU' => 'Marcas de referência e contorno de página',
+  'PLG_SYSTEM_SKIPTO_SECTION' => 'Seção do site',
+  'PLG_SYSTEM_SKIPTO_SECTION_ADMIN' => 'Administrador (Backend)',
+  'PLG_SYSTEM_SKIPTO_SECTION_BOTH' => 'Ambos',
+  'PLG_SYSTEM_SKIPTO_SECTION_SITE' => 'Site (Frontend)',
+  'PLG_SYSTEM_SKIPTO_TITLE' => 'Navegação pelo teclado',
+  'PLG_SYSTEM_SKIPTO_XML_DESCRIPTION' => 'O plugin cria um menu suspenso composto pelos links para os lugares importantes em uma determinada página web. Isso torna mais fácil para os usuários do leitor de teclado e tela saltarem rapidamente para o local desejado, escolhendo-o na lista de opções.',
+);

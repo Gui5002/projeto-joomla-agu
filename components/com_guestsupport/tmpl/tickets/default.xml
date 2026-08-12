@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_GUESTSUPPORT_MENU_TICKET_VIEW_TITLE" option="COM_GUESTSUPPORT_MENU_TICKETS_VIEW_OPTION">
+		<message>
+			<![CDATA[COM_GUESTSUPPORT_MENU_TICKET_VIEW_DESC]]>
+		</message>
+	</layout>
+</metadata>

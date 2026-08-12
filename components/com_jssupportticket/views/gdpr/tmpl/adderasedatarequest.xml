@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Open Ticket">
+		<message>
+			<![CDATA[Create New Ticket.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Open Ticket</name>
+		<description>Create New Ticket.</description>
+	</state>
+</metadata>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="1.7" group="system" method="upgrade">
+	<name>JS Support Ticket icon</name>
+	<author>Joom Sky</author>
+	<creationDate>October 29th, 2015</creationDate>
+	<copyright>Copyright (c) 2015. All rights reserved.</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>ahmad@burujsolutions.com</authorEmail>
+	<authorUrl>www.burujsolutions.com</authorUrl>
+	<version>1.0.1</version>
+	<description>JS Support ticket icon shown support icon at front-end</description>
+
+	<files>
+		<filename plugin="jssupportticketicon">jssupportticketicon.php</filename>
+	</files>
+
+	<languages>
+		<language tag="en-GB">en-GB.plg_system_jssupportticketicon.ini</language>
+	</languages>
+
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="position" type="list" default="1" label="Position" description="Position for the icon" >
+					<option value="1">Top left</option>
+					<option value="2">Top right</option>
+					<option value="3">Middle left</option>
+					<option value="4">Middle right</option>
+					<option value="5">Bottom left</option>
+					<option value="6">Bottom right</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

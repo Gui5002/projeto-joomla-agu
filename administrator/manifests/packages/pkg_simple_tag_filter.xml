@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<extension type="package" method="upgrade">
+    <name>Simple Tag Filter Package</name>
+    <author>Blue-Coder.com</author>
+    <license>GNU General Public License version 2 or later</license>
+    <copyright>(C) 2026 Blue-Coder.com. All rights reserved.</copyright>
+    <creationDate>2026-06-29</creationDate>
+    <packagename>simple_tag_filter</packagename>
+    <version>1.0.0</version>
+    <url>https://blue-coder.com/</url>
+    <dlid prefix="dlid=" suffix=""/>
+
+    <!--Included package files. -->
+    <files>
+        <file type="module" id="simple_tag_filter" client="site">simple_tag_filter.zip</file>
+    </files>
+
+    <!-- Installation script -->
+    <scriptfile>script.php</scriptfile>
+
+    <!-- Update servers -->
+    <updateservers>
+        <server type="extension" priority="1" name="Simple Tag Filter FREE">https://update.blue-coder.com/streams/simpletagfilter-free/joomla.xml</server>
+    </updateservers>
+</extension>

@@ -1,0 +1,6 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'PLG_QUICKICON_OVERRIDECHECK' => 'Ícone Rápido - Notificação de Atualizações de Extensões Joomla',
+  'PLG_QUICKICON_OVERRIDECHECK_XML_DESCRIPTION' => '<p>Verifica substituições na atualização e habilita notificações quando você visita a página do Painel de Controle.</p><p><strong>Aviso! Você deve ter habilitado o Plugin de Substituição do Instalador para ver os resultados.</strong></p>',
+);

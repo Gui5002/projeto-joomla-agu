@@ -1,0 +1,10 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'PLG_SPPAGEBUILDER_LOADMODULE' => 'Content - SP Page Builder Load Modules',
+  'PLG_SPPAGEBUILDER_LOADMODULE_FIELD_STYLE_LABEL' => 'Style',
+  'PLG_SPPAGEBUILDER_LOADMODULE_FIELD_VALUE_DIVS' => 'Wrapped by Divs',
+  'PLG_SPPAGEBUILDER_LOADMODULE_FIELD_VALUE_RAW' => 'No wrapping (raw output)',
+  'PLG_SPPAGEBUILDER_LOADMODULE_FIELD_VALUE_TABLE' => 'Wrapped by table (column)',
+  'PLG_SPPAGEBUILDER_LOADMODULE_XML_DESCRIPTION' => 'Within content this plugin loads a Module by ID, Syntax: {loadmoduleid 1} or a Module by position, Syntax: {loadposition user1} or a Module by name, Syntax: {loadmodule mod_login}. Optionally can specify module style and for loadmodule a specific module by title, Syntax: {loadmodule mod_login,module title,style}.',
+);

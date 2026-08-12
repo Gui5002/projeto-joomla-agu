@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<field
+		name="form_ids"
+		type="sql"
+		default="1"
+		label="COM_GUESTSUPPORT_DEPARTMENT_SELECT_FORMS"
+		query="SELECT id, form_name FROM #__gs_tickets_forms"
+		key_field="id"
+		value_field="form_name"
+		multiple="true"
+		layout="joomla.form.field.list-fancy-select"
+    />
+</form>

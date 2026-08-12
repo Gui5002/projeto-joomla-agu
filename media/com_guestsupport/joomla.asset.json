@@ -1,0 +1,69 @@
+{
+	"$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+	"name": "com_guestsupport",
+	"version": "1.2.6",
+	"description": "Assets for Guest Support component",
+	"license": "GPL-2.0-or-later",
+	"assets": [
+		{
+			"name": "com_guestsupport.admin-styles-j4",
+			"type": "style",
+			"uri": "com_guestsupport/admin-styles-j4.css"
+		},
+		{
+			"name": "com_guestsupport.admin-styles",
+			"type": "style",
+			"uri": "com_guestsupport/admin-styles.css"
+		},
+		{
+			"name": "com_guestsupport.editor-styles",
+			"type": "style",
+			"uri": "com_guestsupport/quill.snow.css"
+		},
+		{
+			"name": "com_guestsupport.styles",
+			"type": "style",
+			"uri": "com_guestsupport/styles.min.css"
+		},
+		{
+			"name": "com_guestsupport.admin-addfield",
+			"type": "script",
+			"uri": "com_guestsupport/admin-addfield.js",
+			"dependencies": [
+				"jquery"
+			]
+		},
+		{
+			"name": "com_guestsupport.admin-dragndrop",
+			"type": "script",
+			"uri": "com_guestsupport/admin-dragndrop.js",
+			"dependencies": [
+				"jquery"
+			]
+		},
+		{
+			"name": "com_guestsupport.admin-scripts",
+			"type": "script",
+			"uri": "com_guestsupport/admin-scripts.js",
+			"dependencies": [
+				"jquery"
+			]
+		},
+		{
+			"name": "com_guestsupport.editor-scripts",
+			"type": "script",
+			"uri": "com_guestsupport/editor.js",
+			"dependencies": [
+				"jquery"
+			]
+		},
+		{
+			"name": "com_guestsupport.scripts",
+			"type": "script",
+			"uri": "com_guestsupport/scripts.min.js",
+			"dependencies": [
+				"jquery"
+			]
+		}
+	]
+}

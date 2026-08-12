@@ -1,0 +1,17 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'COM_POSTINSTALL' => 'Mensagens pós-instalação',
+  'COM_POSTINSTALL_BTN_ARCHIVE' => 'Arquivar',
+  'COM_POSTINSTALL_BTN_HIDE' => 'Esconder esta mensagem',
+  'COM_POSTINSTALL_BTN_REPUBLISH' => 'Ler de novo',
+  'COM_POSTINSTALL_CONFIGURATION' => 'Mensagens Pós-Instalação: Opções',
+  'COM_POSTINSTALL_EMPTYSTATE_BUTTON_ADD' => 'Redefinir mensagens',
+  'COM_POSTINSTALL_EMPTYSTATE_CONTENT' => 'Você leu todas as mensagens.',
+  'COM_POSTINSTALL_EMPTYSTATE_TITLE' => 'Mensagens de pós-instalação e atualização',
+  'COM_POSTINSTALL_HIDE_ALL_MESSAGES' => 'Ocultar todas as mensagens',
+  'COM_POSTINSTALL_LBL_SINCEVERSION' => 'Desde a versão %s',
+  'COM_POSTINSTALL_MESSAGES_FOR' => 'Exibindo mensagens para',
+  'COM_POSTINSTALL_MESSAGES_TITLE' => 'Mensagens de pós-instalação para %s',
+  'COM_POSTINSTALL_XML_DESCRIPTION' => 'Exibe mensagens pós-instalação e pós-atualização do Joomla e suas extensões.',
+);

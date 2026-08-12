@@ -1,0 +1,27 @@
+/* GDPR*/
+div#js-tk-formwrapper{width: 100%; float: left; padding-top: 20px;}
+div#js-tk-formwrapper div.js-form-title {padding: 5px 0px;}
+div#js-tk-formwrapper div.js-form-title  label{display: inline;}
+div#js-tk-formwrapper div.js-form-value {float: left;width: 100%;}
+div#js-tk-formwrapper div.js-append-premade{width: 70%; display: inline-block;}
+div#js-tk-formwrapper div.js-append-premadecheck{width: 30%;display: inline-block;}
+div#js-tk-formwrapper div.js-append-premadecheck label{display: inline-block;}
+div#js-tk-formwrapper div.js-append-premadecheck input#append{margin: 0 7px;}
+div#js-tk-formwrapper div.js-form-value input.js-form-input-field,
+div#js-tk-formwrapper div.js-form-value textarea{width: 100% !important;padding: 5px 5px;margin-bottom: 0;border-radius: 0;box-shadow: unset !important;min-height: 42px;}
+div.js-margin-bottom{margin-bottom: 10px;}
+div.js-ticket-top-search-wrp{border: 1px solid #d1d1d1;}
+div.js-ticket-top-search-wrp.second-style{float: left;width: 100%;}
+div.js-ticket-search-heading-wrp.second-style{background-color: #f5f2f5;color: #2b2b2b;}
+div.js-ticket-search-heading-wrp{float: left;width: 100%; padding: 10px;background-color: #2b2b2b;color: #ffffff;}
+div.js-ticket-search-heading-wrp div.js-ticket-heading-left{float: left;width: 60%;padding: 15px 10px;line-height: initial;}
+div.js-ticket-search-heading-wrp div.js-ticket-heading-right{float: left;width: 40%;text-align: right;}
+div.js-ticket-search-heading-wrp div.js-ticket-heading-right a.js-ticket-add-download-btn{display: inline-block;padding: 15px 25px;text-decoration: none;outline: 0px;line-height: initial;    background: #fff;color: #2b2b2b;}
+div.js-ticket-search-heading-wrp div.js-ticket-heading-right a.js-ticket-add-download-btn span.js-ticket-add-img-wrp{display: inline-block;margin-right: 5px;}
+div.js-ticket-search-heading-wrp div.js-ticket-heading-right a.js-ticket-add-download-btn span.js-ticket-add-img-wrp img{vertical-align: text-bottom;}
+
+div.js-ticket-top-search-wrp.second-style{margin-top:20px;margin-bottom: 15px;}
+div.js-ticket-search-heading-wrp.second-style div.js-ticket-heading-right a.js-ticket-add-download-btn{background: #636363;color: #fff;}
+div.js-form-submit-btn-wrp{float: left;width: calc(100% - 40px);margin: 0px 20px;    margin-top: 0px;text-align: center;padding: 20px 0px 25px 0px;margin-top: 35px;}
+div.js-form-submit-btn-wrp input.js-save-button{padding: 14px 10px;margin-right: 10px;min-width: 120px;border-radius: 0px;border: 1px solid;font-weight: bold;}
+div.js-form-submit-btn-wrp a.js-cancel-button{display: inline-block;padding: 14px 10px;margin-right: 10px;min-width: 120px;border-radius: 0px; text-decoration:none;outline:0;text-decoration:none !important; outline:0px !important;}

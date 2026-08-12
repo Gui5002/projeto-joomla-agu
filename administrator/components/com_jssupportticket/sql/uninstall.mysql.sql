@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS `#__js_ticket_attachments`;
+DROP TABLE IF EXISTS `#__js_ticket_config`;
+DROP TABLE IF EXISTS `#__js_ticket_departments`;
+DROP TABLE IF EXISTS `#__js_ticket_email`;
+DROP TABLE IF EXISTS `#__js_ticket_emailtemplates`;
+DROP TABLE IF EXISTS `#__js_ticket_priorities`;
+DROP TABLE IF EXISTS `#__js_ticket_replies`;
+DROP TABLE IF EXISTS `#__js_ticket_system_errors`;
+DROP TABLE IF EXISTS `#__js_ticket_tickets`;
+DROP TABLE IF EXISTS `#__js_ticket_userfields`;
+DROP TABLE IF EXISTS `#__js_ticket_userfieldvalues`;
+DROP TABLE IF EXISTS `#__js_ticket_userfield_data`;
+DROP TABLE IF EXISTS `#__js_ticket_fieldsordering`;
+DROP TABLE IF EXISTS `#__js_ticket_erasedatarequests`;

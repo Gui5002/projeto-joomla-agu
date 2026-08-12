@@ -1,0 +1,22 @@
+# Pastas de configuração e ambiente
+/configuration.php
+
+# Logs e Cache
+/logs/*
+/tmp/*
+!/logs/index.html
+!/tmp/index.html
+
+# Dependências (se usar Composer)
+/vendor/
+composer.lock
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Backups do Akeeba
+/administrator/components/com_akeebabackup/backup/*.jpa
+/administrator/components/com_akeebabackup/backup/

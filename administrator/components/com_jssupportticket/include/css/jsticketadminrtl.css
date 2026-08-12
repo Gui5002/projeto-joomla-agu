@@ -1,0 +1,507 @@
+div.js-cp-cnt-sec.js-cp-baner {background: url('../images/c_p/installer-bg.png') no-repeat right,url('../images/bg.jpg') repeat center / cover;transform:scaleX(-1);}
+div.menu-collasped-active-footer{padding-right:270px !important;padding-left:0px !important;}
+div#js-tk-copyright{padding-right:70px;padding-left:0px;}
+.js_ticketattachment {float: right;}
+div#jsst-upper-wrapper span.jsst-logo {right: auto;left: 80px;}
+div.js-tk-pagination select#limit {background-position: calc(100% - 40px);}
+div.js-cp-cnt-sec.js-cp-baner div.js-cp-baner-cnt {transform: scaleX(-1);}
+div.js-cp-cnt-sec.js-cp-baner img.js-cp-baner-img {left: 0;right: auto;transform: scaleX(-1);}
+div.js-cp-baner div.js-cp-baner-cnt div.js-cp-banner-tit-bold {padding-right: 0px;padding-left: 30px;}
+div.js-cp-baner div.js-cp-baner-cnt div.js-cp-banner-desc {padding-right: 0px;padding-left: 30px;}
+a.js-child.disable-child img {left: 35px !important;right: auto !important;}
+div.menu-collasped-active div#js-tk-links div.js-divlink a.pro-btn {right: auto;left: 20px;}
+div.js-admin-propage div{float: right;}
+div#js-tk-leftmenu div#js-tk-links .js-divlink span.js-ticket-pro-icon img {right: auto;left: 35px;}
+div.js-cp-tkt div.js-mnu-sub-heading span.js-cp-cnt-title-txt {float: right;}
+div.js-cp-tkt div.js-mnu-sub-heading a.js-cp-cnt-title-btn {float:left ;}
+div#js-tk-leftmenu div#js-tk-links .js-divlink .js-parent, a.js-parent2 {left: 0;right: auto;}
+div#js-tk-leftmenu{left:unset;right:0px;box-shadow: -4px 4px 4px 0px rgba(0,0,0,0.2);}
+div.menu-collasped-active div#js-tk-cparea {padding-right: 270px;}
+div.menu-collasped-active div#js-tk-cparea {padding-left: 0px;}
+div#js_ddl span#js_combo #translations {background-position: calc(100% - 95%);}
+div#js-lang-toserver a.anc img {margin-left: 10px;margin-right: 0px;}
+div#js-language-wrapper div.gettranslation img {margin-left: 10px;margin-right: 0px;}
+.js-cp-baner-left div.js-cp-baner {padding: 59px 25px;}
+div#js-tk-cparea {padding-left: 55px;}
+a.js-admin-report-wrapper div.js-admin-department-report-type-wrapper {background: url(../images/report/userbox-rtl.png) no-repeat 30px 30px #ebd0d0}
+div#js-tk-leftmenu div#js-tk-links div.js-innerlink a.js-child span.text {text-align: right;}
+div.js-cp-baner div.js-cp-baner-cnt div.js-cp-banner-btn-wrp a.js-cp-banner-btn {margin-left: 5px;margin-right: 0px;}
+.js-cp-banner-btn-wrp{float:right;}
+div#js-tk-admin-wrapper:not(.menu-collasped-active) div#js-tk-leftmenu div#js-tk-links div.js-divlink:hover div.js-innerlink {left: auto;right: 60px;}
+div#js-tk-admin-wrapper:not(.menu-collasped-active) div#js-tk-leftmenu div#js-tk-links div.js-divlink:hover div.js-innerlink::before {left: auto;right: -5px;}
+div#js-tk-leftmenu div#js-tk-links .js-divlink a.js-icon-left {border-right: 3px solid transparent;}
+div#js-tk-leftmenu div#js-tk-links .js-divlink a.js-icon-left {border-left: none;}
+div#js-tk-leftmenu div#js-tk-links .js-divlink.active a.js-icon-left {border-right: 3px solid #1572e8;}
+div#js-tk-leftmenu div#js-tk-links .js-divlink.active a.js-icon-left {border-left:none;}
+div#js-tk-leftmenu div#js-tk-links .js-divlink a.js-icon-left:hover {border-right: 3px solid #1572e8;border-left: none;}
+div#js-tk-leftmenu div#js-tk-links .js-divlink.disabled-menu a.js-icon-left:hover {border-right: 3px solid transparent;border-left: none;}
+div#js-wrapper-menus a.js-mnu-area:first-child div.js-mnu-arrowicon {left: 12px;right: auto;}
+div#js-wrapper-menus a.js-mnu-area div.js-mnu-arrowicon {left: 12px;right: auto;}
+div.js-cp-cnt-title span.js-cp-cnt-title-txt {float: right;}
+div#js-tk-heading .jsstadmin-head-text {float: right;}
+div#js-tk-heading a.jsstadmin-add-link {float: left;margin-left: 0px;margin-right: 8px;}
+div#jsstadmin-wrapper-top-left {float: right;}
+div#jsstadmin-wrapper-top-right {float: left;}
+div.js-cp-cnt-left {float: right;padding-left: 20px;padding-right: 0px;}
+div#js-wrapper-menus a.js-mnu-area img {margin-left: 5px;margin-right: 0px;transform: scaleX(-1);}
+form#userpopupsearch div.search-center div.js-search-value-button div.js-button{float: right;}
+div.js-cp-cnt-right {float: right;}
+div.js-cp-tkt div.js-ticket-admin-cp-data div.js-cp-tkt-list-left {float: right;}
+div.js-cp-tkt div.js-ticket-admin-cp-data div.js-cp-tkt-list-left div.js-cp-tkt-image {float: right;}
+div.js-cp-tkt div.js-ticket-admin-cp-data div.js-cp-tkt-list-left div.js-cp-tkt-cnt {float: right;padding: 10px 10px 0 0px;}
+div.js-cp-tkt div.js-ticket-admin-cp-data .js-cp-tkt-status {float: right;}
+div.js-cp-tkt div.js-ticket-admin-cp-data .js-cp-tkt-crted {float: right;}
+div.js-cp-tkt div.js-ticket-admin-cp-data .js-cp-tkt-prorty {float: right;}
+div#jsstadmin-data-wrp div.js-other-products-wrp div.js-other-products-detail div.js-other-products-image div.js-other-products-bottom div.js-product-title {float: right;}
+div#jsstadmin-data-wrp div.js-other-products-wrp div.js-other-products-detail div.js-other-products-image div.js-other-products-bottom div.js-product-bottom-btn {float:left ;}
+div#js-tk-cparea div#js-tk-heading a.tk-heading-addbutton {float: left;margin-left: 0;margin-right: 8px;}
+div#js-tk-filter div.tk-search-button .js-form-search {float: right}
+div#js-tk-filter div.tk-search-button .js-form-reset {float: right;}
+table#js-table thead tr th {border-left: 1px solid #ebecec !important;border-right: none;}
+table#js-table tbody tr td {border-left: 1px solid #ebecec;border-right: none;}
+table#js-table tbody tr td:last-child {border-left: none;}
+table#js-table tbody tr td {text-align: right;}
+form.jsstadmin-data-wrp div#js-tk-filter div.tk-search-value select {background-position: calc(100% - 200px);}
+div#jsstadmin-data-wrp {float: left;}
+form#adminForm, div.js_wrapper {float: right;}
+form#adminForm div.js-form-wrapper {float: right;}
+div#js-tk-cparea div.js-value select.inputbox {background-position: calc(100% - 95%) !important;}
+div#js-tk-cparea .jsst-formfield-status-radio-button-wrap {float: right;margin-right: 0;margin-left: 8px;}
+div#js-tk-cparea .jsst-formfield-status-radio-button-wrap input {margin-left: 5px;}
+div#js-tk-cparea .jsst-formfield-radio-button-wrap input {margin-left: 5px;margin-right: 0;}
+form#adminForm div.js-form-wrapper #userpopup {position: absolute;top: 0;left: 0;right: auto;}
+div#records div.jsst_userpages {text-align: left;float: right;}
+div.js-ticket-table-body {float: right;}
+div.js-ticket-table-body div.js-ticket-data-row {float: right;}
+div.js-ticket-table-body div.js-ticket-data-row div.js-ticket-table-body-col {text-align: right;float: right;}
+div#records div.js-ticket-table-wrp div.js-ticket-table-header {float: right;}
+div.js-ticket-table-wrp div.js-ticket-table-header div.js-ticket-table-header-col {text-align: right;float: right;}
+div#js-tk-cparea div.js-value {float: right;}
+div#js-attachment-files {float: right;}
+div#js-attachment-files span.js-value-attachment-text {margin-left: 10px;margin-right: 0px;float: right;}
+div#js-tk-cparea div.js-value input, select.inputbox {float: right;}
+div#js-attachment-files span.js-value-attachment-text .js-attachment-remove {left: 7px;right: auto;}
+div#js-attachment-option span#js-attachment-add {float: right;}
+div#js-tk-cparea div.js-title label {float: right;}
+div.js-per-subheading span.head-checkbox input {float: left;}
+div.tk-search-button .js-search-filter-btn {float: right;}
+div#divValues a#user-field-val-button {float: right;}
+div#divValues .input-field-wrapper {margin-left: 10px;margin-right: 0;float:right;}
+div#js-mail-threads div.js-tk-pic-subject {float: right;}
+div#js-mail-threads div.js-tk-message {float: right;}
+div#js-mail-threads div.js-tk-message div#pointer {left: auto;right: -21px;}
+div#js-mail-threads div.js-tk-message div#pointer img {-webkit-transform:rotate(180deg);-moz-transform: rotate(180deg);-ms-transform: rotate(180deg);-o-transform: rotate(180deg);transform: rotate(180deg);}
+div#js-mail-threads div.js-tk-pic {float: right;}
+div#js-mail-threads div.js-tk-pic {float: right;}
+table#js-table thead tr th:last-child {border-left: none !important;}
+table#js-table thead tr th:first-child {border-right: none !important;}
+form#adminForm div#js-tk-filter #userpopup {right: auto;left: 0;}
+div#js-tk-filter div.tk-search-value input, select {float: right;}
+div#js-tk-filter div.tk-search-value button {margin-left: 1px;margin-right: -4px;border-right: none;border-left:1px solid #ebecec;}
+.js-admin-report div.js-admin-staff-wrapper {float: right;}
+.js-admin-report div.js-admin-staff-wrapper a {float: right;}
+.js-admin-staff-cnt {float: right;}
+.js-admin-staff-cnt .js-report-staff-image {float: right;}
+.js-admin-staff-cnt .js-report-staff-cnt {float: right;padding: 5px 10px 0 0px;}
+div.js-ticket-admin-cp-tickets {float: right;}
+div.js-report-detail-head:first-child {text-align: right;}
+.js-ticket-admin-cp-data {float: right;}
+div.js-report-detail-body:first-child {text-align: right;}
+div.js-report-detail-body {float: right;}
+div.js-report-detail-body:last-child {border-right: 1px solid #ebecec;}
+form#jssupportticketform div#js-tk-filter #userpopup {left: 0;right: auto;}
+div.js-report-detail-body:first-child {border-right: none !important;}
+div.js-form-wrapper div.js-form-append {float: right;}
+div.js-ticket-configuration-row div.js-ticketviaemail select {background-position: calc(100% - 95%);}
+span.crown_text_right {text-align: right;float:left;}
+span.crown_text_left {float: right;padding-right: 1%;padding-left: 0;}
+div#cron_job {float: right;}
+div#cron_job span {float: right !important;}
+div.js-form-wrapper div.js-export-row-alue select {background-position: calc(100% - 95%);}
+div#userpopup div.popup-field-wrapper div.popup-field-obj select {background-position: calc(100% - 95%);}
+div#userpopup div.js-submit-container input {margin-left: 5px;}
+.js-ticket-configuration-row {float: right;}
+.js-ticket-configuration-row div.js-col-md-4{float: right;}
+.js-ticket-configuration-row a {width: 100%;float: right;}
+div.js-ticket-configuration-row div.js-config-value select.inputbox {background-position: calc(100% - 95%);}
+.js-ticket-configuration-row-mail {float: right;}
+.js-ticket-configuration-row-mail .js-configuration-text , .js-col-lg-3.js-col-md-3 {float: right}
+div#js-tk-heading span.jsst-header-tab.js-ticket-loginlogoutclass {float: left;}
+div.download_attachments {margin-right: 0px;float: right;margin-left: 10px;}
+div.download_attachments a {float:left;}
+div#js-tk-cparea div#js-tk-heading a.tk-heading-addbutton img {margin-left: 3px;margin-right: 0px;}
+div#userpopup span.popup-top span.close {right: auto;left: 22px;}
+div#mail-admin-links a {float: right;}
+div#mail-admin-links a img {margin-left: 3px;margin-right: 0px;}
+div.js-error-wrapper{float:right;}
+div.js-error-wrapper div{float:right;}
+.js-ticket-configuration-row-mail .js-configuration-title {float: right;}
+.js-ticket-configuration-row-mail .js-configuration-value select {background-position: calc(100% - 95%);}
+div.js-ticket-configuration-row div.js-config-value select#tve_enabled {background-position: calc(100% - 95%);}
+div.js_effect_preview {float: right;padding-left: 0px;padding-right: 10px;}
+div#js-tk-heading div#jsst-header-heading {float: right;}
+div#js-tk-wrapper div.js-right {border-left: none;}
+div#js-tk-wrapper div.js-right:hover {border-left: none;}
+div#js-tk-wrapper div.js-middle div.js-tk-pabsolute span {left: 3%;right: auto;}
+div#js-tk-wrapper:hover div.js-right {border-left: none;}
+div.js-myticket-link {float: right;}
+div#js-tk-filter div.tk-search-button button.jsst-search {float: right;}
+div#js-tk-filter div.tk-search-button button.jsst-reset {float: right;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.js-ticket-pic {float: right;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.js-ticket-data {float: right;padding: 0px 5px 0 0px;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.js-ticket-data div.js-ticket-right {float: right;}
+div#js-tk-main-wrapper div.js-ticket-toparea {float: right;}
+div#js-tk-main-wrapper div.js-icon {float: right;}
+div#js-tk-main-wrapper div.js-ticket-data {float: right;padding: 0px 5px 0 0px;}
+div#js-tk-main-wrapper div.js-middle {float: right;}
+div#js-tk-main-wrapper div.js-wrapper {float: right;}
+div#js-tk-main-wrapper div.js-right {float: right;}
+div#js-tk-main-wrapper img.ticketstatusimage {margin-left: 5px;margin-right: 0px;}
+div#js-tk-main-wrapper div.js-right div.js-ticket-data1 {float: left;}
+div#js-tk-main-wrapper div.js-wrapper {float: right;}
+div#js-tk-main-wrapper div.js-bottom {float: right;}
+div#js-tk-main-wrapper div.js-bottom a {float: right;margin-left: 5px;margin-right: 0px;}
+div#js-tk-main-wrapper span.js-ticket-priority {margin-left: 0px;margin-right: 5px}
+div#js-tk-ticket-detail {float: right;}
+div.js-tkt-det-left {float: right;padding-right: 0px;padding-left: 30px;}
+div.js-tkt-det-right {float: right;}
+div.js-tkt-det-cnt {float: right;}
+div.js-tkt-det-user {float: right;}
+div.js-tkt-det-user div.js-tkt-det-user-image {float: right;}
+div.js-tkt-det-user div.js-tkt-det-user-cnt {float: right;padding: 0 10px 0 0px;}
+div.js-tkt-det-user div.js-tkt-det-user-cnt div.js-tkt-det-user-data {float: right;}
+div.js-tkt-det-other-tkt {float: right;}
+div.js-tkt-det-tkt-msg {float: right;}
+div.js-tkt-det-actn-btn-wrp {float: right;}
+div#js-tk-ticket-detail a.js-detal-alinks {float: right;}
+div.js-tk-subheading {float: right;}
+div#js-ticket-threads {float: right;}
+div#js-ticket-threads div.js-tk-message {float: right;padding: 10px 15px 0 0px;}
+div#js-ticket-threads div.js-tk-message .js-ticket-thread-data {float: right;}
+#js-ticket-threads .js-ticket-thread-cnt-btm {float: right;}
+#js-ticket-threads .js-ticket-thread-cnt-btm .js-ticket-thread-date {float: right;}
+a.ticket-edit-time-button {float: left;margin-left: 5px;margin-right: 0px;}
+#js-ticket-threads .js-ticket-thread-cnt-btm .js-ticket-thread-time {float: right;}
+div#js-ticket-threads div.js-tk-message .js-ticket-thread-data .js-ticket-thread-person {float: right;}
+.js-ticket-thread-add-btn {float: right;}
+.js-ticket-thread-add-btn .js-ticket-thread-add-btn-link img {margin-left: 3px;margin-right: 0px;}
+a.ticket-edit-reply-button {float: left;margin-left: 5px;margin-right: 0px;}
+div#button div.js-tk-tabs-wrapper {float: right;}
+.js-ticket-detail-append-signature-xs {float: right;}
+div#button div.js-value div.js-attachment-files span.js-value-text {float: right;}
+div#button div.js-value div.js-attachment-files span.js-value-text span.js-attachment-remove {left: 7px;right: auto;}
+div#button div.js-value .jsst-formfield-radio-button-wrp {float: right;margin-left: 5px;margin-right: 0px;}
+.js-tkt-det-info-cnt {float: right;}
+.js-tkt-det-info-cnt div.js-tkt-det-info-data {float: right;}
+.js-tkt-det-info-cnt div.js-tkt-det-info-data .js-title {float: right;margin-left: 8px;margin-right: 0px;}
+.js-tkt-det-info-cnt div.js-tkt-det-info-data .js-value {float: right;}
+div.js-tkt-det-hdg {float: right;}
+div.js-tkt-det-hdg div.js-tkt-det-hdg-txt {float: right;}
+div.js-tkt-det-hdg a.js-tkt-det-hdg-btn {float: left;}
+.js-tkt-det-tkt-prty-txt {float: right;}
+.js-tkt-det-trsfer-dep {float: right;}
+.js-tkt-det-trsfer-dep .js-tkt-det-trsfer-dep-txt {float: right;}
+.js-tkt-det-trsfer-dep .js-tkt-det-hdg-btn {float: left;text-align: left;}
+.js-tkt-det-usr-tkt-list {float: right;}
+.js-tkt-det-usr-tkt-list .js-tkt-det-prty {float: right;margin-left: 3px;margin-right: 0px;}
+.js-tkt-det-usr-tkt-list .js-tkt-det-status {float: right;}
+div.js-tkt-det-user div.js-tkt-det-user-cnt div.js-tkt-det-user-data span.js-tkt-det-user-tit {float: right;}
+div.js-tkt-det-user div.js-tkt-det-user-cnt div.js-tkt-det-user-data span.js-tkt-det-user-val {float: right;}
+div#js-history-head {float: right;}
+div#js-history-head span.js-title {float: right;}
+div#js-history-head span.js-image {float: left;}
+div#js-history-popup div.js-history-messagewrapper {float: right;}
+div#js-history-row {float: right;}
+div#js-history-row span.js-data {float: right;border-left: 1px solid #ebecec;border-right: none;}
+div#js-history-row span.js-data:last-child {text-align: right;}
+div#js-private-crendentials-head {float: right;}
+div#js-private-crendentials-head span.js-title {float: right;}
+div#js-private-crendentials-head span.js-image {float: left;}
+div.private-crendentials-detail-popup {float: right;}
+div.js-ticket-crendential-detail-wrp {float: right;}
+div.js-ticket-crendential-detail-wrp div.js-ticket-crendential-detail-head {float: right;}
+div.js-ticket-crendential-detail-wrp div.js-ticket-crendential-detail-body {float: right;}
+div.js-ticket-crendential-detail-wrp div.js-ticket-rows-wrp {float: right;}
+div.js-ticket-crendential-detail-wrp div.js-ticket-crendential-detail-footer input.js-ticket-priorty-save {margin-left: 5px;margin-right: 0px;}
+div#popup-record-data div.jsst-popup-header div.popup-header-close-img {left: 16px;right: auto;}
+div.js-ticket-wrapper div.js-ticket-pic {float: right;}
+div.js-ticket-wrapper div.js-ticket-data {float: right;}
+div.js-ticket-wrapper div.js-ticket-data div.js-ticket-body-data-elipses span.js-ticket-title {float: right;}
+div.js-ticket-wrapper div.js-ticket-data div.js-ticket-body-data-elipses a.js-ticket-merge-ticket-title {float: right;}
+div.js-ticket-wrapper div.js-ticket-data1 {float: right;}
+div.js-ticket-wrapper div.js-ticket-data1 div {float: right;}
+div.js-merge-form-wrp {float: right;}
+div.js-merge-form-value {float: right;margin-left: 5px;margin-right: 0px;}
+div.js-merge-form-btn-wrp {float: right;}
+span.js-merge-btn {float: right;margin-left: 5px;margin-right: 0px;}
+.jsst_userlink {margin-left: 5px;margin-right: 0px;}
+div.jsst_userpages {text-align: left;}
+span.js-edit-msg-heading {float: right;}
+div#userpopupforintnote div.js-ticket-priorty-header {float: right;text-align: right;}
+div#userpopupforintnote div.js-ticket-priorty-header span.close-history {left: 16px;right: auto;}
+div#userpopupforintnote div.js-ticket-priorty-fields-wrp div.js-tk-tabs-wrapper div.js-value div.jsst-formfield-radio-button-wrp {float: right;margin-left: 5px;margin-right: 0px;}
+div.jsst-popup-wrapper div.jsst-popup-header div.popup-header-close-img {left: 16px;right: auto;}
+div#userpopupforchangedepartment div.js-ticket-priorty-header span.close-history {left: 16px;right: auto;}
+div#userpopupforassignstaff div.js-ticket-priorty-header span.close-history{left: 16px;right: auto;}
+div#userpopupforchangepriority div.js-ticket-priorty-header span.close-history {left: 16px;right: auto;}
+div#userpopupforchangedepartment div.js-ticket-priorty-header {text-align: right;}
+div#userpopupforassignstaff div.js-ticket-priorty-header {text-align: right;}
+div#userpopupforchangepriority div.js-ticket-priorty-header {text-align: right;}
+div#userpopupforassignstaff div.js-ticket-priorty-fields-wrp div.js-tk-tabs-wrapper div.js-value select.inputbox {background-position: calc(100% - 95%);}
+div#userpopupforchangepriority div.js-ticket-priorty-fields-wrp div.js-ticket-select-priorty select#priorityid {background-position: calc(100% - 95%);}
+div.js-ticket-sorting div.js-ticket-sorting-left {float: right;}
+div.js-ticket-sorting div.js-ticket-sorting-right {float: left;}
+div.js-tk-pagination {text-align: left;}
+div#js-ticket-threads div.js-tk-message .js-ticket-thread-data .js-ticket-thread-note {float: right;}
+div#js-attachment-files span.js-value-text span.js-attachment-remove {left: 8px;right: auto;top: 5px;}
+
+div#js-tk-links .js-divlink .js-parent span.text img{float: left;margin-left:-5px;margin-right: unset;transform: rotate(180deg);}
+div#js-tk-cparea{padding-left:0px;padding-right:60px;}
+div#js-tk-admin-wrapper{padding-right:10px;padding-left:0px;}
+div#js-tk-cparea div#js-tk-heading div.right_side{right:unset;left:10px;}
+div.js-admin-report-box-wrapper.js-admin-controlpanel div.js-admin-box{float:right;}
+div#js-tk-cparea div#js-maincp-area div.js-mnu-wrapper{float:right;}
+div#js-tk-cparea div#js-maincp-area div.js-mnu-arrowicon{right:unset;left:12px;}
+div#js-tk-cparea div#js-maincp-area div.js-mnu-arrowicon img{-moz-transform: scaleX(-1);-o-transform: scaleX(-1);-webkit-transform: scaleX(-1);transform: scaleX(-1);filter: FlipH;-ms-filter: "FlipH";}
+div#js-tk-leftmenu div#js-tk-links .js-divlink .js-parent, a.js-parent2{float:left;}
+/* div#js-tk-leftmenu div#js-tk-links div.js-innerlink{float:left;width:100%;} */
+div#js-tk-leftmenu div#js-tk-links div.js-innerlink a.js-child{margin-right:30px;margin-left:unset;}
+div.js-ticket-admin-cp-head div{float:right;}
+div.js-ticket-admin-cp-data div{padding-left:8px;padding-right:unset;}
+div#js-tk-cparea div#js-tk-heading a.tk-heading-addbutton{right:unset;left:25px;}
+div.js-admin-sorting span.js-admin-sorting-link{float:right;}
+div#js-tk-wrapper div.js-icon{border-right:unset;border-left:1px solid #999;float:right;}
+div#js-tk-wrapper div.js-middle{float:right;border-right: unset;border-left:1px solid #999;}
+div#js-tk-wrapper div.js-middle span.js-tk-title{float:right;}
+div#js-tk-wrapper div.js-middle span.js-tk-value{padding-right:10px;padding-left:unset;}
+div#js-tk-wrapper div.js-middle div.js-tk-pabsolute{float:left;}
+div#js-tk-wrapper div.js-right span.js-tk-title{float:right;}
+div#js-tk-wrapper div.js-bottom span.js-tk-actions{float:left;}
+div#js-tk-wrapper:hover div.js-icon{border-right:unset;border-left:1px solid #A7A7A7;}
+div#js-tk-wrapper:hover div.js-middle{border-right:unset;border-left:1px solid #A7A7A7;}
+div#js-tk-wrapper div.js-bottom span.js-tk-actions a{float:right;}
+div#js-firstrow div.js-col-md-4.js-padding-null{float:right;}
+div#js-firstrow div.js-col-md-4.js-padding-null span.js-col-md-4.js-col-xs-12.js-status{float:right;}
+div#js-firstrow div.js-col-md-4.js-padding-null span.js-created{border-left:1px solid #D7D8D9;border-right:0px;}
+div#js-firstrow .ticket-id{float:right;border-left:1px solid #D7D8D9;border-right:unset;}
+div#js-firstrow span.js-title{float:right;}
+div#js-secondrow div.js-col-md-8{float:right;}
+div#js-secondrow div.js-col-md-8 div.js-wrapper span.js-title{float:right;}
+div#js-secondrow .js-wrapper span.js-value-subject{padding-right:15px;padding-left:unset;}
+div.js-requester-info div.requester-data{float:right;}
+div#js-ticket-threads div.js-tk-pic{float:right;}
+div#js-ticket-threads div.js-tk-message div#pointer{left:unset;right:-21px;webkit-transform: rotate(180deg);-moz-transform: rotate(180deg);-o-transform: rotate(180deg);-ms-transform: rotate(180deg);transform: rotate(180deg);}
+div.js-col-md-4.js-attachment-file{float:right;margin:0px;width:31%;margin:5px;margin-left:1%;}
+div#js-attachment-files span.js-value-text{float:right;}
+div#js-tk-cparea div.js-title{float:right;text-align: right;}
+div.js-pro-feature-wrapper div.js-pro-feature{float:right;}
+div#tabs_wrapper div.js-config-title{float:right;text-align:right;}
+div#tabs_wrapper div.js-config-value{float:right;}
+div.idTabs span{float:right;margin-left:5px;}
+/*div.js-admin-propage span.js-pro-title{text-align:right;}*/
+table#js-table thead tr th{text-align: right;}
+div.js-email-menu{float:right;}
+div.js-admin-info-wrapper span.js-admin-info-title{float:right;margin-right:unset;border-left: 1px solid #ebecec;text-align: left;border-right: none;}
+div.js-admin-info-wrapper span.js-admin-info-vlaue{float:right;padding-right:10px;}
+div.js-requester-info div.requester-data-inner-title{float:right;}
+div.js-tk-message div.js-col-md-4.js-col-xs-12{float:right;}
+textarea#departmenttranfer{float:right;}
+div.js-per-wrapper div.js-per-datawrapper{float:right;}
+div.js-per-subheading span.head-text{float:right;}
+div.js-per-subheading span.head-checkbox{float:left;}
+div.js-per-wrapper div.js-per-datawrapper{float:right;}
+img.js-relative-image{right:unset;left:0px;transform: rotateY(180deg);}
+form div.js-col-xs-12.js-col-md-12.js-ticket-configuration-row div.js-ticket-configuration-title{float:right;}
+form div.js-col-xs-12.js-col-md-12.js-ticket-configuration-row div.js-ticket-configuration-value{float:right;}
+div.js-col-md-12.js-col-xs-12.js-col-md-offset-2.js-admin-ticketviaemail-wrapper-checksetting{margin-left:unset;margin-right:16%;}
+div.js-col-md-12.js-col-xs-12.js-col-md-offset-2.js-admin-ticketviaemail-wrapper-checksetting a#js-admin-ticketviaemail{float:right;}
+div#js-messages-layout div#js-imgfor-message{float:right;text-align: right;}
+div#js-messages-layout div#js-datafor-message div.js-message-title{text-align: right;}
+div#js-messages-layout div#js-datafor-message div.js-message-detail{text-align: right;}
+div.js_theme_section{float:right;}
+div#theme_heading div.left_side{float:right;border-right:unset;border-left:1px solid #ffffff;}
+div#js-tk-sort-wrapper ul#js-tk-sort-manu li.js-tk-sort-manulink{float:right !important;}
+div#js-tk-wrapper div.js-middle div.js-tk-pabsolute{float:left !important;}
+a.js-admin-report-wrapper div.js-admin-overall-report-type-wrapper{background: url(../images/report/overall-rtl.png) no-repeat 30px 30px #eaf1dd;}
+a.js-admin-report-wrapper div.js-admin-staff-report-type-wrapper{background: url(../images/report/staffbox-rtl.png) no-repeat 30px 30px #eef9fd;}
+a.js-admin-report-wrapper div.js-admin-user-report-type-wrapper{background: url(../images/report/userbox-rtl.png) no-repeat 30px 30px #fff5eb;}
+div.js-admin-staff-wrapper .nopadding{float:right;}
+div.js-admin-staff-wrapper div.js-report-staff-image-wrapper{float: right;}
+div.js-admin-staff-wrapper div.js-admin-report-box.box1{margin-left:unset;float:right;}
+div.js-admin-staff-wrapper div.js-admin-report-box{float:right;margin-left: unset;margin-right: 10px;}
+form#userpopupsearch div.search-center span.close{right:unset;left:10px;}
+div.js-admin-report-box-wrapper div.js-admin-box{float: right;}
+div.js-admin-report-box-wrapper div.js-admin-box div.js-admin-box-image{text-align:left;}
+div#js-tk-filter div.tk-search-value{float: right;}
+div#js-tk-filter div.tk-search-button{float: right;padding-right:2px;padding-left:0px;}
+div#js-tk-actiondiv div.js-priority-wrapper{margin-right: 25%;margin-left:unset;}
+div#req-moredetail div.js-col-md-4{float: right;}
+div#records div.js-title{float: right;}
+div#records div.js-value div.js-col-xs-12{float: right;}
+form#userpopupsearch div.search-center div.js-search-value{float: right;}
+div#userpopup div.popup-field-wrapper div.popup-field-title{float: right;}
+div#userpopup div.popup-field-wrapper div.popup-field-obj{float: right;}
+div#userpopup span.popup-top img#popup_cross{float: left;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp{float: right;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-img-wrp{float: left;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-top div.jsst-feedback-det-list-data-top-title{float: right;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-top div.jsst-feedback-det-list-data-top-val{float: right;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm{float: right;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm div.jsst-feedback-det-list-datea-btm-rec{float: right;margin: 0 0px 7px 30px;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm div.jsst-feedback-det-list-datea-btm-rec div.jsst-feedback-det-list-data-btm-title{float: right;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm div.jsst-feedback-det-list-datea-btm-rec div.jsst-feedback-det-list-data-btm-val{float: right;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-btm div.jsst-feedback-det-list-btm-title{float: right;}
+div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-btm div.jsst-feedback-det-list-btm-val{float: right;}
+div#js-tk-cparea div#js-tk-heading a#tk-export.tk-heading-addbutton{right:unset;left:110px;}
+div.js-admin-report-box-wrapper div.js-admin-box.js-col-md-offset-2{margin-left:0px;}
+div.jsst-report-boxes div.js-admin-report-box.box1{margin-right:0px;}
+/* div.js-col-md-offset-1{margin-left:unset;margin-right:8.33333333% !important;} */
+div.statifacetion-report-left{float: right;}
+div.satisfaction-report-right{float: right;margin-right: 2%;margin-left:unset;}
+div.jsst-statifacetion-report-wrapper div.jsst-satisfaction-report-bottom div.indi-stats{float: right;}
+div.jsst-statifacetion-report-wrapper div.jsst-satisfaction-report-bottom div.indi-stats img{float: right;}
+div.jsst-statifacetion-report-wrapper div.jsst-satisfaction-report-bottom div.indi-stats div.stats-percentage{text-align: right;padding-left: unset;padding-right: 10%;}
+div.jsst-statifacetion-report-wrapper div.jsst-satisfaction-report-bottom div.indi-stats div.stats-text{text-align: right;padding-left: unset;padding-right: 10%;}
+div#jsst-middle-wrapper div.js-col-md-4{float: right;}
+div#jsst-middle-wrapper div.js-col-md-4:first-child{margin-left:unset;margin-right: 1%;}
+div#jsst-lower-wrapper div#jsst-table-head div{float: right;}
+div#jsst-lower-wrapper div#jsst-table-data div{float: right;}
+div#jsst-lower-wrapper div.js-row a.nextbutton{margin-right:0px;float: left;}
+div#jsst-lower-wrapper.last div.form input#transactionkey, div#jsst_next_form div.js_wrapper select#productversioninstall{float: right;}
+div#js-attachment-option span.js-attachment-ins{float: right;text-align: right;}
+
+
+@media(max-width: 480px){
+	div#js_ddl span#js_combo #translations {width: 100%;}
+	div#js-tk-filter div.tk-search-value button {margin-right: -6px;}
+	div.js-tkt-det-left {padding-left: 0px;}
+	div#js-history-row span.js-data {float: right;border-left:none;}
+	div#js-tk-main-wrapper div.js-right span.js-tk-title {margin-left: 5px;margin-right: 0px;float: right;}
+	div#js-tk-main-wrapper div.js-right span.js-tk-value {float: right;}
+	div#js-tk-main-wrapper img.ticketstatusimage {float: right;margin-top: 5px;}
+	div#js-tk-main-wrapper span.js-ticket-status {float: right;}
+	div#js-tk-main-wrapper span.js-ticket-priority {float: right;}
+	div#js-tk-cparea{padding-right:65px;}
+	form.jsstadmin-data-wrp div#js-tk-filter div.tk-search-value select {background-position: calc(100% - 95%);}
+	form#userpopupsearch div.search-center div.js-search-value-button {float: right;}
+	form#userpopupsearch div.search-center div.js-search-value-button div.js-button {float: right;}
+	table#js-table tbody tr td {border: none;}
+	div.js-cp-cnt-left{padding-left: 0;}
+	div#js-tk-admin-wrapper{padding-right:0px;}
+	div#tabs_wrapper div.js-config-value {text-align: right;}
+	div.js-admin-report-box-wrapper.js-admin-controlpanel div.js-admin-box{width:100%;}
+	div.js-admin-report-box-wrapper div.js-admin-box div.js-admin-box-content div.js-admin-box-content-number{text-align: left;}
+	div.js-admin-report-box-wrapper div.js-admin-box div.js-admin-box-content div.js-admin-box-content-label{text-align: left;}
+	div.js-admin-report-box-wrapper div.js-admin-box div.js-admin-box-image{text-align: right;}
+	div#js-tk-cparea div#js-tk-heading h4{padding-right:55px;padding-left:10px;}
+	img#js-admin-responsive-menu-link{left:unset;right:5px;}
+	div#js-tk-cparea div#js-tk-heading a.tk-heading-addbutton{left:10px;}
+	div#js-tk-filter div.tk-search-value{float:right;}
+	div.js-admin-sorting span.js-admin-sorting-link{width:100%;float:left;}
+	div#js-tk-wrapper div.js-icon{border-left:0px !important;width:auto;float:right;}
+	div#js-tk-wrapper div.js-middle{border-left:0px !important;}
+	div#js-tk-wrapper div.js-right span.js-tk-value{padding-right:10px !important;}
+	table#js-table tbody td:before{margin-right:0px;margin-left:20px;}
+	div#js-tk-cparea div.js-title{text-align:right;}
+	div.js-per-wrapper div.js-per-datawrapper{width:100%;}
+	div.idTabs span{margin:0px;width:100%;}
+	div#tabs_wrapper div.js-config-title{width:100%;text-align: right;}
+	div#tabs_wrapper div.js-config-value{width:100%;}
+	div.js-null-margin{margin-bottom: 10px !important;}
+	form div.js-col-xs-12.js-col-md-12.js-ticket-configuration-row div.js-ticket-configuration-title{text-align: right;padding-right:15px;}
+	span.crown_text_left{float:right;}
+	div.js-admin-staff-wrapper div.js-report-staff-image-wrapper{width:100%;}
+	div.js-admin-staff-wrapper div.js-col-md-9{width:100%;float:left;}	
+	/* div.js-col-md-2.js-col-md-offset-1.js-admin-report-box.box1{width:100%;margin:0px !important;} */
+	div.js-admin-staff-wrapper div.js-admin-report-box{margin:5px !important;}
+	div.js-admin-staff-wrapper .nopadding{width:100%;}
+	table#js-table thead th.center, table#js-table tbody td.center{text-align:right;}
+	div#jsst-middle-wrapper div.js-col-md-4{margin:0px;width:100%;}
+	div#js-tk-wrapper div.js-middle div.js-tk-pabsolute span{right:unset;left:10px;}
+	div#js-tk-wrapper div.js-bottom span.js-tk-actions a{float: unset;}
+	div#js-firstrow div.js-col-md-4.js-padding-null span.js-created{border-left:none;}
+	div#js-firstrow .ticket-id{border-left:none;}
+	div.js-wrapper-actions{width:100%;display: inline-block;float: right;}
+	div.js-requester-info div.requester-data{width:100%;}
+	div#req-moredetail div.js-col-md-4{width:100%;}
+	div.js-requester-info div.requester-data-inner-value{width:100%;}
+	div#js-ticket-threads{padding-left:15px;padding-right:0px;}
+	div#js-ticket-threads div.js-tk-pic{padding:0 0 0 17px;}
+	div#userpopup div.js-submit-container{width:100%;display: inline-block;float: left;}
+	div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm{width: 100%;}
+	div#jsst-middle-wrapper div.js-col-md-4{width:calc(100% - 20px);}
+	.js-col-md-12{width:100%;display: inline-block;}
+	div#js-tk-filter div.tk-search-value div.field-calendar input {width: calc(100% - 0px);}
+	a.ticket-edit-time-button {float: right;}
+	div.js-col-md-4.js-col-xs-4.js-ticket-data1.js-ticket-padding-left-xs .js-col-xs-3 {width: 50%;}
+}
+@media(min-width:481px) and (max-width: 667px){
+	a.ticket-edit-time-button {float: right;}
+	div#js-tk-filter div.tk-search-value div.field-calendar input {width: calc(100% - 0px);}
+	.js-cp-banner-btn-wrp {width: 100%;}
+	div#js-tk-filter div.tk-search-value button {margin-right: -6px;}
+	div.js-tkt-det-left {padding-left: 0px;}
+	div#js-history-row span.js-data {float: right;border-left:none;}
+	div#js-tk-main-wrapper div.js-right span.js-tk-title {margin-left: 5px;margin-right: 0px;float: right;}
+	div#js-tk-main-wrapper div.js-right span.js-tk-value {float: right;}
+	div#js-tk-main-wrapper img.ticketstatusimage {float: right;margin-top: 5px;}
+	div#js-tk-main-wrapper span.js-ticket-status {float: right;}
+	div#js-tk-main-wrapper span.js-ticket-priority {float: right;}
+	div.js-cp-cnt-left{padding-left: 0;}
+	form.jsstadmin-data-wrp div#js-tk-filter div.tk-search-value select {background-position: calc(100% - 95%);}
+	form#userpopupsearch div.search-center div.js-search-value-button {float: right;}
+	form#userpopupsearch div.search-center div.js-search-value-button div.js-button {float: right;}
+	div.js-report-detail-body:last-child {border-right: 1px solid #ebecec !important;}
+	table#js-table tbody tr td {border: none;}
+	div#js-tk-atags a{float: right;}	
+	div#js-tk-wrapper div.js-middle{border-left:0 !important;}
+	div#js-tk-wrapper div.js-bottom span.js-tk-actions{float: unset;}
+	div#js-firstrow div.js-col-md-4.js-padding-null span.js-created{border-left:0;}
+	div#js-firstrow .ticket-id{border-left:0;}
+	div#js-ticket-threads{padding-right: unset;padding-left:15px}
+	div#js-tk-cparea div.js-title{text-align: right;}
+	div.idTabs span{float: unset;margin:unset;}
+	div.idTabs span a{float: right;}
+	table#js-table tbody td{text-align:right !important;}
+	table#js-table tbody td::before{margin-left:20px;margin-right:unset;}
+	div#userpopup div.js-submit-container{width:100%;display: inline-block;float: left;}
+	div.js-admin-staff-wrapper div.js-col-md-4{width:100%;}
+	div.js-admin-staff-wrapper div.js-report-staff-image-wrapper{margin:10px 10px 10px 0px;}
+	div.js-admin-staff-wrapper div.js-col-md-8 div.js-admin-report-box{float: right;}
+	div.js-col-md-offset-1{margin-right:0px !important;}
+	div.js-admin-staff-wrapper div.js-col-md-8{padding-right:10px;padding-left:0px;}
+	div.js-admin-staff-wrapper div.js-col-md-8 div.js-admin-report-box{margin: 0px 0px 10px 10px;}
+	div.satisfaction-report-right{left:27px;right:unset;float: left;}
+	div#tabs_wrapper div.js-row div.js-config-title{text-align: right;}
+}
+@media(min-width:668px) and (max-width: 768px){
+	a.ticket-edit-time-button {float: right;}
+	div#js-tk-filter div.tk-search-value div.field-calendar input {width: calc(100% - 0px);}
+	div#js-tk-filter div.tk-search-value button {margin-right: -6px;}
+	div.js-tkt-det-left {padding-left: 0px;}
+	div#js-tk-main-wrapper div.js-right span.js-tk-title {margin-left: 5px;margin-right: 0px;float: right;}
+	div#js-tk-main-wrapper div.js-right span.js-tk-value {float: right;}
+	div#js-tk-main-wrapper img.ticketstatusimage {float: right;margin-top: 5px;}
+	div#js-tk-main-wrapper span.js-ticket-status {float: right;}
+	div#js-tk-main-wrapper span.js-ticket-priority {float: right;}
+	form#userpopupsearch div.search-center div.js-search-value-button {float: right;}
+	form#userpopupsearch div.search-center div.js-search-value-button div.js-button {float: right;}
+	div.js-report-detail-body:last-child {border-right: 1px solid #ebecec !important;}
+	table#js-table tbody tr td {border: none;}
+	div.js-cp-cnt-left{padding-left: 0;}
+	div#js-tk-atags a{float: right;}
+	div#js-tk-wrapper div.js-middle{border-left:0 !important;}	
+	div#js-tk-cparea div.js-title{text-align: right;}
+	div#js-firstrow div.js-col-md-4.js-padding-null span.js-created{border-left:0;}
+	div#js-firstrow .ticket-id{border-left:0;}
+	div.js-requester-info div#req-moredetail div.js-col-md-4{float: right;}
+	div#js-ticket-threads{padding-right: unset;padding-left:15px}
+	div.idTabs span{float: unset;margin:unset;}
+	div.idTabs span a{float: right;}
+	table#js-table tbody td{text-align:right !important;}
+	table#js-table tbody td::before{margin-left:20px;margin-right:unset;}
+	div#tabs_wrapper div.js-row div.js-config-title{text-align: right;}
+	div.js-admin-staff-wrapper div.js-col-md-4{width:100%;}
+	div.js-admin-staff-wrapper div.js-col-md-8 div.js-admin-report-box{float: right;margin-right: 10px;}
+	/* div.js-col-md-offset-1{margin-right:0px !important;} */
+}

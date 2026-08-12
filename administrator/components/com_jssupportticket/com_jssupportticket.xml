@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5.0" method="upgrade">
+    <name>JS Support Ticket</name>
+    <creationDate>January 21st, 2026</creationDate>
+    <author>Joom Sky</author>
+    <authorEmail>ahmad@burujsolutions.com</authorEmail>
+    <authorURL>www.burujsolutions.com</authorURL>
+    <copyright>Copyright (c) 2015. All rights reserved.</copyright>
+    <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+    <version>1.2.8</version>
+    <description>JS Support Ticket a help desk component</description>>
+    <!-- Runs on install/uninstall/update;  -->
+    <scriptfile>script.php</scriptfile>
+	<updateservers>
+		<server type="extension" priority="2" name="JS Support Ticket">https://www.joomsky.com/jedupdates/js-support-ticket/js-support-ticket.xml</server>
+	</updateservers>
+
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.mysql.sql</file>
+        </sql>
+    </install>
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.mysql.sql</file>
+        </sql>
+    </uninstall>
+    <update> <!-- Runs on update; New in 2.5 -->
+        <schemas>
+            <schemapath type="mysql">sql/updates/mysql</schemapath>
+        </schemas>
+    </update>
+    <files folder="site">
+        <filename>index.html</filename>
+        <filename>jssupportticket.php</filename>
+        <filename>JSApplication.php</filename>
+        <filename>router.php</filename>
+        <folder>controllers</folder>
+        <folder>include</folder>
+        <folder>views</folder>
+    </files>
+    <administration>
+        <menu img="../administrator/components/com_jssupportticket/include/images/js.png"  link="option=com_jssupportticket&amp;view=jssupportticket&amp;layout=controlpanel" >JS_SUPPORT_TICKET</menu>
+        <menu  link="option=com_jssupportticket&amp;view=jssupportticket&amp;layout=controlpanel">JS_SUPPORT_TICKET</menu>		
+        <files folder="admin">
+            <filename>index.html</filename>
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>admin.jssupportticket.php</filename>
+            <filename>jssupportticket.php</filename>
+            <filename>JSApplication.php</filename>
+            <folder>controllers</folder>
+            <folder>extensions</folder>
+            <folder>include</folder>
+            <folder>models</folder>
+            <folder>tables</folder>
+            <folder>views</folder>
+            <folder>sql</folder>
+        </files>
+        <languages folder="admin/language">
+            <language tag="en-GB">en-GB.com_jssupportticket.ini</language>
+            <language tag="en-GB">en-GB.com_jssupportticket.sys.ini</language>
+        </languages>
+    </administration>
+</extension>
+

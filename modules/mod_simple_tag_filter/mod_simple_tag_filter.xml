@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="module" client="site" method="upgrade">
+    <name>mod_simple_tag_filter_FREE</name>
+    <author>Blue-Coder.com</author>
+    <creationDate>2026-06-29</creationDate>
+    <copyright>Copyright (C) 2026 Blue-Coder.com. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorUrl>https://Blue-Coder.com</authorUrl>
+    <version>1.0.0</version>
+    <description>MOD_SIMPLE_TAG_FILTER_XML_DESCRIPTION</description>
+    <namespace path="src">Bluecoder\Module\SimpleTagFilter</namespace>
+    <files>
+        <folder module="mod_simple_tag_filter">services</folder>
+        <folder>src</folder>
+        <folder>tmpl</folder>
+        <file>env.php</file>
+    </files>
+    <media destination="mod_simple_tag_filter" folder="media">
+        <folder>css</folder>
+        <folder>images</folder>
+        <folder>js</folder>
+        <filename>joomla.asset.json</filename>
+    </media>
+    <languages>
+        <language tag="en-GB">language/en-GB/mod_simple_tag_filter.ini</language>
+        <language tag="en-GB">language/en-GB/mod_simple_tag_filter.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" addfieldprefix="Bluecoder\Module\SimpleTagFilter\Site\Field">
+
+                <field
+                        name="display"
+                        type="Stflist"
+                        label="MOD_SIMPLE_TAG_FILTER_FIELD_DISPLAY_LABEL"
+                        layout="joomla.form.field.list-fancy-select"
+                        default="_buttons_single"
+                        required="true"
+                >
+                    <option value="_buttons_single">MOD_SIMPLE_TAG_FILTER_FIELD_BUTTONS_LABEL</option>
+                    <option value="_buttons_multi" edition="100" multiselect="true">MOD_SIMPLE_TAG_FILTER_FIELD_BUTTONS_MULTI_LABEL</option>
+                    <option value="_dropdown" edition="100">MOD_SIMPLE_TAG_FILTER_FIELD_DROP_DOWN_LIST_LABEL</option>
+                </field>
+
+                <field
+                        name="styling"
+                        type="list"
+                        label="MOD_SIMPLE_TAG_FILTER_FIELD_STYLE_LABEL"
+                        default="tags"
+                        validate="options"
+                        showon="display:_buttons_single"
+                >
+                    <option value="tags">MOD_SIMPLE_TAG_FILTER_FIELD_STYLE_TAGS_LABEL</option>
+                    <option value="tabs">MOD_SIMPLE_TAG_FILTER_FIELD_STYLE_TABS_LABEL</option>
+                </field>
+
+                <field
+                        name="alignment"
+                        type="list"
+                        label="MOD_SIMPLE_TAG_FILTER_FIELD_ALIGNMENT_LABEL"
+                        default="start"
+                        validate="options"
+                        showon="display!:_dropdown"
+                >
+                    <option value="start">MOD_SIMPLE_TAG_FILTER_FIELD_ALIGNMENT_START_LABEL</option>
+                    <option value="center">MOD_SIMPLE_TAG_FILTER_FIELD_ALIGNMENT_CENTER_LABEL</option>
+                </field>
+
+                <field
+                        name="parentTag"
+                        type="tag"
+                        label="MOD_SIMPLE_TAG_FILTER_PARENT_TAG_LABEL"
+                        description="MOD_SIMPLE_TAG_FILTER_PARENT_TAG_DESC"
+                        multiple="true"
+                        filter="intarray"
+                        mode="nested"
+                />
+
+                <field
+                        name="preset"
+                        type="stftag"
+                        label="MOD_SIMPLE_TAG_FILTER_PRESET_TAG_LABEL"
+                        description="MOD_SIMPLE_TAG_FILTER_PRESET_TAG_DESC"
+                        multiple="true"
+                        filter="int"
+                        mode="nested"
+                        data-edition="100"
+                >
+                    <option value="0">JOPTION_SELECT_TAG</option>
+                </field>
+
+                <field
+                        name="maximum"
+                        type="number"
+                        label="MOD_SIMPLE_TAG_FILTER_MAX_LABEL"
+                        default="5"
+                        filter="integer"
+                        min="0"
+                        validate="number"
+                />
+
+                <field
+                        name="timeframe"
+                        type="list"
+                        label="MOD_SIMPLE_TAG_FILTER_FIELD_TIMEFRAME_LABEL"
+                        default="alltime"
+                        validate="options"
+                >
+                    <option value="alltime">MOD_SIMPLE_TAG_FILTER_FIELD_ALL_TIME</option>
+                    <option value="hour">MOD_SIMPLE_TAG_FILTER_FIELD_LAST_HOUR</option>
+                    <option value="day">MOD_SIMPLE_TAG_FILTER_FIELD_LAST_DAY</option>
+                    <option value="week">MOD_SIMPLE_TAG_FILTER_FIELD_LAST_WEEK</option>
+                    <option value="month">MOD_SIMPLE_TAG_FILTER_FIELD_LAST_MONTH</option>
+                    <option value="year">MOD_SIMPLE_TAG_FILTER_FIELD_LAST_YEAR</option>
+                </field>
+
+                <field
+                        name="order_value"
+                        type="Stflist"
+                        label="MOD_SIMPLE_TAG_FILTER_FIELD_ORDER_VALUE_LABEL"
+                        default="title"
+                        validate="options"
+                >
+                    <option value="title">MOD_SIMPLE_TAG_FILTER_FIELD_ORDER_VALUE_TITLE</option>
+                    <option value="order" edition="100">MOD_SIMPLE_TAG_FILTER_FIELD_ORDER_TAG_ORDER</option>
+                    <option value="count" edition="100">MOD_SIMPLE_TAG_FILTER_FIELD_ORDER_VALUE_COUNT</option>
+                    <option value="rand()" edition="100">MOD_SIMPLE_TAG_FILTER_FIELD_ORDER_VALUE_RANDOM</option>
+                </field>
+
+                <field
+                        name="order_direction"
+                        type="list"
+                        label="JGLOBAL_ORDER_DIRECTION_LABEL"
+                        default="1"
+                        filter="integer"
+                        validate="options"
+                >
+                    <option value="0">JGLOBAL_ORDER_ASCENDING</option>
+                    <option value="1">JGLOBAL_ORDER_DESCENDING</option>
+                </field>
+
+                <field
+                        name="display_count"
+                        type="stfradio"
+                        data-edition="100"
+                        layout="joomla.form.field.radio.switcher"
+                        label="MOD_SIMPLE_TAG_FILTER_FIELD_DISPLAY_COUNT_LABEL"
+                        default="0"
+                        filter="integer"
+                >
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field
+                        name="context"
+                        type="Stflist"
+                        label="MOD_SIMPLE_TAG_FILTER_FIELD_CONTEXT_LABEL"
+                        description="MOD_SIMPLE_TAG_FILTER_FIELD_CONTEXT_DESC"
+                        layout="joomla.form.field.list-fancy-select"
+                        default="com_content.category"
+                        required="true"
+                >
+                    <option value="com_content.category">
+                        MOD_SIMPLE_TAG_FILTER_FIELD_COM_CONTENT_CATEGORY_LABEL
+                    </option>
+                    <option value="com_ochsubscriptions.products" edition="100">
+                        MOD_SIMPLE_TAG_FILTER_FIELD_COM_OCHSUBSCRIPTIONS_PRODUCTS_LABEL
+                    </option>
+                </field>
+            </fieldset>
+            <fieldset name="advanced">
+                <field
+                        name="layout"
+                        type="modulelayout"
+                        label="JFIELD_ALT_LAYOUT_LABEL"
+                        class="form-select"
+                        default="_:default"
+                        validate="moduleLayout"
+                />
+
+                <field
+                        name="moduleclass_sfx"
+                        type="textarea"
+                        label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+                        rows="3"
+                        validate="CssIdentifier"
+                />
+
+                <field
+                        name="owncache"
+                        type="list"
+                        label="COM_MODULES_FIELD_CACHING_LABEL"
+                        default="1"
+                        filter="integer"
+                        validate="options"
+                >
+                    <option value="1">JGLOBAL_USE_GLOBAL</option>
+                    <option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+                </field>
+
+                <field
+                        name="cache_time"
+                        type="number"
+                        label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+                        default="900"
+                        filter="integer"
+                />
+            </fieldset>
+        </fields>
+    </config>
+</extension>

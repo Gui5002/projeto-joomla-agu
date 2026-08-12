@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" version="1.7.0" method="upgrade">
+	<name>Mx Awesome News</name>
+	<author>mixwebtemplates</author>
+	<creationDate>July 13, 2020</creationDate>
+	<copyright>Copyright (C) http://www.mixwebtemplates.com. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>support@mixwebtemplates.com</authorEmail>
+	<authorUrl>www.mixwebtemplates.com</authorUrl>
+	<version>4.2.3</version>	
+		<description>	
+	<![CDATA[<link href="../modules/mod_mx_awesomenews/assets/css/admin.css" rel="stylesheet" type="text/css" media="all" />
+	<h1>Mx Awesome News free</h1>
+	<div style="margin:0 0 0 10px; font-size:15px;">Mx Awesome News Module free version from <a href="http://www.mixwebtemplates.com" target="_blank">mixwebtemplates.com</a>. </br>The Styles and some features in free verions are limited.</div>
+	<h3>Userful links</h3>
+	<ul><li><a target='_blank' href='https://www.mixwebtemplates.com/joomla-templates'>Joomla templates</a></li>
+	<li><a target='_blank' href='https://www.mixwebtemplates.com/contact'>Report bug</a></li></ul>
+						
+		<div class="footer_review">
+				Like this extensions? <a href="https://extensions.joomla.org/extension/news-display/articles-display/mx-awesome-news/" target="_blank">Leave a review on JED</a>
+				<a class="stars" href="https://extensions.joomla.org/extension/news-display/articles-display/mx-awesome-news/" target="_blank">
+					<span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span>
+				</a>
+			</div>
+		]]></description>
+		
+	<files>
+		<filename module="mod_mx_awesomenews">mod_mx_awesomenews.php</filename>
+		<filename>index.html</filename>
+		<folder>assets</folder>
+		<folder>tmpl</folder>
+		<folder>field</folder>
+	</files>
+	<updateservers>
+  		<server type="extension" priority="1" name="Mx Awesome News"><![CDATA[https://www.mixwebtemplates.com/updates/mod_mx_awesomenews_free.xml]]></server>
+  	</updateservers>
+	<config>
+		<fields name="params">
+			
+			<fieldset name="settings" label="General Settings">	
+				<field name="get_style" type="list" default="default" label="Style" description="Select a style" >
+					<option value="style3" disabled="true">Default (Availabe in Pro)</option>
+					<option value="style1" disabled="true">Style 1 (Availabe in Pro)</option>
+					<option value="style2" disabled="true">Style 2 (Availabe in Pro)</option>
+					<option value="default">Style 3</option>
+					<option value="style4" disabled="true">Style 4 (Availabe in Pro)</option>
+					<option value="style5" disabled="true">Style 5 (Availabe in Pro)</option>
+					<option value="style6" disabled="true">Style 6 (Availabe in Pro)</option>
+					<option value="style7" disabled="true">Style 7 (Availabe in Pro)</option>
+					<option value="style8" disabled="true">Style 8 (Availabe in Pro)</option>
+					<option value="style9" disabled="true">Style 9 (Availabe in Pro)</option>
+					<option value="style10" disabled="true">Style 10 (Availabe in Pro)</option>
+					<option value="style11" disabled="true">Style 11 (Availabe in Pro)</option>
+					<option value="style12" disabled="true">Style 12 (Availabe in Pro)</option>
+					<option value="style13" disabled="true">Style 13 (Availabe in Pro)</option>
+					<option value="style14" disabled="true">Style 14 (Availabe in Pro)</option>
+					<option value="style15" disabled="true">Style 15 (Availabe in Pro)</option>
+					<option value="style16" disabled="true">Style 16 (Availabe in Pro)</option>
+					<option value="style17" disabled="true">Style 17 (Availabe in Pro)</option>
+				</field>	
+				
+				<field name="get_vers" type="list" default="img-slice-wrap-two" label="Version" description="Select Version"  showon="get_style:default">
+					<option value="" disabled="true">one (Availabe in Pro)</option>
+					<option value="img-slice-wrap-two">two</option>
+					<option value="" disabled="true">three (Availabe in Pro)</option>
+				</field>
+										
+				<field name="ts5_height" type="combo" default="400" label="Item Heigh" description="Item Heigh. Example 450"  showon="get_style:style5" >
+					<option value="200">200</option>
+					<option value="300">300</option>
+					<option value="400">400</option>
+					<option value="500">500</option>
+					<option value="600">600</option>
+				</field>						
+				<field name="sliderload" type="radio" default="0" label="Version" description="Load items in Slider or standard Version" checked="checked" class="btn-group">
+					<option value="0">Standard</option>
+					<option value="1" disabled="true">Slider (Pro)</option>
+				</field>
+				<field name="container_fix" type="text" default="0" label="Item Distance" description="Disatance betwin each team members." />
+				<field name="csm_back" type="radio" default="0" label="Use custom colors" description="Use custom colors" class="btn-group">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+
+				<field name="bgm_color" type="color" format="rgba" default="" label="Background Color" description="Background Color" showon="csm_back:1"/>
+				<field name="tx_color" type="color" format="rgba" default="" label="Color" description="Color" showon="csm_back:1"/>
+										
+				<field name="fontload" type="radio" default="0" label="Font awesome" description="Load font awesome only in case of icons issues" checked="checked" class="btn-group">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				
+			</fieldset>	
+			<fieldset name="DataSource" label="Data Source">	
+			
+				<field name="get_source" type="radio" class="btn-group btn-group-yesno"  filter="integer" default="folder_so" label="Source" description="Select a source" >
+					<option value="1">Articles (Pro)</option>
+					<option value="2">Custom Items</option>
+				</field>
+		<field name="ga_items" type="mysubform" formsource="modules/mod_mx_awesomenews/field/items.xml" class="advancedSelect" min="1" max="50" multiple="true" groupByFieldset="true" label="Items(s)" description="Add Items(s) to display" />
+   
+			</fieldset>
+
+			<fieldset name="slider_settings" label="Slider Settings">
+			<field name="image_width" type="list" default="4" label="Items" description="Number of items displayed">
+					<option value="1">1 Item</option>
+					<option value="2">2 Items</option>
+					<option value="3">3 Items</option>
+					<option value="4">4 Items</option>
+					<option value="5">5 Items</option>
+					<option value="6">6 Items</option>
+					<option value="7">7 Items</option>
+					<option value="8">8 Items</option>
+					<option value="9">9 Items</option>
+					<option value="10">10 Items</option>
+				</field>
+				<field name="image_width_tabl" type="list" default="3" label="Items (Tab Landscape)" description="Items (Tab Landscape)">
+					<option value="1">1 Item</option>
+					<option value="2">2 Items</option>
+					<option value="3">3 Items</option>
+					<option value="4">4 Items</option>
+					<option value="5">5 Items</option>
+					<option value="6">6 Items</option>
+					<option value="7">7 Items</option>
+					<option value="8">8 Items</option>
+					<option value="9">9 Items</option>
+					<option value="10">10 Items</option>
+				</field>
+				<field name="image_width_tabp" type="list" default="3" label="Items (Tab Portrait)" description="Items (Tab Portrait)">
+					<option value="1">1 Item</option>
+					<option value="2">2 Items</option>
+					<option value="3">3 Items</option>
+					<option value="4">4 Items</option>
+					<option value="5">5 Items</option>
+					<option value="6">6 Items</option>
+					<option value="7">7 Items</option>
+					<option value="8">8 Items</option>
+					<option value="9">9 Items</option>
+					<option value="10">10 Items</option>
+				</field>
+				<field name="image_width_mobl" type="list" default="2" label="Items (Mob Landscape)" description="Items (Mob Landscape)">
+					<option value="1">1 Item</option>
+					<option value="2">2 Items</option>
+					<option value="3">3 Items</option>
+					<option value="4">4 Items</option>
+					<option value="5">5 Items</option>
+					<option value="6">6 Items</option>
+					<option value="7">7 Items</option>
+					<option value="8">8 Items</option>
+					<option value="9">9 Items</option>
+					<option value="10">10 Items</option>
+				</field>
+				<field name="image_width_mobp" type="list" default="1" label="Items (Mob Portrait)" description="Items (Mob Portrait)">
+					<option value="1">1 Item</option>
+					<option value="2">2 Items</option>
+					<option value="3">3 Items</option>
+					<option value="4">4 Items</option>
+					<option value="5">5 Items</option>
+					<option value="6">6 Items</option>
+					<option value="7">7 Items</option>
+					<option value="8">8 Items</option>
+					<option value="9">9 Items</option>
+					<option value="10">10 Items</option>
+				</field>	
+				<field name="autoplay" type="list" default="true" label="Auto play" description="Auto play">
+					<option value="true">Yes</option>
+					<option value="false">No</option>
+				</field>
+				<field name="autoplay-timeout" type="list" default="5000" label="Sliding Time" description="Sliding Time">
+					<option value="1000">1 sec</option>
+					<option value="2000">2 sec</option>
+					<option value="3000">3 sec</option>
+					<option value="4000">4 sec</option>
+					<option value="5000">5 sec</option>
+					<option value="6000">6 sec</option>
+					<option value="7000">7 sec</option>
+					<option value="8000">8 sec</option>
+					<option value="9000">9 sec</option>
+					<option value="10000">10 sec</option>
+					<option value="15000">15 sec</option>
+					<option value="20000">20 sec</option>
+				</field>
+				<field name="autoplay-speed" type="list" default="1000" label="Sliding speed" description="Sliding speed">
+					<option value="500">0.5 sec</option>
+					<option value="600">0.6 sec</option>
+					<option value="700">0.7 sec</option>
+					<option value="800">0.8 sec</option>
+					<option value="900">0.9 sec</option>
+					<option value="1000">1 sec</option>
+					<option value="2000">2 sec</option>
+					<option value="3000">3 sec</option>
+				</field>
+				<field name="autoplay-hover-pause" type="list" default="true" label="Auto play hover pause" description="Auto play hover pause">
+					<option value="true">Yes</option>
+					<option value="false">No</option>
+				</field>
+				<field name="dataLoop" type="list" default="true" label="Loop" description="Loop">
+					<option value="true">Yes</option>
+					<option value="false">No</option>
+				</field>
+				<field name="dataNav" type="list" default="true" label="Navigation" description="Show Navigation">
+					<option value="true">Yes</option>
+					<option value="false">No</option>
+				</field>
+				<field name="navPosit" type="list" default="owl-nav" label="Navigation position" description="Next prev buttom position">
+					<option value="nav-bottom-right">Bottom right</option>
+					<option value="nav-outside-top">Top right</option>
+					<option value="owl-nav">Center</option>
+				</field>
+				<field name="navStyle" type="list" default="" label="Navigation Style" description="Navigation Style">
+					<option value="nav-light">Light</option>
+					<option value="">Dark</option>
+				</field>
+				<field name="navRounded" type="list" default="" label="Nav Buttons Rounded" description="Navigation Buttons Rounded">
+					<option value="nav-rounded">Yes</option>
+					<option value="">No</option>
+				</field>
+								
+				<field name="loadjquery" type="radio" class="btn-group btn-group-yesno" default="0" label="Load Jquery" description="Load Jquery">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+			</fieldset>
+			
+			<fieldset name="Standart" label="Standart Setting" >	
+				<field name="ju_image_width" type="list" default="25%" label="Items" description="Number of items displayed">
+					<option value="100%">1 Column</option>
+					<option value="50%">2 Column</option>
+					<option value="33.333%">3 Column</option>
+					<option value="25%">4 Column</option>
+					<option value="20%">5 Column</option>
+					<option value="16.666%">6 Column</option>
+					<option value="14.286%">7 Column</option>
+					<option value="12.5%">8 Column</option>
+					<option value="11.111%">9 Column</option>
+					<option value="10%">10 Column</option>
+				</field>
+				<field name="ju_image_width_tabl" type="list" default="33.333%" label="Items (Tab Landscape)" description="Items (Tab Landscape)">
+					<option value="100%">1 Column</option>
+					<option value="50%">2 Column</option>
+					<option value="33.333%">3 Column</option>
+					<option value="25%">4 Column</option>
+					<option value="20%">5 Column</option>
+					<option value="16.666%">6 Column</option>
+					<option value="14.286%">7 Column</option>
+					<option value="12.5%">8 Column</option>
+					<option value="11.111%">9 Column</option>
+					<option value="10%">10 Column</option>
+				</field>
+				<field name="ju_image_width_tabp" type="list" default="33.333%" label="Items (Tab Portrait)" description="Items (Tab Portrait)">
+					<option value="100%">1 Column</option>
+					<option value="50%">2 Column</option>
+					<option value="33.333%">3 Column</option>
+					<option value="25%">4 Column</option>
+					<option value="20%">5 Column</option>
+					<option value="16.666%">6 Column</option>
+					<option value="14.286%">7 Column</option>
+					<option value="12.5%">8 Column</option>
+					<option value="11.111%">9 Column</option>
+					<option value="10%">10 Column</option>
+				</field>
+				<field name="ju_image_width_mobl" type="list" default="50%" label="Items (Mob Landscape)" description="Items (Mob Landscape)">
+					<option value="100%">1 Column</option>
+					<option value="50%">2 Column</option>
+					<option value="33.333%">3 Column</option>
+					<option value="25%">4 Column</option>
+					<option value="20%">5 Column</option>
+					<option value="16.666%">6 Column</option>
+					<option value="14.286%">7 Column</option>
+					<option value="12.5%">8 Column</option>
+					<option value="11.111%">9 Column</option>
+					<option value="10%">10 Column</option>
+				</field>
+				<field name="ju_image_width_mobp" type="list" default="100%" label="Items (Mob Portrait)" description="Items (Mob Portrait)">
+					<option value="100%">1 Column</option>
+					<option value="50%">2 Column</option>
+					<option value="33.333%">3 Column</option>
+					<option value="25%">4 Column</option>
+					<option value="20%">5 Column</option>
+					<option value="16.666%">6 Column</option>
+					<option value="14.286%">7 Column</option>
+					<option value="12.5%">8 Column</option>
+					<option value="11.111%">9 Column</option>
+					<option value="10%">10 Column</option>
+				</field>
+			</fieldset>				
+			<fieldset name="custom" label="Custom CSS" >	
+                <field name="css_code" type="textarea" filter="safehtml" default="" label="Css code" description="Here add css code" />					
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="moduleclass_sfx" type="text"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+				<field name="layout" type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+								<field name="owncache" type="list" default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC" >
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING
+					</option>
+				</field>
+				<field name="cache_time" type="text" default="900"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

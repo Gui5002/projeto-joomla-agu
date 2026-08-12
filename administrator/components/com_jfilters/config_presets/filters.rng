@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="filters" ns="urn:jfilters:filters">
+      <attribute name="xmlns:xsi">
+        <value>http://www.w3.org/2001/XMLSchema-instance</value>
+      </attribute>
+      <attribute name="xmlns">
+        <value>urn:jfilters:filters</value>
+      </attribute>
+      <attribute name="xsi:schemaLocation">
+        <value>urn:jfilters:filters filters.rng</value>
+      </attribute>
+      <zeroOrMore>
+        <ref name="filter"/>
+      </zeroOrMore>
+    </element>
+  </start>
+  
+  <define name="filter">
+    <element name="filter">
+      <attribute name="name">
+        <data type="string"/>
+      </attribute>
+      <attribute name="label">
+        <data type="string"/>
+      </attribute>
+      <attribute name="dynamic">
+        <choice>
+          <value>true</value>
+          <value>false</value>
+        </choice>
+      </attribute>
+      <attribute name="root">
+        <choice>
+          <value>true</value>
+          <value>false</value>
+        </choice>
+      </attribute>
+      <ref name="definition"/>
+      <ref name="value"/>
+      <optional>
+        <ref name="valueRefItem"/>
+      </optional>
+    </element>
+  </define>
+  
+  <define name="definition">
+    <element name="definition">
+      <ref name="id"/>
+      <ref name="title"/>
+      <ref name="context"/>
+    </element>
+  </define>
+  
+  <define name="id">
+    <element name="id">
+      <data type="int"/>
+    </element>
+  </define>
+  
+  <define name="title">
+    <element name="title">
+      <data type="string"/>
+    </element>
+  </define>
+  
+  <define name="context">
+    <element name="context">
+      <data type="string"/>
+    </element>
+  </define>
+  
+  <define name="value">
+    <element name="value">
+      <attribute name="dbTable">
+        <data type="string"/>
+      </attribute>
+      <attribute name="class">
+        <data type="string"/>
+      </attribute>
+      <attribute name="tree">
+        <choice>
+          <value>true</value>
+          <value>false</value>
+        </choice>
+      </attribute>
+      <ref name="valueElement"/>
+      <ref name="label"/>
+      <ref name="alias"/>
+      <optional>
+        <ref name="parentValueId"/>
+      </optional>
+      <optional>
+        <ref name="lft"/>
+      </optional>
+      <optional>
+        <ref name="rgt"/>
+      </optional>
+      <optional>
+        <ref name="extension"/>
+      </optional>
+      <optional>
+        <ref name="state"/>
+      </optional>
+      <optional>
+        <ref name="language"/>
+      </optional>
+      <optional>
+        <ref name="metadescription"/>
+      </optional>
+      <optional>
+        <ref name="metakeywords"/>
+      </optional>
+      <optional>
+        <ref name="requests"/>
+      </optional>
+    </element>
+  </define>
+  
+  <define name="valueElement">
+    <element name="value">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+      <attribute name="type">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="label">
+    <element name="label">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="alias">
+    <element name="alias">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="parentValueId">
+    <element name="parentValueId">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="lft">
+    <element name="lft">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="rgt">
+    <element name="rgt">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="extension">
+    <element name="extension">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="state">
+    <element name="state">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="language">
+    <element name="language">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="metadescription">
+    <element name="metadescription">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="metakeywords">
+    <element name="metakeywords">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="requests">
+    <element name="requests">
+      <zeroOrMore>
+        <ref name="request"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  
+  <define name="request">
+    <element name="request">
+      <attribute name="extension">
+        <data type="string"/>
+      </attribute>
+      <attribute name="view">
+        <data type="string"/>
+      </attribute>
+      <data type="string"/>
+    </element>
+  </define>
+  
+  <define name="valueRefItem">
+    <element name="valueRefItem">
+      <attribute name="dbTable">
+        <data type="string"/>
+      </attribute>
+      <ref name="itemId"/>
+      <ref name="valueId"/>
+    </element>
+  </define>
+  
+  <define name="itemId">
+    <element name="itemId">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+      <attribute name="reference">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  
+  <define name="valueId">
+    <element name="valueId">
+      <attribute name="dbColumn">
+        <data type="string"/>
+      </attribute>
+      <attribute name="reference">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+</grammar>
