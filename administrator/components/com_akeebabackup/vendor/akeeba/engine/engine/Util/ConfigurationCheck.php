@@ -29,6 +29,27 @@ use Akeeba\Engine\Platform;
 class ConfigurationCheck
 {
 	/**
+	 * Returns the configured output directory with the platform's stock directory macros (e.g. [SITEROOT])
+	 * expanded to their actual values.
+	 *
+	 * @return  string
+	 */
+	private function getExpandedOutputDirectory()
+	{
+		$stock_dirs = Platform::getInstance()->get_stock_directories();
+
+		$registry = Factory::getConfiguration();
+		$outdir   = (string) $registry->get('akeeba.basic.output_directory');
+
+		foreach ($stock_dirs as $macro => $replacement)
+		{
+			$outdir = str_replace($macro, (string) $replacement, $outdir);
+		}
+
+		return $outdir;
+	}
+
+	/**
 	 * The configuration checks to perform
 	 *
 	 * @var  array
@@ -105,16 +126,7 @@ class ConfigurationCheck
 
 		if (is_null($status))
 		{
-			$stock_dirs = Platform::getInstance()->get_stock_directories();
-
-			// Get output writable status
-			$registry = Factory::getConfiguration();
-			$outdir   = $registry->get('akeeba.basic.output_directory');
-
-			foreach ($stock_dirs as $macro => $replacement)
-			{
-				$outdir = str_replace($macro, $replacement, $outdir);
-			}
+			$outdir = $this->getExpandedOutputDirectory();
 
 			$status['output'] = @is_writable($outdir);
 		}
@@ -397,15 +409,7 @@ class ConfigurationCheck
 	 */
 	private function q003()
 	{
-		$stock_dirs = Platform::getInstance()->get_stock_directories();
-
-		$registry = Factory::getConfiguration();
-		$outdir   = $registry->get('akeeba.basic.output_directory');
-
-		foreach ($stock_dirs as $macro => $replacement)
-		{
-			$outdir = str_replace($macro, $replacement, $outdir);
-		}
+		$outdir = $this->getExpandedOutputDirectory();
 
 		$outdir_real = @realpath($outdir);
 
@@ -461,16 +465,7 @@ class ConfigurationCheck
 	 */
 	private function q101()
 	{
-		$stock_dirs = Platform::getInstance()->get_stock_directories();
-
-		// Get output writable status
-		$registry = Factory::getConfiguration();
-		$outdir   = $registry->get('akeeba.basic.output_directory');
-
-		foreach ($stock_dirs as $macro => $replacement)
-		{
-			$outdir = str_replace($macro, $replacement, $outdir);
-		}
+		$outdir = $this->getExpandedOutputDirectory();
 
 		return $this->checkOpenBasedirs($outdir);
 	}
@@ -623,15 +618,8 @@ class ConfigurationCheck
 	{
 		$stock_dirs = Platform::getInstance()->get_stock_directories();
 
-		$registry = Factory::getConfiguration();
-		$outdir   = $registry->get('akeeba.basic.output_directory');
-
-		foreach ($stock_dirs as $macro => $replacement)
-		{
-			$outdir = str_replace($macro, $replacement, $outdir);
-		}
-
-		$default = $stock_dirs['[DEFAULT_OUTPUT]'];
+		$outdir  = $this->getExpandedOutputDirectory();
+		$default = (string) $stock_dirs['[DEFAULT_OUTPUT]'];
 
 		$outdir  = Factory::getFilesystemTools()->TranslateWinPath($outdir);
 		$default = Factory::getFilesystemTools()->TranslateWinPath($default);

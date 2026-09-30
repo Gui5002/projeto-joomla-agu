@@ -11,13 +11,11 @@
  */
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 $document = Factory::getDocument();
-$document->addStyleSheet(Uri::root() . 'administrator/components/com_jssupportticket/include/css/custom.boots.css');
-$document->addStyleSheet(Uri::root() . 'administrator/components/com_jssupportticket/include/css/jsticketadmin.css');
 if (JVERSION < 3) {
     HTMLHelper::_('behavior.mootools');
     $document->addScript('components/com_jssupportticket/include/js/jquery.js');
@@ -32,11 +30,11 @@ HTMLHelper::_('script', $tag . '/calendar-setup.js', array('version' => 'auto', 
 */
 HTMLHelper::_('behavior.formvalidator');
 $yesno = array(
-    '0' => array('value' => 1, 'text' => Text::_('Yes')),
-    '1' => array('value' => 0, 'text' => Text::_('No')),);
+    '0' => array('value' => 1, 'text' => Text::_('JYES')),
+    '1' => array('value' => 0, 'text' => Text::_('JNO')),);
 $fieldsize = array(
-    '0' => array('value' => 50, 'text' => Text::_('50%')),
-    '1' => array('value' => 100, 'text' => Text::_('100%')));
+    '0' => array('value' => 50, 'text' => '50%'),
+    '1' => array('value' => 100, 'text' => '100%'));
 
 $fieldtype = array(
     '0' => array('value' => 'text', 'text' => Text::_('Text field')),
@@ -72,206 +70,188 @@ if (isset($this->userfield)) {
 }
 ?>
 
-<div id="js-tk-admin-wrapper">
-    <div id="js-tk-leftmenu">
-        <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
-    </div>
-    <div id="js-tk-cparea">
-        <div id="jsstadmin-wrapper-top">
-            <div id="jsstadmin-wrapper-top-left">
-                <div id="jsstadmin-breadcrunbs">
-                    <ul>
-                        <li><a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel" title="Dashboard"><?php echo Text::_('Dashboard'); ?></a></li>
-                        <li><?php echo Text::_('Add User Field'); ?></li>
-                    </ul>
-                </div>
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-screen-form">
+   <div id="js-tk-leftmenu">
+      <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
+   </div>
+   <div id="js-tk-cparea">
+      <?php
+      $jsstPageTitle = 'Add User Field';
+      $jsstBreadcrumb = array(
+          array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+          array('label_raw' => Text::_('Add User Field'), 'link' => null),
+      );
+      include_once('components/com_jssupportticket/views/partials/pageheader.php');
+      ?>
+      <div id="jsstadmin-data-wrp" class="js-ticket-box-shadow">
+         <form action="index.php" method="POST" name="adminForm" id="adminForm" >
+         <!-- old -->
+           <div class="js-form-wrapper">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Field Type'); ?><font class="required-notifier">*</font></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $lstype; ?></div>
+           </div>
+           <div class="js-form-wrapper">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><label for="fieldtitle"><?php echo Text::_('Field Title'); ?><font class="required-notifier">*</font></label></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value">
+               <input required="true" type="text" id="fieldtitle" name="fieldtitle" class="inputbox" value="<?php if (isset($this->userfield)) echo $this->userfield->fieldtitle; ?>"/></div>
+           </div>
+           <div class="js-form-wrapper for-terms-condtions-hide" id="for-combo-wrapper" style="display:none;">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Select','js-jobs') .'&nbsp;'. Text::_('Parent Field'); ?><font class="required-notifier">*</font></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value" id="for-combo"></div>
+           </div>
+           <div class="js-form-wrapper for-terms-condtions-hide">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Show on listing'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $showonlisting; ?></div>
+           </div>
+            <div class="js-form-wrapper for-terms-condtions-hide">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('User Published'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $lspublished; ?></div>
             </div>
-            <div id="jsstadmin-wrapper-top-right">
-                <div id="jsstadmin-config-btn">
-                    <a title="Configuration" href="index.php?option=com_jssupportticket&c=config&layout=config">
-                        <img alt="Configuration" src="components/com_jssupportticket/include/images/config.png">
-                    </a>
-                </div>
-                <div id="jsstadmin-vers-txt">
-                    <?php echo Text::_('Version').Text::_(' : '); ?>
-                    <span class="jsstadmin-ver">
-                        <?php $version = str_split($this->version);
-                        $version = implode('.', $version);
-                        echo $version; ?>
-                    </span>
-                </div>
+            <div class="js-form-wrapper for-terms-condtions-hide">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Visitor Published'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $isvisitorpublished; ?></div>
             </div>
-        </div>
-        <div id="js-tk-heading"><h1 class="jsstadmin-head-text"><?php echo Text::_('Add User Field'); ?></h1></div>
-        <div id="jsstadmin-data-wrp" class="js-ticket-box-shadow">
-        <form action="index.php" method="POST" name="adminForm" id="adminForm" >
-        <!-- old -->
-        <div class="js-form-wrapper">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Field Type'); ?><font class="required-notifier">*</font></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $lstype; ?></div>
-        </div>
-        <div class="js-form-wrapper">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><label for="fieldtitle"><?php echo Text::_('Field Title'); ?><font class="required-notifier">*</font></label></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value">
-            <input required="true" type="text" id="fieldtitle" name="fieldtitle" class="inputbox" value="<?php if (isset($this->userfield)) echo $this->userfield->fieldtitle; ?>"/></div>
-        </div>
-        <div class="js-form-wrapper for-terms-condtions-hide" id="for-combo-wrapper" style="display:none;">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Select','js-jobs') .'&nbsp;'. Text::_('Parent Field'); ?><font class="required-notifier">*</font></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value" id="for-combo"></div>
-        </div>
-        <div class="js-form-wrapper for-terms-condtions-hide">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Show on listing'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $showonlisting; ?></div>
-        </div>
-        <div class="js-form-wrapper for-terms-condtions-hide">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('User Published'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $lspublished; ?></div>
-        </div>
-        <div class="js-form-wrapper for-terms-condtions-hide">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Visitor Published'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $isvisitorpublished; ?></div>
-        </div>
-        <div class="js-form-wrapper for-terms-condtions-hide">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('User Search'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $search_user; ?></div>
-        </div>
-        <div class="js-form-wrapper for-terms-condtions-hide">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Visitor Search'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $search_visitor; ?></div>
-        </div>
-        <div class="js-form-wrapper for-terms-condtions-hide">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Required'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $lsrequired; ?></div>
-        </div>
-        <div class="js-form-wrapper for-terms-condtions-hide">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Field Size'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $fieldsize; ?></div>
-        </div>
+            <div class="js-form-wrapper for-terms-condtions-hide">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('User Search'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $search_user; ?></div>
+            </div>
+            <div class="js-form-wrapper for-terms-condtions-hide">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Visitor Search'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $search_visitor; ?></div>
+            </div>
+            <div class="js-form-wrapper for-terms-condtions-hide">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Required'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $lsrequired; ?></div>
+            </div>
+            <div class="js-form-wrapper for-terms-condtions-hide">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Field Size'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $fieldsize; ?></div>
+            </div>
 
-        <div id="for-combo-options" >
-            <?php
-            $arraynames = '';
-            $comma = '';
-            if (isset($this->userfieldparams) && $this->userfield->userfieldtype == 'depandant_field') {
-                foreach ($this->userfieldparams as $key => $val) {
-                    $textvar = $key;
-                    $textvar .='[]';
-                    $arraynames .= $comma . "$key";
-                    $comma = ',';
-                    ?>
-                    <div class="js-form-wrapper">
-                        <div class="js-form-title js-col-xs-12 js-col-md-2 js-title">
-                            <?php echo $key; ?>
-                        </div>
-                        <div class="js-col-lg-9 js-col-md-9 no-padding combo-options-fields" id="<?php echo $key; ?>">
-                            <?php
-                            if (!empty($val)) {
-                                foreach ($val as $each) {
-                                    ?>
-                                    <span class="input-field-wrapper">
-                                        <input name="<?php echo $textvar; ?>" id="<?php echo $textvar; ?>" value="<?php echo $each; ?>" class="inputbox one user-field" type="text">
-                                        <img class="input-field-remove-img" src="components/com_jssupportticket/include/images/delete.png">
-                                    </span><?php
-                                }
-                            }
-                            ?>
-                            <input id="depandant-field-button" onclick="getNextField( '<?php echo $key; ?>',this );" value="Add More" type="button">
-                        </div>
-                    </div><?php
-                }
-            }
-            ?>
-        </div>
-        <div id="divText" class="js-form-wrapper">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Max Length'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"> 
-                <input type="text" id="maxlength" name="maxlength" class="inputbox" value="<?php if (isset($this->userfield)) echo $this->userfield->maxlength; ?>" />
+            <div id="for-combo-options" >
+               <?php
+               $arraynames = '';
+               $comma = '';
+               if (isset($this->userfieldparams) && $this->userfield->userfieldtype == 'depandant_field') {
+                   foreach ($this->userfieldparams as $key => $val) {
+                       $textvar = $key;
+                       $textvar .='[]';
+                       $arraynames .= $comma . "$key";
+                       $comma = ',';
+                       ?>
+                       <div class="js-form-wrapper">
+                           <div class="js-form-title js-col-xs-12 js-col-md-2 js-title">
+                               <?php echo $key; ?>
+                           </div>
+                           <div class="js-col-lg-9 js-col-md-9 no-padding combo-options-fields" id="<?php echo $key; ?>">
+                               <?php
+                               if (!empty($val)) {
+                                   foreach ($val as $each) {
+                                       ?>
+                                       <span class="input-field-wrapper">
+                                           <input name="<?php echo $textvar; ?>" id="<?php echo $textvar; ?>" value="<?php echo $each; ?>" class="inputbox one user-field" type="text">
+                                           <img class="input-field-remove-img" src="components/com_jssupportticket/include/images/delete.png">
+                                       </span><?php
+                                   }
+                               }
+                               ?>
+                               <input id="depandant-field-button" onclick="getNextField( '<?php echo $key; ?>',this );" value="Add More" type="button">
+                           </div>
+                       </div><?php
+                   }
+               }
+               ?>
             </div>
-        </div>
-        <div class="js-form-wrapper divColsRows">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Columns'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><input type="text" id="cols" name="cols" class="inputbox" value="<?php if (isset($this->userfield)) echo $this->userfield->cols; ?>" /></div>
-        </div>
-        <div class="js-form-wrapper divColsRows">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Rows'); ?></div>
-            <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><input type="text" id="rows" name="rows" class="inputbox" value="<?php if (isset($this->userfield)) echo $this->userfield->rows; ?>" /></div>
-        </div>
-        <div id="divValues" class="js-form-wrapper divColsRowsno-margin">
-            <span class="js-admin-title"><?php echo Text::_('Use The Table Below To Add New Values'); ?></span>
-            <div class="page-actions no-margin">
-                <div id="user-field-values" class="no-padding">
-                    <?php
-                    if (isset($this->userfield) && $this->userfield->userfieldtype != 'depandant_field') {
-                        if (isset($this->userfieldparams) && !empty($this->userfieldparams)) {
-                            foreach ($this->userfieldparams as $key => $val) {
-                                ?>
-                                <span class="input-field-wrapper">
-                                <input type="text" class="inputbox one user-field" id="values" name="values[]" class="inputbox" value="<?php echo isset($val) ? $val : ''; ?>" />
-                                    <img class="input-field-remove-img" src="components/com_jssupportticket/include/images/delete.png" />
-                                </span>
-                            <?php
-                            }
-                        } else {
-                            ?>
-                            <span class="input-field-wrapper">
-                            <input type="text" class="inputbox one user-field" id="values" name="values[]" class="inputbox" value="<?php echo isset($val) ? $val : ''; ?>" />
-                                <img class="input-field-remove-img" src="components/com_jssupportticket/include/images/delete.png" />
-                            </span>
-                        <?php
-                        }
-                    }
-                    ?>
-                    <a class="js-button-link button user-field-val-button" id="user-field-val-button" onclick="insertNewRow();"><?php echo Text::_('Add Value') ?></a>
-                </div>  
+            <div id="divText" class="js-form-wrapper">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Max Length'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"> 
+                   <input type="text" id="maxlength" name="maxlength" class="inputbox" value="<?php if (isset($this->userfield)) echo $this->userfield->maxlength; ?>" />
+               </div>
             </div>
-        </div>
-        <div id="for-terms-condtions-show" class="for-terms-condtions-show">
-            <?php
-            $termsandconditions_text = '';
-            $termsandconditions_linktype = '';
-            $termsandconditions_link = '';
-            $termsandconditions_page = '';
-            if( isset($this->userfieldparams) && $this->userfieldparams != '' && is_array($this->userfieldparams) && !empty($this->userfieldparams)){
-                $termsandconditions_text = isset($this->userfieldparams['termsandconditions_text']) ? $this->userfieldparams['termsandconditions_text'] : '' ;
-                $termsandconditions_linktype = isset($this->userfieldparams['termsandconditions_linktype']) ? $this->userfieldparams['termsandconditions_linktype'] :'' ;
-                $termsandconditions_link = isset($this->userfieldparams['termsandconditions_link']) ? $this->userfieldparams['termsandconditions_link'] :'' ;
-                $termsandconditions_page = isset($this->userfieldparams['termsandconditions_page']) ? $this->userfieldparams['termsandconditions_page'] :'' ;
-            } ?>
-            <div class="js-form-wrapper">
-                <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Terms and Conditions Text'); ?></div>
-                <div class="js-form-field js-col-xs-12 js-col-md-10 js-value">
-                    <input type="text" id="termsandconditions_text" name="termsandconditions_text" class="inputbox" value="<?php echo $termsandconditions_text; ?>" />
-                </div>
-                <div class="js-form-desc">
-                    e.g "  I have read and agree to the [link] Terms and Conditions[/link].  " The text between [link] and [/link] will be linked to provided url or Joomla page.
-                </div>
+            <div class="js-form-wrapper divColsRows">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Columns'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><input type="text" id="cols" name="cols" class="inputbox" value="<?php if (isset($this->userfield)) echo $this->userfield->cols; ?>" /></div>
             </div>
-            <div class="js-form-wrapper">
-            <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Terms and Conditions Link Type'); ?><font class="required-notifier">*</font></div>
-                <?php
-                $linktype = array(
+            <div class="js-form-wrapper divColsRows">
+               <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Rows'); ?></div>
+               <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><input type="text" id="rows" name="rows" class="inputbox" value="<?php if (isset($this->userfield)) echo $this->userfield->rows; ?>" /></div>
+            </div>
+            <div id="divValues" class="js-form-wrapper divColsRowsno-margin">
+               <span class="js-admin-title"><?php echo Text::_('Use The Table Below To Add New Values'); ?></span>
+               <div class="page-actions no-margin">
+                  <div id="user-field-values" class="no-padding">
+                       <?php
+                       if (isset($this->userfield) && $this->userfield->userfieldtype != 'depandant_field') {
+                           if (isset($this->userfieldparams) && !empty($this->userfieldparams)) {
+                               foreach ($this->userfieldparams as $key => $val) {
+                                   ?>
+                                   <span class="input-field-wrapper">
+                                   <input type="text" class="inputbox one user-field jsst-userfield-value" name="values[]" value="<?php echo isset($val) ? $val : ''; ?>" />
+                                       <img class="input-field-remove-img" src="components/com_jssupportticket/include/images/delete.png" />
+                                   </span>
+                               <?php
+                               }
+                           } else {
+                               ?>
+                               <span class="input-field-wrapper">
+                               <input type="text" class="inputbox one user-field jsst-userfield-value" name="values[]" value="<?php echo isset($val) ? $val : ''; ?>" />
+                                   <img class="input-field-remove-img" src="components/com_jssupportticket/include/images/delete.png" />
+                               </span>
+                           <?php
+                           }
+                       }
+                       ?>
+                       <a class="js-button-link button user-field-val-button" id="user-field-val-button" onclick="insertNewRow();"><?php echo Text::_('Add Value') ?></a>
+                  </div>  
+               </div>
+            </div>
+            <div id="for-terms-condtions-show" class="for-terms-condtions-show">
+               <?php
+               $termsandconditions_text = '';
+               $termsandconditions_linktype = '';
+               $termsandconditions_link = '';
+               $termsandconditions_page = '';
+               if( isset($this->userfieldparams) && $this->userfieldparams != '' && is_array($this->userfieldparams) && !empty($this->userfieldparams)){
+                   $termsandconditions_text = isset($this->userfieldparams['termsandconditions_text']) ? $this->userfieldparams['termsandconditions_text'] : '' ;
+                   $termsandconditions_linktype = isset($this->userfieldparams['termsandconditions_linktype']) ? $this->userfieldparams['termsandconditions_linktype'] :'' ;
+                   $termsandconditions_link = isset($this->userfieldparams['termsandconditions_link']) ? $this->userfieldparams['termsandconditions_link'] :'' ;
+                   $termsandconditions_page = isset($this->userfieldparams['termsandconditions_page']) ? $this->userfieldparams['termsandconditions_page'] :'' ;
+               } ?>
+               <div class="js-form-wrapper">
+                   <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Terms and Conditions Text'); ?></div>
+                   <div class="js-form-field js-col-xs-12 js-col-md-10 js-value">
+                       <input type="text" id="termsandconditions_text" name="termsandconditions_text" class="inputbox" value="<?php echo $termsandconditions_text; ?>" />
+                   </div>
+                   <div class="js-form-desc">
+                       e.g "  I have read and agree to the [link] Terms and Conditions[/link].  " The text between [link] and [/link] will be linked to provided url or Joomla page.
+                   </div>
+               </div>
+               <div class="js-form-wrapper">
+                  <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Terms and Conditions Link Type'); ?><font class="required-notifier">*</font></div>
+                  <?php
+                  $linktype = array(
                     '0' => array('value' => 1, 'text' => Text::_('Direct Link')),
                     '1' => array('value' => 2, 'text' => Text::_('Joomla Article Page')));
-                $selectlinktype = HTMLHelper::_('select.genericList', $linktype, 'termsandconditions_linktype', 'class="inputbox"', 'value', 'text', $termsandconditions_linktype);
-                ?>
-                <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $selectlinktype; ?></div>
-            </div>
-            <div class="js-form-wrapper for-terms-condtions-linktype1" style="display: none;">
-                <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Terms and Conditions Link'); ?></div>
-                <div class="js-form-field js-col-xs-12 js-col-md-10 js-value">
-                    <input type="text" id="termsandconditions_link" name="termsandconditions_link" class="inputbox" value="<?php echo $termsandconditions_link; ?>" /></div>
-                </div>
+                  $selectlinktype = HTMLHelper::_('select.genericList', $linktype, 'termsandconditions_linktype', 'class="inputbox"', 'value', 'text', $termsandconditions_linktype);
+                  ?>
+                  <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo $selectlinktype; ?></div>
+               </div>
+               <div class="js-form-wrapper for-terms-condtions-linktype1" style="display: none;">
+                  <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Terms and Conditions Link'); ?></div>
+                  <div class="js-form-field js-col-xs-12 js-col-md-10 js-value">
+                     <input type="text" id="termsandconditions_link" name="termsandconditions_link" class="inputbox" value="<?php echo $termsandconditions_link; ?>" />
+                  </div>
+               </div>
             </div>
             <div class="js-form-wrapper for-terms-condtions-linktype2" style="display: none;">
                 <div class="js-form-title js-col-xs-12 js-col-md-2 js-title"><?php echo Text::_('Terms and Conditions Page'); ?></div>
                 <div class="js-form-field js-col-xs-12 js-col-md-10 js-value"><?php echo HTMLHelper::_('select.genericList', $this->joomlaarticles, 'termsandconditions_page', 'class="inputbox" ', 'value', 'text', $termsandconditions_page); ?></div>
             </div>
-        </div>
 
 
-        <input type="hidden" id="id" name="id" value="<?php if (isset($this->userfield->id)) echo $this->userfield->id; ?>" />
-        <input type="hidden" id="fieldfor" name="fieldfor" value="1" />
+        <input type="hidden" id="id" name="id" value="<?php if (isset($this->userfield->id)) echo $this->userfield->id; ?>" />        
         <input type="hidden" id="field" name="field" value="<?php if (isset($this->userfield->field)) echo $this->userfield->field; ?>" />
+        <input type="hidden" id="fieldfor" name="fieldfor" value="<?php echo $_SESSION['ffusr']; ?>" />
         <input type="hidden" id="ordering" name="ordering" value="<?php echo isset($this->userfield->ordering) ? $this->userfield->ordering : ''; ?>" />
         <input type="hidden" id="c" name="c" value="userfields" />
         <input type="hidden" id="layout" name="layout" value="formuserfield" />
@@ -280,18 +260,17 @@ if (isset($this->userfield)) {
         <input type="hidden" id="option" name="option" value="<?php echo $this->option; ?>" />
         <input type="hidden" id="arraynames2" name="arraynames2" value="<?php echo $arraynames; ?>" />
         <input type="hidden" id="fieldname" name="fieldname" value="<?php echo isset($this->userfield->field) ? $this->userfield->field : ''; ?>" />
-        <div class="js-form-button">
-            <input type="submit" name="save" id="save" value="<?php echo Text::_('Save Field')?>" class="button js-form-save">
+        <div class="js-col-xs-12 js-col-md-12">
+            <div id="js-submit-btn" class="js-form-button">
+                <input type="submit" name="save" id="save" value="<?php echo Text::_('Save Field')?>" class="button js-form-save">
+            </div>
         </div>
         <?php echo HTMLHelper::_('form.token'); ?>
         </form>
         </div>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>
 
     <script type="text/javascript">
         jQuery(document).ready(function () {
@@ -466,7 +445,7 @@ if (isset($this->userfield)) {
         }
 
         function insertNewRow() {
-            var fieldhtml = '<span class="input-field-wrapper" ><input name="values[]" id="values" value="" class="inputbox one user-field" type="text" /><img class="input-field-remove-img" src="components/com_jssupportticket/include/images/delete.png" /></span>';
+            var fieldhtml = '<span class="input-field-wrapper" ><input name="values[]" value="" class="inputbox one user-field jsst-userfield-value" type="text" /><img class="input-field-remove-img" src="components/com_jssupportticket/include/images/delete.png" /></span>';
             jQuery("#user-field-val-button").before(fieldhtml);
         }
         jQuery(document).ready(function () {

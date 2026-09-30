@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -74,8 +74,8 @@ class SppagebuilderModelMedia extends ListModel
 		if ($date)
 		{
 			$year_month = explode('-', $date);
-			$query->where('YEAR(created_on) = ' . $year_month[0]);
-			$query->where('MONTH(created_on) = ' . $year_month[1]);
+			$query->where('YEAR(created_on) = ' . (int) $year_month[0]);
+			$query->where('MONTH(created_on) = ' . (int) ($year_month[1] ?? 0));
 		}
 
 		if ($type !== '*')
@@ -127,14 +127,20 @@ class SppagebuilderModelMedia extends ListModel
 		{
 			$search = preg_replace('#\xE3\x80\x80#s', " ", trim($search));
 			$search_array = explode(" ", $search);
-			$query->where($db->quoteName('title') . " LIKE '%" . implode("%' OR " . $db->quoteName('title') . " LIKE '%", $search_array) . "%'");
+			$search_conditions = [];
+
+			foreach ($search_array as $term) {
+				$search_conditions[] = $db->quoteName('title') . " LIKE " . $db->quote('%' . $term . '%');
+			}
+
+			$query->where('(' . implode(' OR ', $search_conditions) . ')');
 		}
 
 		if ($date)
 		{
 			$date = explode('-', $date);
-			$query->where('YEAR(created_on) = ' . $date[0]);
-			$query->where('MONTH(created_on) = ' . $date[1]);
+			$query->where('YEAR(created_on) = ' . (int) $date[0]);
+			$query->where('MONTH(created_on) = ' . (int) ($date[1] ?? 0));
 		}
 
 		//Check User permission
@@ -166,14 +172,20 @@ class SppagebuilderModelMedia extends ListModel
 		{
 			$search = preg_replace('#\xE3\x80\x80#s', " ", trim($search));
 			$search_array = explode(" ", $search);
-			$query->where($db->quoteName('title') . " LIKE '%" . implode("%' OR " . $db->quoteName('title') . " LIKE '%", $search_array) . "%'");
+			$search_conditions = [];
+
+			foreach ($search_array as $term) {
+				$search_conditions[] = $db->quoteName('title') . " LIKE " . $db->quote('%' . $term . '%');
+			}
+
+			$query->where('(' . implode(' OR ', $search_conditions) . ')');
 		}
 
 		if ($date)
 		{
 			$date = explode('-', $date);
-			$query->where('YEAR(created_on) = ' . $date[0]);
-			$query->where('MONTH(created_on) = ' . $date[1]);
+			$query->where('YEAR(created_on) = ' . (int) $date[0]);
+			$query->where('MONTH(created_on) = ' . (int) ($date[1] ?? 0));
 		}
 
 		if ($type != '*')
@@ -363,7 +375,7 @@ class SppagebuilderModelMedia extends ListModel
 			return $output;
 		}
 
-		$items = Folder::files($directory, '.png|.jpg|.jpeg|.gif|.svg|.pdf|.webp', false, true);
+		$items = Folder::files($directory, '.png|.jpg|.jpeg|.gif|.svg|.pdf|.webp|.avif|.mp4|.mov|.wmv|.avi|.mpg|.ogv|.3gp|.3g2|.mp3|.m4a|.ogg|.wav|.doc|.docx|.key|.ppt|.pptx|.pps|.ppsx|.odt|.xls|.xlsx|.zip|.json', false, true);
 		$folders_list = Folder::folders($directory, '.', false, false, array('.svn', 'CVS', '.DS_Store', '__MACOSX', '_spmedia_thumbs'));
 		$folders = self::listFolderTree(JPATH_ROOT . '/' . $rootPath, '.');
 

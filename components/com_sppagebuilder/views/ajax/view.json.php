@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -11,6 +11,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Session\Session;
 
 //no direct access
 defined('_JEXEC') or die('Restricted access');
@@ -19,6 +20,15 @@ require_once JPATH_COMPONENT . '/builder/classes/ajax.php';
 if (!class_exists('SppagebuilderHelperSite'))
 {
 	require_once JPATH_ROOT . '/components/com_sppagebuilder/helpers/helper.php';
+}
+
+if (!Session::checkToken('post'))
+{
+	$app = Factory::getApplication();
+	$app->enqueueMessage(Text::_('JINVALID_TOKEN'), 'error');
+	$app->setHeader('status', 403, true);
+
+	return false;
 }
 
 $user = Factory::getUser();
@@ -205,7 +215,10 @@ if ($action === 'addon')
 
 	$output = '';
 
-	require_once $addon_path . '/site.php';
+	if (!empty($addon_path) && file_exists($addon_path . '/site.php'))
+	{
+		require_once $addon_path . '/site.php';
+	}
 
 	$assets = array();
 	$css = LayoutHelper::render('addon.css', array('addon' => $addon));
@@ -268,10 +281,16 @@ if ($action === 'addon')
 
 if ($action === 'get-page-data')
 {
-	$page_path = $_POST['pagepath'];
-	if (File::exists($page_path))
+	$page_path = (string) ($_POST['pagepath'] ?? '');
+	$real = realpath($page_path);
+
+	// Confine to real files inside the site root; reject stream wrappers (php://, http://) and traversal.
+	if ($real !== false
+		&& strpos($page_path, '://') === false
+		&& strncmp($real, JPATH_ROOT, strlen(JPATH_ROOT)) === 0
+		&& File::exists($real))
 	{
-		$content = file_get_contents($page_path);
+		$content = file_get_contents($real);
 
 		if (is_array(json_decode($content)))
 		{
@@ -322,7 +341,10 @@ if ($action === 'setting_value')
 
 	$output = '';
 
-	require_once $addon_path . '/site.php';
+	if (!empty($addon_path) && file_exists($addon_path . '/site.php'))
+	{
+		require_once $addon_path . '/site.php';
+	}
 
 	$assets = array();
 	$css = LayoutHelper::render('addon.css', array('addon' => $addon));

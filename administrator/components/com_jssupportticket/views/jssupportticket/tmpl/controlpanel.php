@@ -2,469 +2,557 @@
 /**
  * @Copyright Copyright (C) 2015 ... Ahmad Bilal
  * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
- * Company:		Buruj Solutions
- + Contact:		www.burujsolutions.com , info@burujsolutions.com
- * Created on:	May 22, 2015
-  ^
-  + Project: 	JS Tickets
-  ^
+ * Company: Buruj Solutions
+ * Project: JS Tickets
  */
 defined('_JEXEC') or die('Restricted access');
+
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 $document = Factory::getDocument();
-$document->addStyleSheet('components/com_jssupportticket/include/css/circle.css');
-$document->addScript('components/com_jssupportticket/include/js/circle.js');
+$document->addStyleSheet('components/com_jssupportticket/include/css/jsst-dashboard-v2.css?v=56');
+$document->addScript('https://www.gstatic.com/charts/loader.js');
+
+if (!function_exists('jsst_dashboard_escape')) {
+    function jsst_dashboard_escape($value) {
+        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+    }
+}
+
+if (!function_exists('jsst_dashboard_label')) {
+    /**
+     * Escapes a tile label and appends the Pro marker as real markup.
+     * The marker cannot be baked into the label string itself, because every
+     * label on this page is passed through jsst_dashboard_escape() on output
+     * and the span would be printed literally.
+     */
+    function jsst_dashboard_label($value, $pro = false) {
+        $out = jsst_dashboard_escape($value);
+        if ($pro) {
+            $out .= '<span class="jsst-pro-star" aria-hidden="true">*</span>';
+        }
+        return $out;
+    }
+}
+
+if (!function_exists('jsst_dashboard_excerpt')) {
+    function jsst_dashboard_excerpt($value, $length = 120) {
+        $text = trim(preg_replace('/\s+/', ' ', strip_tags((string) $value)));
+        if (strlen($text) <= $length) {
+            return $text;
+        }
+        return substr($text, 0, $length - 3) . '...';
+    }
+}
+
+if (!function_exists('jsst_dashboard_count')) {
+    function jsst_dashboard_count($value, $showCounts = 1) {
+        if (!$showCounts) {
+            return '-';
+        }
+        return number_format((int) $value);
+    }
+}
+
+if (!function_exists('jsst_dashboard_color')) {
+    function jsst_dashboard_color($value, $fallback = '#64748b') {
+        $color = trim((string) $value);
+        if (preg_match('/^#[0-9a-fA-F]{3,6}$/', $color)) {
+            return $color;
+        }
+        return $fallback;
+    }
+}
+
+if (!function_exists('jsst_dashboard_status')) {
+    function jsst_dashboard_status($status) {
+        switch ((int) $status) {
+            case 0:
+                return Text::_('New');
+            case 1:
+                return Text::_('Waiting for staff reply');
+            case 2:
+                return Text::_('In progress');
+            case 3:
+                return Text::_('Waiting for customer reply');
+            case 4:
+                return Text::_('Closed');
+            default:
+                return Text::_('Open');
+        }
+    }
+}
+
+
+$ticketTotal = isset($this->result['ticket_total']) && is_array($this->result['ticket_total']) ? $this->result['ticket_total'] : array();
+$totalTickets = (int) ($ticketTotal['totalticket'] ?? 0);
+$openTickets = (int) ($ticketTotal['openticket'] ?? 0);
+$pendingTickets = (int) ($ticketTotal['pendingticket'] ?? 0);
+$overdueTickets = (int) ($ticketTotal['overdueticket'] ?? 0);
+$answeredTickets = (int) ($ticketTotal['answeredticket'] ?? 0);
+$showCounts = isset($this->config['show_count_tickets']) ? (int) $this->config['show_count_tickets'] : 1;
+
+$adminSnapshot = isset($this->result['admin_snapshot']) && is_array($this->result['admin_snapshot']) ? $this->result['admin_snapshot'] : array();
+$todaySummary = isset($this->result['today_summary']) && is_array($this->result['today_summary']) ? $this->result['today_summary'] : array();
+$peopleSummary = isset($this->result['people_summary']) && is_array($this->result['people_summary']) ? $this->result['people_summary'] : array();
+$departmentActivity = isset($this->result['department_activity']) && is_array($this->result['department_activity']) ? $this->result['department_activity'] : array();
+$priorityBreakdown = isset($this->result['priority_breakdown']) && is_array($this->result['priority_breakdown']) ? $this->result['priority_breakdown'] : array();
+$staffActivity = isset($this->result['staff_activity']) && is_array($this->result['staff_activity']) ? $this->result['staff_activity'] : array();
+$attentionTickets = isset($this->result['attention_tickets']) && is_array($this->result['attention_tickets']) ? $this->result['attention_tickets'] : array();
+
+$percentage = function ($count) use ($totalTickets) {
+    if ($totalTickets <= 0) {
+        return 0;
+    }
+    return max(0, min(100, (int) round(((int) $count / $totalTickets) * 100)));
+};
+
+$dateFormat = $this->config['date_format'] ?? 'Y-m-d';
+$curdate = HTMLHelper::_('date', date('Y-m-d'), 'Y-m-d');
+$fromdate = HTMLHelper::_('date', date('Y-m-d', getJSTicketPHPFunctionsClass()->jsticket_strtotime('now -1 month')), 'Y-m-d');
+
+$stackChartTitle = $this->result['stack_chart_horizontal']['title'] ?? "['Status','High','Low','Normal']";
+$stackChartData = $this->result['stack_chart_horizontal']['data'] ?? "['No Data',0,0,0]";
+$stackChartColors = $this->result['stack_chart_horizontal']['colors'] ?? "['#ef4444','#0ea5e9','#22c55e']";
+$todayChartTitle = $this->result['today_ticket_chart']['title'] ?? "['Status','Tickets']";
+$todayChartData = $this->result['today_ticket_chart']['data'] ?? "['No Data',0]";
+
+$quickLinks = array(
+    array('icon' => '+', 'label' => Text::_('Create Ticket'), 'href' => 'index.php?option=com_jssupportticket&c=ticket&layout=formticket'),
+    array('icon' => 'T', 'label' => Text::_('Tickets'), 'href' => 'index.php?option=com_jssupportticket&c=ticket&layout=tickets'),
+    array('icon' => 'D', 'label' => Text::_('Departments'), 'href' => 'index.php?option=com_jssupportticket&c=department&layout=departments'),
+    array('icon' => 'S', 'label' => Text::_('Staff Members'), 'pro' => true, 'href' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=proversion&feature=staff'),
+    array('icon' => 'R', 'label' => Text::_('Reports'), 'pro' => true, 'href' => 'index.php?option=com_jssupportticket&jssupportticket&layout=proversion&feature=reports'),
+    array('icon' => '@', 'label' => Text::_('Email Templates'), 'href' => 'index.php?option=com_jssupportticket&c=emailtemplate&layout=emailtemplate&tf=ew-tk'),
+);
+
+$overviewCards = array(
+    array('icon' => '●', 'label' => Text::_('Active Tickets'), 'value' => $adminSnapshot['active'] ?? $openTickets, 'meta' => Text::_('Currently open queue'), 'href' => 'index.php?option=com_jssupportticket&c=ticket&layout=tickets'),
+    array('icon' => '↩', 'label' => Text::_('Pending Reply'), 'value' => $pendingTickets, 'meta' => Text::_('Waiting for staff action'), 'href' => 'index.php?option=com_jssupportticket&c=ticket&layout=tickets'),
+    array('icon' => '!', 'label' => Text::_('Unassigned'), 'value' => $adminSnapshot['unassigned'] ?? 0, 'meta' => Text::_('Need owner assignment'), 'href' => 'index.php?option=com_jssupportticket&c=ticket&layout=tickets'),
+    array('icon' => '✓', 'label' => Text::_('Closed'), 'value' => $adminSnapshot['closed'] ?? 0, 'meta' => Text::_('Resolved tickets'), 'href' => 'index.php?option=com_jssupportticket&c=ticket&layout=tickets'),
+    array('icon' => 'D', 'label' => Text::_('Departments'), 'value' => $peopleSummary['departments'] ?? 0, 'meta' => Text::_('Support routing'), 'href' => 'index.php?option=com_jssupportticket&c=department&layout=departments'),
+    array('icon' => 'S', 'label' => Text::_('Staff'), 'pro' => true, 'value' => $peopleSummary['staff'] ?? 0, 'meta' => Text::_('Team accounts'), 'href' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=proversion&feature=staff'),
+    array('icon' => '★', 'label' => Text::_('Feedback'), 'pro' => true, 'value' => $peopleSummary['feedback'] ?? 0, 'meta' => Text::_('Customer responses'), 'href' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=proversion&feature=feedback'),
+    array('icon' => '@', 'label' => Text::_('Email Tickets'), 'pro' => true, 'value' => $adminSnapshot['viaemail'] ?? 0, 'meta' => Text::_('Created via email'), 'href' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=proversion&feature=ticketviaemail'),
+);
+
+$todayCards = array(
+    array('label' => Text::_('New Today'), 'value' => $todaySummary['new_today'] ?? 0),
+    array('label' => Text::_('Replies Today'), 'value' => $todaySummary['replies_today'] ?? 0),
+    array('label' => Text::_('Closed Today'), 'value' => $todaySummary['closed_today'] ?? 0),
+);
+
+$modules = array(
+    array('kicker' => Text::_('Tickets'), 'title' => Text::_('Ticket Queue'), 'desc' => Text::_('Review open, pending, answered, overdue, merged, and closed tickets.'), 'href' => 'index.php?option=com_jssupportticket&c=ticket&layout=tickets', 'cta' => Text::_('Open tickets')),
+    array('kicker' => Text::_('People'), 'title' => Text::_('Staff Members'), 'pro' => true, 'desc' => Text::_('Manage staff accounts, roles, visibility, and ticket responsibilities.'), 'href' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=proversion&feature=staff', 'cta' => Text::_('Manage staff')),
+    array('kicker' => Text::_('Flow'), 'title' => Text::_('Departments'), 'desc' => Text::_('Control ticket routing, public departments, signatures, and email behavior.'), 'href' => 'index.php?option=com_jssupportticket&c=department&layout=departments', 'cta' => Text::_('Manage departments')),
+    array('kicker' => Text::_('System'), 'title' => Text::_('Configurations'), 'desc' => Text::_('Configure ticket settings, email options, menus, and preferences.'), 'href' => 'index.php?option=com_jssupportticket&c=config&layout=config', 'cta' => Text::_('Open settings')),
+);
 ?>
-
-<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"></script>
 <script>
-    google.charts.load('current', {packages: ['corechart']});
-    google.charts.setOnLoadCallback(drawStackChartHorizontal);
-    google.setOnLoadCallback(drawTodayTicketsChart);
-    function drawStackChartHorizontal() {
-      var data = google.visualization.arrayToDataTable([
-        <?php
-            echo $this->result['stack_chart_horizontal']['title'].',';
-            echo $this->result['stack_chart_horizontal']['data'];
-        ?>
-      ]);
-
-      var view = new google.visualization.DataView(data);
-
-      var options = {
-        height:305,
-        legend: { position: 'top', maxLines: 3 },
-        bar: { groupWidth: '75%' },
-        isStacked: true,
-        colors:<?php echo $this->result['stack_chart_horizontal']['colors']; ?>
-      };
-      var chart = new google.visualization.BarChart(document.getElementById("stack_chart_horizontal"));
-      chart.draw(view, options);
+(function () {
+    function drawJsstDashboardCharts() {
+        if (!window.google || !google.visualization) {
+            return;
+        }
+        var stackEl = document.getElementById('jsst_dashboard_stack_chart');
+        if (stackEl) {
+            var stackData = google.visualization.arrayToDataTable([
+                <?php echo $stackChartTitle; ?>,
+                <?php echo $stackChartData; ?>
+            ]);
+            var stackChart = new google.visualization.BarChart(stackEl);
+            stackChart.draw(stackData, {
+                height: 286,
+                legend: { position: 'top', maxLines: 3, textStyle: { color: '#64748b', fontSize: 12 } },
+                chartArea: { width: '74%', height: '70%', left: 90, top: 42 },
+                bar: { groupWidth: '58%' },
+                isStacked: true,
+                backgroundColor: 'transparent',
+                hAxis: { textStyle: { color: '#94a3b8' }, gridlines: { color: '#eef2f7' } },
+                vAxis: { textStyle: { color: '#64748b' } },
+                colors: <?php echo $stackChartColors; ?>
+            });
+        }
+        var todayEl = document.getElementById('jsst_dashboard_today_chart');
+        if (todayEl) {
+            var todayData = google.visualization.arrayToDataTable([
+                <?php echo $todayChartTitle; ?>,
+                <?php echo $todayChartData; ?>
+            ]);
+            var todayChart = new google.visualization.ColumnChart(todayEl);
+            todayChart.draw(todayData, {
+                height: 142,
+                legend: { position: 'right', textStyle: { color: '#64748b', fontSize: 12 } },
+                chartArea: { width: '68%', height: '70%', left: 30, top: 16 },
+                backgroundColor: 'transparent',
+                hAxis: { textPosition: 'none', gridlines: { color: 'transparent' } },
+                vAxis: { textStyle: { color: '#94a3b8' }, gridlines: { color: '#eef2f7' } },
+                colors: <?php echo $stackChartColors; ?>
+            });
+        }
     }
-    function drawTodayTicketsChart() {
-      var data = google.visualization.arrayToDataTable([
-        <?php
-            echo $this->result['today_ticket_chart']['title'].',';
-            echo $this->result['today_ticket_chart']['data'];
-        ?>
-      ]);
 
-      var view = new google.visualization.DataView(data);
-
-      var options = {
-        height:120,
-        chartArea: { width: '70%', left: 30 },
-        legend: { position: "right" },
-        hAxis: { textPosition: 'none' },
-        colors:<?php echo  $this->result['stack_chart_horizontal']['colors']; ?>,
-      };
-      var chart = new google.visualization.ColumnChart(document.getElementById("today_ticket_chart"));
-      chart.draw(view, options);
+    if (window.google && google.charts) {
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawJsstDashboardCharts);
+        window.addEventListener('resize', function () {
+            window.clearTimeout(window.jsstDashboardChartTimer);
+            window.jsstDashboardChartTimer = window.setTimeout(drawJsstDashboardCharts, 180);
+        });
     }
+})();
 </script>
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-admin-dashboard-shell">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-        <div id="jsstadmin-wrapper-top">
-            <div id="jsstadmin-wrapper-top-left">
-                <div id="jsstadmin-breadcrunbs">
-                    <ul>
-                        <li>
-                            <a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel" title="Dashboard">
-                                <?php echo Text::_('Dashboard'); ?>
-                            </a>
-                        </li>
-                    </ul>
+        <div class="jsst-dashboard-v2">
+            <section class="jsst-dashboard-v2__hero" aria-label="<?php echo jsst_dashboard_escape(Text::_('Control Panel')); ?>">
+                <div>
+                    <div class="jsst-dashboard-v2__eyebrow"><?php echo Text::_('JS Support Ticket'); ?></div>
+                    <h1 class="jsst-dashboard-v2__title"><?php echo Text::_('Control Panel'); ?></h1>
+                    <p class="jsst-dashboard-v2__subtitle">
+                        <?php echo Text::_('Monitor ticket activity, workload, departments, priorities, recent replies, and support settings from one place.'); ?>
+                    </p>
                 </div>
-            </div>
-            <div id="jsstadmin-wrapper-top-right">
-                <div id="jsstadmin-config-btn">
-                    <a title="Configuration" href="index.php?option=com_jssupportticket&c=config&layout=config">
-                        <img alt="Configuration" src="components/com_jssupportticket/include/images/config.png">
+                <div class="jsst-dashboard-v2__actions">
+                    <a class="jsst-dashboard-v2__btn jsst-dashboard-v2__btn--light" href="index.php?option=com_jssupportticket&c=ticket&layout=formticket">+ <?php echo Text::_('Create Ticket'); ?></a>
+                    <a class="jsst-dashboard-v2__btn" href="index.php?option=com_jssupportticket&c=ticket&layout=tickets"><?php echo Text::_('All Tickets'); ?></a>
+                </div>
+            </section>
+
+            <section class="jsst-dashboard-v2__section jsst-dashboard-v2__stats" aria-label="<?php echo jsst_dashboard_escape(Text::_('Ticket Status')); ?>">
+                <a class="jsst-dashboard-v2__stat jsst-dashboard-v2__stat--open" href="index.php?option=com_jssupportticket&c=ticket&layout=tickets&lt=1">
+                    <span class="jsst-dashboard-v2__stat-icon">O</span>
+                    <div class="jsst-dashboard-v2__stat-label"><?php echo Text::_('Open'); ?></div>
+                    <div class="jsst-dashboard-v2__stat-value"><?php echo jsst_dashboard_count($openTickets, $showCounts); ?></div>
+                    <div class="jsst-dashboard-v2__progress"><span style="width: <?php echo $percentage($openTickets); ?>%"></span></div>
+                </a>
+                <a class="jsst-dashboard-v2__stat jsst-dashboard-v2__stat--overdue" href="index.php?option=com_jssupportticket&c=ticket&layout=tickets">
+                    <span class="jsst-dashboard-v2__stat-icon">!</span>
+                    <div class="jsst-dashboard-v2__stat-label"><?php echo jsst_dashboard_label(Text::_('Overdue'), true); ?></div>
+                    <div class="jsst-dashboard-v2__stat-value"><?php echo jsst_dashboard_count($overdueTickets, $showCounts); ?></div>
+                    <div class="jsst-dashboard-v2__progress"><span style="width: <?php echo $percentage($overdueTickets); ?>%"></span></div>
+                </a>
+                <a class="jsst-dashboard-v2__stat jsst-dashboard-v2__stat--answered" href="index.php?option=com_jssupportticket&c=ticket&layout=tickets&lt=2">
+                    <span class="jsst-dashboard-v2__stat-icon">A</span>
+                    <div class="jsst-dashboard-v2__stat-label"><?php echo Text::_('Answered'); ?></div>
+                    <div class="jsst-dashboard-v2__stat-value"><?php echo jsst_dashboard_count($answeredTickets, $showCounts); ?></div>
+                    <div class="jsst-dashboard-v2__progress"><span style="width: <?php echo $percentage($answeredTickets); ?>%"></span></div>
+                </a>
+                <a class="jsst-dashboard-v2__stat jsst-dashboard-v2__stat--all" href="index.php?option=com_jssupportticket&c=ticket&layout=tickets&lt=5">
+                    <span class="jsst-dashboard-v2__stat-icon">Σ</span>
+                    <div class="jsst-dashboard-v2__stat-label"><?php echo Text::_('All Tickets'); ?></div>
+                    <div class="jsst-dashboard-v2__stat-value"><?php echo jsst_dashboard_count($totalTickets, $showCounts); ?></div>
+                    <div class="jsst-dashboard-v2__progress"><span style="width: <?php echo $totalTickets > 0 ? 100 : 0; ?>%"></span></div>
+                </a>
+            </section>
+
+            <section class="jsst-dashboard-v2__section jsst-dashboard-v2__mini-stats" aria-label="<?php echo jsst_dashboard_escape(Text::_('Admin Snapshot')); ?>">
+                <?php foreach ($overviewCards as $card) { ?>
+                    <a class="jsst-dashboard-v2__mini-stat" href="<?php echo jsst_dashboard_escape($card['href']); ?>">
+                        <span class="jsst-dashboard-v2__mini-stat-icon"><?php echo jsst_dashboard_escape($card['icon']); ?></span>
+                        <span class="jsst-dashboard-v2__mini-stat-copy">
+                            <span class="jsst-dashboard-v2__mini-stat-label"><?php echo jsst_dashboard_label($card['label'], !empty($card['pro'])); ?></span>
+                            <span class="jsst-dashboard-v2__mini-stat-meta"><?php echo jsst_dashboard_escape($card['meta']); ?></span>
+                        </span>
+                        <span class="jsst-dashboard-v2__mini-stat-value"><?php echo jsst_dashboard_count($card['value'], $showCounts); ?></span>
                     </a>
+                <?php } ?>
+            </section>
+
+            <section class="jsst-dashboard-v2__section jsst-dashboard-v2__grid">
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head">
+                        <div>
+                            <h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('Ticket Statistics'); ?></h2>
+                            <div class="jsst-dashboard-v2__panel-subtitle"><?php echo jsst_dashboard_escape($fromdate . ' - ' . $curdate); ?></div>
+                        </div>
+                        <a class="jsst-dashboard-v2__panel-link" href="index.php?option=com_jssupportticket&c=jssupportticket&layout=proversion&feature=reports"><?php echo Text::_('Open Reports'); ?> *</a>
+                    </div>
+                    <div class="jsst-dashboard-v2__panel-body">
+                        <div id="jsst_dashboard_stack_chart" class="jsst-dashboard-v2__chart"></div>
+                    </div>
                 </div>
-                <div id="jsstadmin-vers-txt">
-                    <?php echo Text::_('Version').Text::_(' : '); ?>
-                    <span class="jsstadmin-ver">
-                        <?php $version = str_split($this->version);
-                        $version = implode('.', $version);
-                        echo $version; ?>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div id="js-tk-heading">
-            <h1 class="jsstadmin-head-text">
-                <?php echo Text::_('Dashboard'); ?>
-            </h1>
-            <a href="index.php?option=com_jssupportticket&c=ticket&layout=tickets" class="jsstadmin-add-link button" title="All Tickets">
-                <img alt="All Tickets" src="components/com_jssupportticket/include/images/c_p/all-tickets.png">
-                <?php echo Text::_('All Tickets'); ?>
-            </a>
-        </div>
-        <?php
-        $open_percentage = 0;
-        $close_percentage = 0;
-        $answered_percentage = 0;
-        $close_percentage = 0;
-        $allticket_percentage = 0;
-        if($this->config['show_count_tickets'] == 1 && isset($this->result['ticket_total']['totalticket']) && $this->result['ticket_total']['totalticket'] != 0){
-            $open_percentage  = getJSTicketPHPFunctionsClass()->jsticket_round(($this->result['ticket_total']['openticket'] / $this->result['ticket_total']['totalticket']) * 100);
-            // $close_percentage  = getJSTicketPHPFunctionsClass()->jsticket_round(($this->result['ticket_total']['closeticket'] / $this->result['ticket_total']['totalticket']) * 100);
-            $answered_percentage = getJSTicketPHPFunctionsClass()->jsticket_round(($this->result['ticket_total']['answeredticket'] / $this->result['ticket_total']['totalticket']) * 100);
-            $close_percentage = getJSTicketPHPFunctionsClass()->jsticket_round(($this->result['ticket_total']['closeticket'] / $this->result['ticket_total']['totalticket']) * 100);
-            $allticket_percentage = 100;
-        }?>
-        <div id="jsstadmin-data-wrp" class="js-bg-null js-padding-all-null">
-            <div class="js-cp-cnt-sec">
-                <div class="js-cp-cnt-left">
-                    <div class="js-row js-ticket-top-cirlce-count-wrp js-ticket-admin-dashboard-top-cirlce-count-wrp">
-                        <div class="js-col-xs-12 js-col-md-2 js-myticket-link js-ticket-myticket-link-myticket js-ticket-open">
-                            <a class="js-ticket-green js-myticket-link" href="javascript:void(0);">
-                                <div class="js-ticket-cricle-wrp ">
-                                    <div class="circlebar" data-circle-startTime=0 data-circle-maxValue="<?php echo $open_percentage; ?>" data-circle-dialWidth=15 data-circle-size="100px" data-circle-type="progress">
-                                        <div class="loader-bg"></div>
-                                    </div>
-                                </div>
-                                <div class="js-ticket-circle-count-text">
-                                    <?php
-                                        echo Text::_('Open');
-                                        if($this->config['show_count_tickets'] == 1)
-                                        echo " ( " . $this->result['ticket_total']['openticket'] . " ) ";
-                                    ?>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="js-col-xs-12 js-col-md-2 js-myticket-link js-ticket-myticket-link-myticket js-ticket-close">
-                            <a class="js-ticket-orange js-myticket-link" href="javascript:void(0);">
-                                <div class="js-ticket-cricle-wrp">
-                                    <div class="circlebar" data-circle-startTime=0 data-circle-maxValue="<?php echo $close_percentage; ?>" data-circle-dialWidth=15 data-circle-size="100px" data-circle-type="progress">
-                                        <div class="loader-bg "></div>
-                                    </div>
-                                </div>
-                                <div class="js-ticket-circle-count-text">
-                                    <?php
-                                        echo Text::_('Closed');
-                                        if($this->config['show_count_tickets'] == 1)
-                                        echo " ( ". $this->result['ticket_total']['closeticket'] . " ) ";
-                                    ?>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="js-col-xs-12 js-col-md-2 js-myticket-link js-ticket-myticket-link-myticket js-ticket-answer">
-                            <a class="js-ticket-pink js-myticket-link" href="javascript:void(0);">
-                                <div class="js-ticket-cricle-wrp">
-                                    <div class="circlebar" data-circle-startTime = 0 data-circle-maxValue="<?php echo $answered_percentage; ?>" data-circle-dialWidth=15 data-circle-size="100px" data-circle-type="progress">
-                                        <div class="loader-bg">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="js-ticket-circle-count-text">
-                                    <?php
-                                        echo Text::_('Answered');
-                                        if($this->config['show_count_tickets'] == 1)
-                                        echo " ( ". $this->result['ticket_total']['answeredticket'] ." ) ";
-                                    ?>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="js-col-xs-12 js-col-md-2 js-myticket-link js-ticket-myticket-link-myticket js-ticket-allticket">
-                            <a class="js-ticket-blue js-myticket-link" href="javascript:void(0);">
-                                <div class="js-ticket-cricle-wrp">
-                                    <div class="circlebar" data-circle-startTime=0 data-circle-maxValue="<?php echo $allticket_percentage; ?>" data-circle-dialWidth=15 data-circle-size="100px" data-circle-type="progress">
-                                        <div class="loader-bg"></div>
-                                    </div>
-                                </div>
-                                <div class="js-ticket-circle-count-text">
-                                    <?php
-                                        echo Text::_('All Tickets');
-                                        if($this->config['show_count_tickets'] == 1)
-                                        echo " ( " . $this->result['ticket_total']['totalticket'] . " ) ";
-                                    ?>
-                                </div>
-                            </a>
+
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head">
+                        <div>
+                            <h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_("Today's Activity"); ?></h2>
+                            <div class="jsst-dashboard-v2__panel-subtitle"><?php echo Text::_('New work for today'); ?></div>
                         </div>
                     </div>
-                    <!-- graph -->
-                    <div class="js-cp-cnt">
-                    <div id="graph-title">
-                        <?php echo Text::_('Statistics'); ?>
-                        <small>
-                            <?php
-                                $date = Joomla\CMS\Factory::getDate();
-//                                $curdate = HTMLHelper::_('date',date('Y-m-d'),"Y-m-d" );
-                                $curdate = $date->format('Y-m-d');
-//                                $fromdate = HTMLHelper::_('date',date('Y-m-d', getJSTicketPHPFunctionsClass()->jsticket_strtotime("now -1 month")),"Y-m-d" );
-                                $jDate = new Joomla\CMS\Date\Date(getJSTicketPHPFunctionsClass()->jsticket_strtotime("now -1 month"));
-                                $fromdate = $jDate->format('Y-m-d');
-                                echo " ($fromdate - $curdate)";
+                    <div class="jsst-dashboard-v2__panel-body">
+                        <div class="jsst-dashboard-v2__today-metrics">
+                            <?php foreach ($todayCards as $card) { ?>
+                                <div class="jsst-dashboard-v2__today-metric">
+                                    <span><?php echo jsst_dashboard_escape($card['label']); ?></span>
+                                    <strong><?php echo jsst_dashboard_count($card['value'], $showCounts); ?></strong>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div id="jsst_dashboard_today_chart" class="jsst-dashboard-v2__today-chart"></div>
+                        <div class="jsst-dashboard-v2__quicklinks">
+                            <?php foreach ($quickLinks as $link) { ?>
+                                <a class="jsst-dashboard-v2__quicklink" href="<?php echo jsst_dashboard_escape($link['href']); ?>">
+                                    <span class="jsst-dashboard-v2__quicklink-left"><span class="jsst-dashboard-v2__quicklink-icon"><?php echo jsst_dashboard_escape($link['icon']); ?></span><?php echo jsst_dashboard_label($link['label'], !empty($link['pro'])); ?></span>
+                                    <span>→</span>
+                                </a>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="jsst-dashboard-v2__section jsst-dashboard-v2__module-grid">
+                <?php foreach ($modules as $module) { ?>
+                    <a class="jsst-dashboard-v2__module" href="<?php echo jsst_dashboard_escape($module['href']); ?>">
+                        <span>
+                            <span class="jsst-dashboard-v2__module-kicker"><?php echo jsst_dashboard_escape($module['kicker']); ?></span>
+                            <span class="jsst-dashboard-v2__module-title"><?php echo jsst_dashboard_label($module['title'], !empty($module['pro'])); ?></span>
+                            <span class="jsst-dashboard-v2__module-desc"><?php echo jsst_dashboard_escape($module['desc']); ?></span>
+                        </span>
+                        <span class="jsst-dashboard-v2__module-cta"><?php echo jsst_dashboard_escape($module['cta']); ?> →</span>
+                    </a>
+                <?php } ?>
+            </section>
+
+            <section class="jsst-dashboard-v2__section jsst-dashboard-v2__data-grid">
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head">
+                        <div>
+                            <h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('Needs Attention'); ?></h2>
+                            <div class="jsst-dashboard-v2__panel-subtitle"><?php echo Text::_('Overdue, unassigned, or waiting tickets'); ?></div>
+                        </div>
+                        <a class="jsst-dashboard-v2__panel-link" href="index.php?option=com_jssupportticket&c=ticket&layout=tickets"><?php echo Text::_('View Queue'); ?> →</a>
+                    </div>
+                    <div class="jsst-dashboard-v2__panel-body jsst-dashboard-v2__list">
+                        <?php if (!empty($attentionTickets)) { ?>
+                            <?php foreach ($attentionTickets as $ticket) {
+                                $ticketId = isset($ticket->id) ? (int) $ticket->id : 0;
+                                $ticketLink = 'index.php?option=com_jssupportticket&c=ticket&layout=ticketdetails&cid[]=' . $ticketId;
+                                $priorityColour = jsst_dashboard_color($ticket->prioritycolour ?? '');
+                                $departmentName = !empty($ticket->departmentname) ? $ticket->departmentname : Text::_('Unassigned Department');
                             ?>
-                        </small>
-                    </div>
-                    <div id="graph-area">
-                        <div id="stack_chart_horizontal" style="width:100%;"></div>
-                    </div>
-                    </div>
-                </div>
-                <div class="js-cp-cnt-right">
-                    <div class="js-cp-cnt">
-                        <div class="js-cp-cnt-title">
-                            <span class="js-cp-cnt-title-txt">
-                                <?php echo Text::_('Today Tickets'); ?>
-                            </span>
-                        </div>
-                        <div id="js-pm-grapharea">
-                            <div id="today_ticket_chart" style="width:100%;"></div>
-                        </div>
-                    </div>
-                    <div class="js-cp-cnt">
-                        <div class="js-cp-cnt-title">
-                            <span class="js-cp-cnt-title-txt">
-                                <?php echo Text::_('Short Links'); ?>
-                            </span>
-                        </div>
-                        <div id="js-wrapper-menus">
-                            <a title="Tickets" class="js-mnu-area" href="index.php?option=com_jssupportticket&c=ticket&layout=tickets">
-                                <div class="js-mnu-icon"><img src="components/com_jssupportticket/include/images/c_p/left-icons/tickets.png"/></div>
-                                <div class="js-mnu-text"><span> <?php echo Text::_('Tickets'); ?></span></div>
-                                <div class="js-mnu-arrowicon"><img src="components/com_jssupportticket/include/images/c_p/arrows/green.png"/></div>
-                            </a>
-                            <a title="Departments" class="js-mnu-area" href="index.php?option=com_jssupportticket&c=department&layout=departments">
-                                <div class="js-mnu-icon"><img src="components/com_jssupportticket/include/images/c_p/left-icons/department.png"/></div>
-                                <div class="js-mnu-text"><span> <?php echo Text::_('Departments'); ?></span></div>
-                                <div class="js-mnu-arrowicon"><img src="components/com_jssupportticket/include/images/c_p/arrows/orange.png"/></div>
-                            </a>
-                            <a title="Priorities" class="js-mnu-area" href="index.php?option=com_jssupportticket&c=priority&layout=priorities">
-                                <div class="js-mnu-icon"><img src="components/com_jssupportticket/include/images/c_p/left-icons/priorities.png"/></div>
-                                <div class="js-mnu-text"><span> <?php echo Text::_('Priorities'); ?></span></div>
-                                <div class="js-mnu-arrowicon"><img src="components/com_jssupportticket/include/images/c_p/arrows/light-blue.png"/></div>
-                            </a>
-                            <a title="Configurations" class="js-mnu-area" href="index.php?option=com_jssupportticket&c=config&layout=config">
-                                <div class="js-mnu-icon"><img src="components/com_jssupportticket/include/images/c_p/left-icons/settings.png"/></div>
-                                <div class="js-mnu-text"><span> <?php echo Text::_('Configurations'); ?></span></div>
-                                <div class="js-mnu-arrowicon"><img src="components/com_jssupportticket/include/images/c_p/arrows/red.png"/></div>
-                            </a>
-                            <a title="Emails" class="js-mnu-area" href="index.php?option=com_jssupportticket&c=email&layout=emails">
-                                <div class="js-mnu-icon"><img src="components/com_jssupportticket/include/images/c_p/left-icons/system-email.png"/></div>
-                                <div class="js-mnu-text"><span> <?php echo Text::_('System Emails'); ?></span></div>
-                                <div class="js-mnu-arrowicon"><img src="components/com_jssupportticket/include/images/c_p/arrows/green.png"/></div>
-                            </a>
-                            <a title="Email Templates" class="js-mnu-area" href="index.php?option=com_jssupportticket&c=emailtemplate&layout=emailtemplate&tf=ew-tk">
-                                <div class="js-mnu-icon"><img src="components/com_jssupportticket/include/images/c_p/left-icons/email-templates.png"/></div>
-                                <div class="js-mnu-text"><span> <?php echo Text::_('Email Templates'); ?></span></div>
-                                <div class="js-mnu-arrowicon"><img src="components/com_jssupportticket/include/images/c_p/arrows/dark-blue.png"/></div>
-                            </a>
-                            <a title="Translations" class="js-mnu-area" href="index.php?option=com_jssupportticket&c=jssupportticket&layout=translation">
-                                <div class="js-mnu-icon"><img src="components/com_jssupportticket/include/images/c_p/left-icons/translate.png"/></div>
-                                <div class="js-mnu-text"><span> <?php echo Text::_('Translations'); ?></span></div>
-                                <div class="js-mnu-arrowicon"><img src="components/com_jssupportticket/include/images/c_p/arrows/orange.png"/></div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="js-cp-cnt-sec js-cp-baner">
-                    <div class="js-cp-baner-cnt">
-                        <div class="js-cp-banner-tit-bold">
-                            <?php echo Text::_('Upgrade To Professional Version'); ?>
-                        </div>
-                        <div class="js-cp-banner-desc">
-                            <?php echo Text::_('It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged.'); ?>
-                        </div>
-                        <div class="js-cp-banner-btn-wrp">
-                            <a href="https://joomsky.com/products/js-support-ticket-pro-joomla.html" class="js-cp-banner-btn orange-bg">
-                                <?php echo Text::_('Basic Package'); ?>
-                            </a>
-                            <a href="https://joomsky.com/products/js-support-ticket-pro-joomla.html" class="js-cp-banner-btn">
-                                <?php echo Text::_('Professional Package'); ?>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            <!-- latest tickets -->
-            <?php if (!empty($this->result['tickets'])) { ?>
-                <div class="js-cp-cnt-sec js-cp-tkt">
-                <div class="js-mnu-sub-heading">
-                    <span class="js-cp-cnt-title-txt"><?php echo Text::_("Latest Tickets"); ?>
-                    </span>
-                    <a href="index.php?option=com_jssupportticket&c=ticket&layout=tickets" class="js-cp-cnt-title-btn" title="View All Tickets">
-                        <?php echo Text::_("View All Tickets"); ?>
-                    </a>
-                </div>
-                <div class="js-ticket-admin-cp-tickets">
-                    <?php foreach ($this->result['tickets'] AS $ticket): ?>
-                        <div class="js-ticket-admin-cp-data">
-                            <div class="js-cp-tkt-list-left">
-                                <div class="js-cp-tkt-image">
-                                    <img alt="" srcset="" src="<?php echo Uri::root(); ?>components/com_jssupportticket/include/images/user.png" class="avatar avatar-96 photo" height="96" width="96" />
-                                </div>
-                                <div class="js-cp-tkt-cnt">
-                                    <div class="js-cp-tkt-info name">
-                                        <span class="js-ticket-admin-cp-showhide" >
-                                            <?php echo Text::_('From');
-                                                    echo " : "; ?>
-                                        </span>
-                                        <?php echo $ticket->name; ?>
-                                    </div>
-                                    <div class="js-cp-tkt-info subject">
-                                        <span class="js-ticket-admin-cp-showhide" >
-                                            <?php echo Text::_('Subject');
-                                                    echo " : "; ?>
-                                        </span>
-                                        <?php $link_detail = 'index.php?option=' . $this->option . '&c=ticket&layout=ticketdetails&cid[]='.$ticket->id; ?>
-                                        <a title="Subject" href="<?php echo $link_detail; ?>">
-                                            <?php echo $ticket->subject; ?>
-                                        </a>
-                                    </div>
-                                    <div class="js-cp-tkt-info dept">
-                                        <span class="js-cp-tkt-info-label">
-                                            <?php echo Text::_('Department').' :'; ?>
-                                            <?php if(isset($ticket->departmentname)) echo $ticket->departmentname; ?>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="js-cp-tkt-status">
-                                <span class="js-ticket-admin-cp-showhide" ><?php echo Text::_('Status');
-                                                echo " : "; ?>
-                                </span>
-                                <?php
-                                    if ($ticket->status == 0) {
-                                        $style = "#1572e8;";
-                                        $status = Text::_('New');
-                                    }
-                                    elseif ($ticket->status == 1) {
-                                        $style = "orange;";
-                                        $status = Text::_('Waiting Staff Reply');
-                                    }
-                                    elseif ($ticket->status == 2) {
-                                        $style = "#FF7F50;";
-                                        $status = Text::_('In progress');
-                                    }
-                                    elseif ($ticket->status == 3) {
-                                        $style = "green;";
-                                        $status = Text::_('Waiting your reply');
-                                    }
-                                    elseif ($ticket->status == 4) {
-                                        $style = "blue;";
-                                        $status = Text::_('Closed');
-                                    }
-                                    echo '<span style="color:' . $style . '">' . $status . '</span>';
-                                ?>
-                            </div>
-                            <div class="js-cp-tkt-crted">
-                                <span class="js-ticket-admin-cp-showhide" >
-                                    <?php echo Text::_('Created');
-                                    echo " : "; ?>
-                                </span> <?php //echo HTMLHelper::_('date',$ticket->created,$this->config['date_format']); ?>
-                            </div>
-                            <div class="js-cp-tkt-prorty">
-                                <span class="js-ticket-admin-cp-showhide" ><?php echo Text::_('Priority');
-                                    echo " : "; ?>
-                                </span>
-                                <span style="background-color:<?php echo $ticket->prioritycolour; ?>;">
-                                    <?php echo Text::_($ticket->priority); ?>
-                                </span>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            <?php } ?>
-                <!-- Latest Downloads start -->
-                <div class="js-cp-fed-ad-wrp">
-                    <div class="js-cp-addon-wrp first-child">
-                        <div class="js-cp-cnt-title">
-                            <span class="js-cp-cnt-title-txt">
-                                <?php echo Text::_("Latest Departments"); ?>
-                            </span>
-                        </div>
-                        <?php if($this->latestdepartments && !empty($this->latestdepartments)){ ?>
-                            <div class="js-cp-addon-list">
-                                <?php foreach($this->latestdepartments AS $latestdepartments){ ?>
-                                    <div class="js-cp-addon">
-                                        <div class="js-cp-addon-cnt">
-                                            <div class="js-cp-addon-tit">
-                                                <?php echo $latestdepartments->departmentname; ?>
-                                            </div>
-                                            <div class="js-cp-addon-desc">
-                                                    <?php echo $latestdepartments->departmentsignature; ?>
-                                            </div>
+                                <div class="jsst-dashboard-v2__attention-ticket">
+                                    <div>
+                                        <div class="jsst-dashboard-v2__ticket-title"><a href="<?php echo jsst_dashboard_escape($ticketLink); ?>"><?php echo jsst_dashboard_escape($ticket->subject ?? Text::_('Ticket')); ?></a></div>
+                                        <div class="jsst-dashboard-v2__ticket-meta">
+                                            <span><?php echo Text::_('From') . ': ' . jsst_dashboard_escape($ticket->name ?? ''); ?></span>
+                                            <span><?php echo Text::_('Department') . ': ' . jsst_dashboard_escape($departmentName); ?></span>
+                                            <?php if (!empty($ticket->created)) { ?><span><?php echo Text::_('Created') . ': ' . jsst_dashboard_escape(HTMLHelper::_('date', $ticket->created, $dateFormat)); ?></span><?php } ?>
                                         </div>
+                                    </div>
+                                    <div class="jsst-dashboard-v2__attention-badges">
+                                        <?php if ((int) ($ticket->isoverdue ?? 0) === 1) { ?><span class="jsst-dashboard-v2__badge jsst-dashboard-v2__badge--danger"><?php echo Text::_('Overdue'); ?></span><?php } ?>
+                                        <span class="jsst-dashboard-v2__badge"><?php echo jsst_dashboard_escape(jsst_dashboard_status($ticket->status ?? 0)); ?></span>
+                                        <span class="jsst-dashboard-v2__priority" style="background-color: <?php echo jsst_dashboard_escape($priorityColour); ?>;"><?php echo jsst_dashboard_escape(Text::_($ticket->priority ?? '')); ?></span>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <div class="jsst-dashboard-v2__empty"><span class="jsst-dashboard-v2__empty-icon">✓</span><strong><?php echo Text::_('No tickets need attention right now.'); ?></strong></div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head">
+                        <div>
+                            <h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('Department Activity'); ?></h2>
+                            <div class="jsst-dashboard-v2__panel-subtitle"><?php echo Text::_('Top active departments'); ?></div>
+                        </div>
+                    </div>
+                    <div class="jsst-dashboard-v2__panel-body">
+                        <?php if (!empty($departmentActivity)) { ?>
+                            <div class="jsst-dashboard-v2__metric-list">
+                                <?php foreach ($departmentActivity as $department) {
+                                    $departmentTotal = max(1, (int) ($department->totalticket ?? 0));
+                                    $departmentActive = (int) ($department->active ?? 0);
+                                ?>
+                                    <div class="jsst-dashboard-v2__metric-row">
+                                        <div>
+                                            <strong><?php echo jsst_dashboard_escape($department->departmentname ?? Text::_('Department')); ?></strong>
+                                            <span><?php echo jsst_dashboard_count($department->overdue ?? 0, $showCounts) . ' ' . Text::_('overdue'); ?></span>
+                                        </div>
+                                        <em><?php echo jsst_dashboard_count($departmentActive, $showCounts); ?></em>
+                                        <div class="jsst-dashboard-v2__bar"><span style="width: <?php echo min(100, round(($departmentActive / $departmentTotal) * 100)); ?>%"></span></div>
                                     </div>
                                 <?php } ?>
-                                <div class="js-cp-addon-footer">
-                                    <div class="js-cp-addon-cnt-footer"><a href="index.php?option=com_jssupportticket&c=department&layout=departments"><?php echo Text::_("Show All"); ?></a>
+                            </div>
+                        <?php } else { ?>
+                            <div class="jsst-dashboard-v2__empty"><span class="jsst-dashboard-v2__empty-icon">D</span><strong><?php echo Text::_('No department activity yet.'); ?></strong></div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </section>
 
+            <section class="jsst-dashboard-v2__section jsst-dashboard-v2__content-grid jsst-dashboard-v2__content-grid--admin">
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head"><h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('Team Workload'); ?></h2></div>
+                    <div class="jsst-dashboard-v2__panel-body">
+                        <?php if (!empty($staffActivity)) { ?>
+                            <div class="jsst-dashboard-v2__metric-list">
+                                <?php foreach ($staffActivity as $staff) { ?>
+                                    <div class="jsst-dashboard-v2__metric-row jsst-dashboard-v2__metric-row--compact">
+                                        <div>
+                                            <strong><?php echo jsst_dashboard_escape(jsst_dashboard_staff_name($staff)); ?></strong>
+                                            <span><?php echo jsst_dashboard_count($staff->overdue ?? 0, $showCounts) . ' ' . Text::_('overdue'); ?></span>
+                                        </div>
+                                        <em><?php echo jsst_dashboard_count($staff->active ?? 0, $showCounts); ?></em>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } else { ?>
+                            <div class="jsst-dashboard-v2__empty"><span class="jsst-dashboard-v2__empty-icon">S</span><strong><?php echo Text::_('No staff activity yet.'); ?></strong></div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head"><h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('Priority Breakdown'); ?></h2></div>
+                    <div class="jsst-dashboard-v2__panel-body">
+                        <?php if (!empty($priorityBreakdown)) { ?>
+                            <div class="jsst-dashboard-v2__metric-list">
+                                <?php foreach ($priorityBreakdown as $priority) { ?>
+                                    <div class="jsst-dashboard-v2__metric-row jsst-dashboard-v2__metric-row--compact">
+                                        <div>
+                                            <strong><span class="jsst-dashboard-v2__dot" style="background-color: <?php echo jsst_dashboard_escape(jsst_dashboard_color($priority->prioritycolour ?? '')); ?>;"></span><?php echo jsst_dashboard_escape(Text::_($priority->priority ?? Text::_('Priority'))); ?></strong>
+                                            <span><?php echo jsst_dashboard_count($priority->totalticket ?? 0, $showCounts) . ' ' . Text::_('total'); ?></span>
+                                        </div>
+                                        <em><?php echo jsst_dashboard_count($priority->active ?? 0, $showCounts); ?></em>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } else { ?>
+                            <div class="jsst-dashboard-v2__empty"><span class="jsst-dashboard-v2__empty-icon">P</span><strong><?php echo Text::_('No priority data yet.'); ?></strong></div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head"><h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('System Setup'); ?></h2></div>
+                    <div class="jsst-dashboard-v2__panel-body">
+                        <div class="jsst-dashboard-v2__setup-grid">
+                            <a href="index.php?option=com_jssupportticket&c=department&layout=departments"><span><?php echo Text::_('Active Departments'); ?></span><strong><?php echo jsst_dashboard_count($peopleSummary['active_departments'] ?? 0, $showCounts); ?></strong></a>
+                            <a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=proversion&feature=staff"><span><?php echo jsstProCfg('Active Staff'); ?></span><strong><?php echo jsst_dashboard_count($peopleSummary['active_staff'] ?? 0, $showCounts); ?></strong></a>
+                            <a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=proversion&feature=feedback"><span><?php echo jsstProCfg('Average Rating'); ?></span><strong><?php echo $showCounts ? jsst_dashboard_escape($peopleSummary['average_rating'] ?? '-') : '-'; ?></strong></a>
+                            <a href="index.php?option=com_jssupportticket&c=ticket&layout=tickets"><span><?php echo jsst_dashboard_label(Text::_('Merged Tickets'), true); ?></span><strong><?php echo jsst_dashboard_count($adminSnapshot['merged'] ?? 0, $showCounts); ?></strong></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <?php if (!empty($this->result['tickets']) && is_array($this->result['tickets'])) { ?>
+                <section class="jsst-dashboard-v2__section jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head">
+                        <div>
+                            <h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('Latest Tickets'); ?></h2>
+                            <div class="jsst-dashboard-v2__panel-subtitle"><?php echo Text::_('Recent ticket activity'); ?></div>
+                        </div>
+                        <a class="jsst-dashboard-v2__badge" href="index.php?option=com_jssupportticket&c=ticket&layout=tickets"><?php echo Text::_('View All Tickets'); ?></a>
+                    </div>
+                    <div class="jsst-dashboard-v2__panel-body jsst-dashboard-v2__list">
+                        <?php foreach ($this->result['tickets'] as $ticket) {
+                            $ticketId = isset($ticket->id) ? (int) $ticket->id : 0;
+                            $ticketLink = 'index.php?option=com_jssupportticket&c=ticket&layout=ticketdetails&cid[]=' . $ticketId;
+                            $priorityColour = jsst_dashboard_color($ticket->prioritycolour ?? '');
+                        ?>
+                            <div class="jsst-dashboard-v2__ticket">
+                                <div>
+                                    <div class="jsst-dashboard-v2__ticket-title"><a href="<?php echo jsst_dashboard_escape($ticketLink); ?>"><?php echo jsst_dashboard_escape($ticket->subject ?? Text::_('Ticket')); ?></a></div>
+                                    <div class="jsst-dashboard-v2__ticket-meta">
+                                        <span><?php echo Text::_('From') . ': ' . jsst_dashboard_escape($ticket->name ?? ''); ?></span>
+                                        <?php if (!empty($ticket->created)) { ?><span><?php echo Text::_('Created') . ': ' . jsst_dashboard_escape(HTMLHelper::_('date', $ticket->created, $dateFormat)); ?></span><?php } ?>
                                     </div>
                                 </div>
-                            </div>
-                        <?php }else{ ?>
-                            <div class="js-cp-addon-empty-data">
-                                <div class="js-empty-data-upper-portion">
-                                    <img src="components/com_jssupportticket/include/images/c_p/no-record.png" alt="">
-                                </div>
-                                <div class="js-empty-data-lower-portion">
-                                    <?php echo Text::_("No Data"); ?>
-                                </div>
+                                <span class="jsst-dashboard-v2__badge"><?php echo jsst_dashboard_escape(jsst_dashboard_status($ticket->status ?? 0)); ?></span>
+                                <span class="jsst-dashboard-v2__priority" style="background-color: <?php echo jsst_dashboard_escape($priorityColour); ?>;"><?php echo jsst_dashboard_escape(Text::_($ticket->priority ?? '')); ?></span>
                             </div>
                         <?php } ?>
                     </div>
+                </section>
+            <?php } ?>
 
-                    <div class="js-cp-addon-wrp">
-                        <div class="js-cp-cnt-title">
-                            <span class="js-cp-cnt-title-txt">
-                                <?php echo Text::_("Pro Version Features"); ?>
-                            </span>
-                        </div>
-                        <div class="js-cp-addon-feature-data">
-                            <div class="js-cp-addon">
-                                <div class="js-cp-addon-tit">
-                                    <?php echo Text::_("Big Collection Of Add-Ons"); ?>
-                                </div>
-                                <div class="js-cp-addon-desc">
-                                        <?php echo Text::_("It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."); ?>
-                                </div>
+            <section class="jsst-dashboard-v2__section jsst-dashboard-v2__content-grid">
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head"><h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('Latest Downloads'); ?></h2></div>
+                    <div class="jsst-dashboard-v2__panel-body">
+                        <?php if (!empty($this->latestdownloads)) { ?>
+                            <div class="jsst-dashboard-v2__list">
+                                <?php foreach ($this->latestdownloads as $download) { ?>
+                                    <div class="jsst-dashboard-v2__content-item">
+                                        <div class="jsst-dashboard-v2__content-title"><?php echo jsst_dashboard_escape($download->title ?? ''); ?></div>
+                                        <div class="jsst-dashboard-v2__content-desc"><?php echo jsst_dashboard_escape(jsst_dashboard_excerpt($download->description ?? '')); ?></div>
+                                    </div>
+                                <?php } ?>
                             </div>
-                            <div class="js-empty-data-upper-portion">
-                                <a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=proversion">
-                                    <img src="components/com_jssupportticket/include/images/c_p/pro-feature.png" alt="">
-                                </a>
-                            </div>
-                        </div>
+                        <?php } else { ?>
+                            <div class="jsst-dashboard-v2__empty"><span class="jsst-dashboard-v2__empty-icon">↓</span><strong><?php echo Text::_('No Data'); ?></strong></div>
+                        <?php } ?>
                     </div>
                 </div>
-                <!-- Ticket History End -->
-                <div id="jsreview-banner">
-                    <div class="review">
-                        <div class="upper">
-                            <span class="simple-text">
-                                <?php echo Text::_("We'd love to hear from you.<br>Please write an appreciated review at"); ?>
-                            </span>
-                            <a class="review-link" href="https://extensions.joomla.org/extension/js-support-ticket/" target="_blank" title="WP Extension Directory">
-                                <img alt="star" src="components/com_jssupportticket/include/images/c_p/star.png"><?php echo Text::_("Joomla Extension Directory"); ?>
-                            </a>
-                        </div>
-                        <div class="lower">
-                            <span class="simple-text"><?php echo Text::_("Spread the word"); ?>:&nbsp;</span>
-                            <a class="rev-soc-link" href="https://www.facebook.com/joomsky">
-                                <img alt="fb" src="components/com_jssupportticket/include/images/c_p/fb.png">
-                            </a>
-                            <a class="rev-soc-link" href="https://twitter.com/joomsky">
-                                <img alt="twitter" src="components/com_jssupportticket/include/images/c_p/twitter.png">
-                            </a>
-                        </div>
+
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head"><h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('Latest Knowledge Base'); ?></h2></div>
+                    <div class="jsst-dashboard-v2__panel-body">
+                        <?php if (!empty($this->latestknowledgebase)) { ?>
+                            <div class="jsst-dashboard-v2__list">
+                                <?php foreach ($this->latestknowledgebase as $latestknowledgebase) { ?>
+                                    <div class="jsst-dashboard-v2__content-item">
+                                        <div class="jsst-dashboard-v2__content-title"><?php echo jsst_dashboard_escape($latestknowledgebase->subject ?? ''); ?></div>
+                                        <div class="jsst-dashboard-v2__content-desc"><?php echo jsst_dashboard_escape(jsst_dashboard_excerpt($latestknowledgebase->content ?? '')); ?></div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } else { ?>
+                            <div class="jsst-dashboard-v2__empty"><span class="jsst-dashboard-v2__empty-icon">?</span><strong><?php echo Text::_('No Data'); ?></strong></div>
+                        <?php } ?>
                     </div>
                 </div>
-            </div>
+
+                <div class="jsst-dashboard-v2__panel">
+                    <div class="jsst-dashboard-v2__panel-head"><h2 class="jsst-dashboard-v2__panel-title"><?php echo Text::_('Latest Announcements'); ?></h2></div>
+                    <div class="jsst-dashboard-v2__panel-body">
+                        <?php if (!empty($this->latestannouncement)) { ?>
+                            <div class="jsst-dashboard-v2__list">
+                                <?php foreach ($this->latestannouncement as $latestannouncement) { ?>
+                                    <div class="jsst-dashboard-v2__content-item">
+                                        <div class="jsst-dashboard-v2__content-title"><?php echo jsst_dashboard_escape($latestannouncement->title ?? ''); ?></div>
+                                        <div class="jsst-dashboard-v2__content-desc"><?php echo jsst_dashboard_escape(jsst_dashboard_excerpt($latestannouncement->description ?? '')); ?></div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } else { ?>
+                            <div class="jsst-dashboard-v2__empty"><span class="jsst-dashboard-v2__empty-icon">i</span><strong><?php echo Text::_('No Data'); ?></strong></div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </section>
+
+            <section class="jsst-dashboard-v2__section jsst-dashboard-v2__resources">
+                <div class="jsst-dashboard-v2__resource">
+                    <div class="jsst-dashboard-v2__resource-title"><?php echo Text::_('Enjoying JS Support Ticket?'); ?></div>
+                    <div class="jsst-dashboard-v2__resource-text"><?php echo Text::_('Please consider leaving a review on the Joomla Extensions Directory.'); ?></div>
+                    <a href="https://extensions.joomla.org/extension/js-support-ticket/" target="_blank" rel="noopener noreferrer"><?php echo Text::_('Joomla Extension Directory'); ?> →</a>
+                </div>
+                <div class="jsst-dashboard-v2__resource">
+                    <div class="jsst-dashboard-v2__resource-title"><?php echo Text::_('Useful Links'); ?></div>
+                    <div class="jsst-dashboard-v2__resource-text"><?php echo Text::_('Quick access to important administration areas.'); ?></div>
+                    <a href="index.php?option=com_jssupportticket&c=systemerrors&layout=systemerrors"><?php echo Text::_('System Errors'); ?> →</a>
+                </div>
+            </section>
+
+            <?php
+$jsstFooterClass = 'jsst-dashboard-v2__footer';
+$jsstFooterId = '';
+include_once('components/com_jssupportticket/views/partials/pagefooter.php');
+?>
         </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
+    </div>
 </div>

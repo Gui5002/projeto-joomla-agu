@@ -11,10 +11,10 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
-
-jimport('joomla.application.component.controller');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+
+jimport('joomla.application.component.controller');
 
 class JSSupportticketControllerConfig extends JSSupportTicketController {
 

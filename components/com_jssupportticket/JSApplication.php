@@ -9,7 +9,6 @@
  + Project: 	JS Tickets
  ^
  */
-
  defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -137,7 +136,6 @@ if (JVERSION < 3) {
         static function getJSModel($model){
             return JSSupportTicketModel::getJSModel($model);
         }
-    }
+    }    
 }
-
 ?>

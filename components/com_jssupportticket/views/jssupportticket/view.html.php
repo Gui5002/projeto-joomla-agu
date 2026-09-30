@@ -15,18 +15,19 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 jimport('joomla.html.pagination');
 
-class JSSupportTicketViewJsSupportticket extends JSSupportticketView
-{
+class jssupportticketViewjssupportticket extends JSSupportTicketView{
 	function display($tpl = null){
 		require_once(JPATH_COMPONENT."/views/common.php");
 		if($layoutName == 'controlpanel'){
-			$latest_tickets = $this->getJSModel('ticket')->getUserMyTicketsForCP();
-			$userticketstats = $this->getJSModel('jssupportticket')->getUserTicketStatsForCP();	
+			$user = JSSupportticketCurrentUser::getInstance();
+				$latest_tickets = $this->getJSModel('ticket')->getUserMyTicketsForCP();	
+				
+        	$userticketstats = $this->getJSModel('jssupportticket')->getUserTicketStatsForCP();	
 
 	        $this->userticketstats=$userticketstats;
-            $this->latest_tickets=$latest_tickets;
+			$this->latest_tickets=$latest_tickets;
+	        
 		}
-		require_once(JPATH_COMPONENT."/views/jssupportticket/jssupportticket_breadcrumbs.php");
 		parent::display($tpl);
 	}
 }

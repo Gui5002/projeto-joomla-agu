@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 // No direct access
@@ -46,12 +46,19 @@ abstract class SppagebuilderAddons
 	 */
 	public function __construct($addon)
 	{
-		if (!$addon)
+		if ($addon)
 		{
-			return false;
-		}
+			// The id is client supplied and is used by addons to build cache paths,
+			// CSS selectors and DOM ids. Keep it to identifier characters only so it
+			// can never carry path separators or markup. Legitimate ids (uuid, hex,
+			// negative integers) are unaffected.
+			if (is_object($addon) && isset($addon->id))
+			{
+				$addon->id = preg_replace('/[^A-Za-z0-9_-]/', '', (string) $addon->id);
+			}
 
-		$this->addon = $addon;
+			$this->addon = $addon;
+		}
 	}
 
 	/**

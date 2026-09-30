@@ -14,12 +14,20 @@ use Joomla\CMS\Language\Text;
 
 ?>
 
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-jssupportticket-userguide">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-        <div id="js-tk-heading"><h4><img id="js-admin-responsive-menu-link" src="components/com_jssupportticket/include/images/c_p/left-icons/menu.png" /><?php echo Text::_('JS_USER_GUIDE'); ?></h4></div> 
+        <?php
+$jsstPageTitle = 'User Guide';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label' => 'User Guide', 'link' => null),
+);
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?>
+        <div id="jsstadmin-data-wrp" class="js-ticket-box-shadow">
         <table width="100%" class="adminlist">
             <tr>
                 <td>
@@ -82,13 +90,11 @@ use Joomla\CMS\Language\Text;
                     System errors are those errors which generate during the any storage process. If any error is generated then the log of system error is stored in system
                     errors.
                     <br/>
-                    <div style="float:right;">Thanks for reading the guide, Hope this will useful for you.</div>
+                    <div class="jsst-userguide-closing">Thanks for reading the guide, Hope this will useful for you.</div>
                 </td>
             </tr>
         </table>
+        </div>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>

@@ -421,7 +421,7 @@ final class PageSchemaOrgBuilder
 			$query = $db->getQuery(true)
 				->select($db->quoteName('title'))
 				->from($db->quoteName('#__categories'))
-				->where($db->quoteName('id') . ' = ' . $catId)
+				->where($db->quoteName('id') . ' = ' . (int)$catId)
 				->where($db->quoteName('extension') . ' = ' . $db->quote('com_sppagebuilder'))
 				->where($db->quoteName('published') . ' = 1');
 			$db->setQuery($query);

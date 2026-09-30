@@ -1,0 +1,153 @@
+/* JS Support Ticket admin workspace v34
+   Clean support layer for modernized staff/department/priority/form/detail screens. */
+
+#jsst-admin .jsst-admin-form,
+#jsst-admin .jsst-config-v2,
+#jsst-admin .jsst-management,
+#jsst-admin .jsst-ticket-detail-v2,
+#jsst-admin .jsst-ticket-detail-admin-v2{
+  width:100%;
+  max-width:1280px;
+  margin:26px auto 0;
+  padding:0;
+  display:block;
+  overflow:visible;
+}
+
+#jsst-admin .jsst-admin-form > #js-tk-leftmenu,
+#jsst-admin .jsst-config-v2 > #js-tk-leftmenu,
+#jsst-admin .jsst-management > #js-tk-leftmenu,
+#jsst-admin .jsst-ticket-detail-v2 > #js-tk-leftmenu,
+#jsst-admin .jsst-ticket-detail-admin-v2 > #js-tk-leftmenu{
+  width:100%;
+  max-width:100%;
+  margin:0 0 18px;
+  padding:0;
+  float:none;
+  position:relative;
+  left:auto;
+  top:auto;
+}
+
+#jsst-admin .jsst-admin-form > #js-tk-cparea,
+#jsst-admin .jsst-config-v2 > #js-tk-cparea,
+#jsst-admin .jsst-management > #js-tk-cparea,
+#jsst-admin .jsst-ticket-detail-v2 > #js-tk-cparea,
+#jsst-admin .jsst-ticket-detail-admin-v2 > #js-tk-cparea,
+#jsst-admin .jsst-admin-form.menu-collasped-active > #js-tk-cparea,
+#jsst-admin .jsst-config-v2.menu-collasped-active > #js-tk-cparea,
+#jsst-admin .jsst-management.menu-collasped-active > #js-tk-cparea,
+#jsst-admin .jsst-ticket-detail-v2.menu-collasped-active > #js-tk-cparea,
+#jsst-admin .jsst-ticket-detail-admin-v2.menu-collasped-active > #js-tk-cparea{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  margin:0;
+  padding:0;
+  padding-left:0;
+  float:none;
+  clear:both;
+  display:block;
+}
+
+#jsst-admin .jsst-admin-form #jsstadmin-wrapper-top,
+#jsst-admin .jsst-config-v2 #jsstadmin-wrapper-top,
+#jsst-admin .jsst-management #jsstadmin-wrapper-top,
+#jsst-admin .jsst-ticket-detail-v2 #jsstadmin-wrapper-top,
+#jsst-admin .jsst-ticket-detail-admin-v2 #jsstadmin-wrapper-top{
+  display:none !important;
+}
+
+#jsst-admin .jsst-management #js-tk-heading,
+#jsst-admin .jsst-admin-form #js-tk-heading,
+#jsst-admin .jsst-config-v2 #js-tk-heading{
+  margin:0;
+  border-radius:24px 24px 0 0;
+  min-height:112px;
+  height:auto;
+  padding-top:32px;
+  padding-bottom:32px;
+  overflow:visible;
+  position:relative;
+  z-index:2;
+}
+
+#jsst-admin .jsst-management #js-tk-heading .jsstadmin-head-text,
+#jsst-admin .jsst-admin-form #js-tk-heading .jsstadmin-head-text,
+#jsst-admin .jsst-config-v2 #js-tk-heading .jsstadmin-head-text,
+#jsst-admin .jsst-management #js-tk-heading h1,
+#jsst-admin .jsst-admin-form #js-tk-heading h1,
+#jsst-admin .jsst-config-v2 #js-tk-heading h1,
+#jsst-admin .jsst-management #js-tk-heading h4,
+#jsst-admin .jsst-admin-form #js-tk-heading h4,
+#jsst-admin .jsst-config-v2 #js-tk-heading h4{
+  line-height:1.28;
+  height:auto;
+  max-height:none;
+  overflow:visible;
+  display:block;
+}
+
+#jsst-admin .jsst-management form#adminForm,
+#jsst-admin .jsst-admin-form form#adminForm,
+#jsst-admin .jsst-config-v2 form#adminForm,
+#jsst-admin .jsst-management form#adminForm.jsstadmin-data-wrp,
+#jsst-admin .jsst-admin-form form#adminForm.jsstadmin-data-wrp,
+#jsst-admin .jsst-config-v2 form#adminForm.jsstadmin-data-wrp{
+  margin:0;
+  width:100%;
+  max-width:100%;
+}
+
+#jsst-admin .js-form-wrapper,
+#jsst-admin .jsstadmin-data-wrp .js-form-wrapper{
+  border:1px solid #e4edf7;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 10px 24px rgba(15,23,42,.035);
+}
+
+#jsst-admin .js-form-title,
+#jsst-admin .a-js-form-title{
+  color:var(--jsst-ink, #0f172a);
+  font-weight:900;
+}
+
+@media (max-width:900px){
+  #jsst-admin .jsst-admin-form,
+  #jsst-admin .jsst-config-v2,
+  #jsst-admin .jsst-management,
+  #jsst-admin .jsst-ticket-detail-v2,
+  #jsst-admin .jsst-ticket-detail-admin-v2{
+    max-width:100% !important;
+    margin:0 auto !important;
+    padding:10px !important;
+  }
+}
+
+
+/* v36 final heading safety loaded after general admin styles */
+
+
+
+/* v37 workspace finish polish */
+#jsst-admin .jsst-admin-form #js-tk-heading,
+#jsst-admin .jsst-management #js-tk-heading,
+#jsst-admin .jsst-config-v2 #js-tk-heading{
+  height:auto;
+  margin-top:18px;
+  min-height:118px;
+  padding-top:38px;
+  padding-bottom:28px;
+  overflow:visible;
+}
+
+#jsst-admin .jsst-admin-form #js-tk-heading .jsstadmin-head-text,
+#jsst-admin .jsst-management #js-tk-heading .jsstadmin-head-text,
+#jsst-admin .jsst-config-v2 #js-tk-heading .jsstadmin-head-text{
+  max-height:none;
+  white-space:normal;
+  line-height:1.55;
+  padding-bottom:2px;
+  overflow:visible;
+}

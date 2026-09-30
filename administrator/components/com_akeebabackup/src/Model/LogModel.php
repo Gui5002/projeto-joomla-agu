@@ -9,6 +9,7 @@ namespace Akeeba\Component\AkeebaBackup\Administrator\Model;
 
 defined('_JEXEC') || die;
 
+use Akeeba\Component\AkeebaBackup\Administrator\Helper\Utils;
 use Akeeba\Engine\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -41,17 +42,18 @@ class LogModel extends BaseDatabaseModel
 		{
 			$baseName         = basename($filename);
 			$startsWithAkeeba = substr($baseName, 0, 7) == 'akeeba.';
-			$endsWithLog      = substr($baseName, -4) == '.log';
 			$endsWithPhpLog   = substr($baseName, -8) == '.log.php';
-			$isDefaultLog     = $baseName == 'akeeba.log';
+			$endsWithLog      = !$endsWithPhpLog && substr($baseName, -4) == '.log';
+			$endsWithPhp      = !$endsWithPhpLog && substr($baseName, -4) == '.php';
+			$isDefaultLog     = in_array($baseName, ['akeeba.log', 'akeeba.log.php', 'akeeba.php']);
 
-			if ($startsWithAkeeba && ($endsWithLog || $endsWithPhpLog) && !$isDefaultLog)
+			if ($startsWithAkeeba && ($endsWithLog || $endsWithPhpLog || $endsWithPhp) && !$isDefaultLog)
 			{
 				/**
-				 * Extract the tag from the filename (akeeba.tag.log or akeeba.tag.log.php)
+				 * Extract the tag from the filename (akeeba.tag.log, akeeba.tag.log.php or akeeba.tag.php)
 				 *
 				 * We ignore the first seven characters ("akeeba.") and the last X characters, where X is 8 if the
-				 * log file name ends with .log.php or 4 if the log name ends with .log.
+				 * log file name ends with .log.php or 4 if the log name ends with .log or .php.
 				 */
 				$tag = substr($baseName, 7, -($endsWithPhpLog ? 8 : 4));
 
@@ -134,7 +136,7 @@ class LogModel extends BaseDatabaseModel
 	public function echoRawLog($withHeader = true)
 	{
 		$tag     = $this->getState('tag', '');
-		$logFile = Factory::getLog()->getLogFilename($tag);
+		$logFile = Utils::getLogFilePath($tag);
 
 		if ($withHeader)
 		{
@@ -147,7 +149,7 @@ class LogModel extends BaseDatabaseModel
 
 		// The at sign (silence operator) is necessary to prevent PHP showing a warning if the file doesn't exist or
 		// isn't readable for any reason.
-		$fp = @fopen($logFile, 'r');
+		$fp = is_null($logFile) ? false : @fopen($logFile, 'r');
 
 		if ($fp === false)
 		{

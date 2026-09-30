@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5.0" method="upgrade">
     <name>JS Support Ticket</name>
-    <creationDate>January 21st, 2026</creationDate>
+    <creationDate>August 07th, 2026</creationDate>
     <author>Joom Sky</author>
     <authorEmail>ahmad@burujsolutions.com</authorEmail>
     <authorURL>www.burujsolutions.com</authorURL>
     <copyright>Copyright (c) 2015. All rights reserved.</copyright>
     <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-    <version>1.2.8</version>
+    <version>1.2.9</version>
     <description>JS Support Ticket a help desk component</description>>
     <!-- Runs on install/uninstall/update;  -->
     <scriptfile>script.php</scriptfile>
@@ -60,6 +60,11 @@
         <languages folder="admin/language">
             <language tag="en-GB">en-GB.com_jssupportticket.ini</language>
             <language tag="en-GB">en-GB.com_jssupportticket.sys.ini</language>
+      		<language tag="de-DE">de-DE.com_jssupportticket.ini</language>
+      		<language tag="es-ES">es-ES.com_jssupportticket.ini</language>
+			<language tag="fr-FR">fr-FR.com_jssupportticket.ini</language>
+      		<language tag="it-IT">it-IT.com_jssupportticket.ini</language>
+			<language tag="pt-BR">pt-BR.com_jssupportticket.ini</language>
         </languages>
     </administration>
 </extension>

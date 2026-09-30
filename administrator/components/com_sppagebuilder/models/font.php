@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -177,7 +177,7 @@ class SppagebuilderModelFont extends ListModel
 		$db 	= Factory::getDbo();
 		$query 	= $db->getQuery(true);
 		$query->delete($db->quoteName('#__sppagebuilder_assets'))
-			->where($db->quoteName('id') . ' = ' . $id);
+			->where($db->quoteName('id') . ' = ' . (int)$id);
 		$db->setQuery($query);
 
 		if (Folder::exists($assetPath))
@@ -200,7 +200,7 @@ class SppagebuilderModelFont extends ListModel
 		$db 	= Factory::getDbo();
 		$query 	= $db->getQuery(true);
 		$query->select('*')->from($db->quoteName('#__sppagebuilder_assets'))
-			->where($db->quoteName('id') . ' = ' . $db->quote($id));
+			->where($db->quoteName('id') . ' = ' . (int)$id);
 		$db->setQuery($query);
 
 		return $db->loadObject();
@@ -221,8 +221,8 @@ class SppagebuilderModelFont extends ListModel
 		$query 	= $db->getQuery(true);
 
 		$query->update($db->quoteName('#__sppagebuilder_assets'))
-			->set($db->quoteName('published') . ' = ' . $status)
-			->where($db->quoteName('id') . ' = ' . $id);
+			->set($db->quoteName('published') . ' = ' . $db->quote($status))
+			->where($db->quoteName('id') . ' = ' . (int)$id);
 
 		$db->setQuery($query);
 

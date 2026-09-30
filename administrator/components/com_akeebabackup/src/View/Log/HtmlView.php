@@ -9,10 +9,10 @@ namespace Akeeba\Component\AkeebaBackup\Administrator\View\Log;
 
 defined('_JEXEC') or die;
 
+use Akeeba\Component\AkeebaBackup\Administrator\Helper\Utils;
 use Akeeba\Component\AkeebaBackup\Administrator\Mixin\ViewProfileIdAndNameTrait;
 use Akeeba\Component\AkeebaBackup\Administrator\Mixin\ViewToolbarTrait;
 use Akeeba\Component\AkeebaBackup\Administrator\Model\LogModel;
-use Akeeba\Engine\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -105,9 +105,9 @@ class HtmlView extends BaseHtmlView
 		// Let's check if the file is too big to display
 		if ($this->tag)
 		{
-			$logFile = Factory::getLog()->getLogFilename($this->tag);
+			$logFile = Utils::getLogFilePath($this->tag);
 
-			if (@file_exists($logFile))
+			if (!is_null($logFile))
 			{
 				$this->logSize   = filesize($logFile);
 				$this->logTooBig = ($this->logSize >= self::bigLogSize);

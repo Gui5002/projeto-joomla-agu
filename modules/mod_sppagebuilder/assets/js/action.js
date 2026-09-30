@@ -1,7 +1,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 jQuery(function ($) {
@@ -40,6 +40,9 @@ jQuery(function ($) {
 		$.ajax({
 			type: "POST",
 			url: pagebuilder_base + "administrator/index.php?option=com_sppagebuilder&task=page.module_save",
+			headers: {
+				"X-CSRF-Token": Joomla.getOptions("csrf.token"),
+			},
 			data: data,
 			success: function (response) {
 				var data = jQuery.parseJSON(response);

@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -1966,7 +1966,7 @@ class SppagebuilderHelperSite
             $doc->addStyledeclaration($data->css);
         }
 
-        $content = $data->content;
+        $content = !empty($data->content) ? $data->content : '';
 
         return is_string($content) ? json_decode($content) : $content;
     }

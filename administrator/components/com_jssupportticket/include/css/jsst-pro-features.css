@@ -1,0 +1,480 @@
+/* ==========================================================================
+   JS Support Ticket - Pro features page + "*" markers on Pro menu entries.
+   Free edition only. Token-based, no !important.
+   ========================================================================== */
+
+/* --- The "*" marker on Pro menu items ----------------------------------- */
+
+.jsst-pro-star {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--jsst-orange);
+  font-weight: 700;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+#jsst-admin .jsst-dashboard-v2__stat.jsst-dashboard-v2__stat--overdue{
+  cursor: not-allowed;
+}
+.jsst-ticket-status-card.is-overdue .jsst-ticket-status-label::after,
+.jsst-ticket-badge.is-overdue::after {
+  content: " ★";
+  color: var(--jsst-orange);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  position: relative;
+  top: -5px;
+}
+.jsst-modern-submenu-link.is-pro .jsst-modern-submenu-icon img,
+.jsst-modern-quick-link.is-pro img {
+  opacity: .6;
+}
+#jsst-admin .jsst-screen .js-ticket-box-shadow.jsst-pro-page .jsst-pro-callout__icon{
+  flex: 0 0 100px;
+  width:100px;
+  height:60px;
+}
+#jsst-admin .jsst-screen .js-ticket-box-shadow.jsst-pro-page .jsst-pro-callout__icon img{
+  width: 100%;
+}
+#jsst-admin .jsst-screen .js-ticket-box-shadow.jsst-pro-page .jsst-pro-card__icon{
+  width:100%;
+  height:auto;
+  padding: 10px 0;
+  display: inline-block;
+}
+#jsst-admin .jsst-screen .js-ticket-box-shadow.jsst-pro-page .jsst-pro-card__icon img{
+  width: 100%;
+}
+#jsst-admin .jsst-screen .js-ticket-box-shadow.jsst-pro-page .jsst-pro-hero__badge img{
+  width: 100%;
+}
+#jsst-admin .jsst-screen .js-ticket-box-shadow.jsst-pro-page .jsst-pro-extra__icon{
+  flex: 0 0 100px;
+  width:100px;
+  height:60px;
+}
+#jsst-admin .jsst-screen .js-ticket-box-shadow.jsst-pro-page .jsst-pro-extra__icon img{
+  width: 100%;
+}
+.jsst-modern-submenu-link.is-pro:hover .jsst-modern-submenu-icon img,
+.jsst-modern-quick-link.is-pro:hover img {
+  opacity: 1;
+}
+
+/* --- Configuration screen: legend + whole-tab notices -------------------- */
+
+#jsst-admin .jsst-pro-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--jsst-space-3) 0 0;
+  padding: var(--jsst-space-2) var(--jsst-space-3);
+  border-left: 3px solid var(--jsst-orange);
+  border-radius: var(--jsst-radius-sm);
+  background: var(--jsst-soft);
+  font-size: var(--jsst-fs-sm);
+  color: var(--jsst-muted);
+}
+
+#jsst-admin .jsst-pro-legend a {
+  color: var(--jsst-primary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Shown at the top of a tab whose settings are Pro in full, so the marker does
+   not have to be repeated on thirty consecutive rows. */
+#jsst-admin .jsst-pro-tabnote {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 var(--jsst-space-4);
+  padding: var(--jsst-space-3) var(--jsst-space-4);
+  border: 1px solid var(--jsst-border);
+  border-left: 4px solid var(--jsst-orange);
+  border-radius: var(--jsst-radius-sm);
+  background: var(--jsst-soft);
+}
+
+#jsst-admin .jsst-pro-tabnote strong {
+  font-size: var(--jsst-fs-base);
+  color: var(--jsst-ink);
+}
+
+#jsst-admin .jsst-pro-tabnote span {
+  flex: 1 1 320px;
+  font-size: var(--jsst-fs-sm);
+  color: var(--jsst-muted);
+}
+
+#jsst-admin .jsst-pro-tabnote a {
+  color: var(--jsst-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+/* --- Page shell --------------------------------------------------------- */
+
+.jsst-pro-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--jsst-space-6);
+  padding: var(--jsst-space-6);
+  background: var(--jsst-card);
+  border-radius: var(--jsst-radius-lg);
+}
+
+/* --- Callout naming the feature the user clicked ------------------------ */
+
+.jsst-pro-callout {
+  display: flex;
+  align-items: center;
+  gap: var(--jsst-space-4);
+  flex-wrap: wrap;
+  padding: var(--jsst-space-4) var(--jsst-space-5);
+  border: 1px solid var(--jsst-border);
+  border-left: 4px solid var(--jsst-orange);
+  border-radius: var(--jsst-radius-md);
+  background: var(--jsst-soft);
+}
+
+.jsst-pro-callout__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: var(--jsst-radius-sm);
+  background: var(--jsst-card);
+  border: 1px solid var(--jsst-border);
+}
+
+.jsst-pro-callout__icon img { width: 22px; height: 22px; }
+
+.jsst-pro-callout__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 260px;
+}
+
+.jsst-pro-callout__copy strong {
+  font-size: var(--jsst-fs-lg);
+  color: var(--jsst-ink);
+}
+
+.jsst-pro-callout__copy span {
+  font-size: var(--jsst-fs-sm);
+  color: var(--jsst-muted);
+}
+
+.jsst-pro-callout__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--jsst-space-2);
+  margin-left: auto;
+}
+
+/* --- Hero --------------------------------------------------------------- */
+
+.jsst-pro-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: var(--jsst-space-6);
+  align-items: center;
+  padding: var(--jsst-space-7);
+  border-radius: var(--jsst-radius-lg);
+  background: linear-gradient(135deg, var(--jsst-primary) 0%, var(--jsst-blue) 55%, var(--jsst-cyan) 100%);
+  color: #fff;
+}
+
+.jsst-pro-eyebrow {
+  display: inline-block;
+  padding: 4px 12px;
+  margin-bottom: var(--jsst-space-3);
+  border-radius: var(--jsst-radius-pill);
+  background: rgba(255, 255, 255, .18);
+  font-size: var(--jsst-fs-xs);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.jsst-pro-hero h2 {
+  margin: 0 0 var(--jsst-space-3);
+  color: #fff;
+  font-size: var(--jsst-fs-2xl);
+  line-height: 1.2;
+}
+
+.jsst-pro-hero p {
+  margin: 0 0 var(--jsst-space-5);
+  max-width: 62ch;
+  color: rgba(255, 255, 255, .9);
+  font-size: var(--jsst-fs-md);
+  line-height: var(--jsst-lh-base);
+}
+
+.jsst-pro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--jsst-space-3);
+}
+
+.jsst-pro-hero__badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--jsst-space-5);
+  border-radius: var(--jsst-radius-md);
+  background: rgba(255, 255, 255, .14);
+  text-align: center;
+}
+
+.jsst-pro-hero__badge img { width: 64px; height: 64px; margin-bottom: 6px; }
+.jsst-pro-hero__badge strong { font-size: var(--jsst-fs-base); }
+.jsst-pro-hero__badge span {
+  font-size: var(--jsst-fs-xs);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .85;
+}
+
+/* --- Buttons ------------------------------------------------------------ */
+
+/*
+ * Buttons are scoped through #jsst-admin .jsst-pro-page so they outrank the
+ * Joomla admin template's generic anchor styling. Atum colours bare links and
+ * hangs an external-link glyph off a[target="_blank"], which previously bled
+ * through: the hero's secondary button rendered dark-on-blue and the labels
+ * sat cramped against an injected icon.
+ */
+#jsst-admin .jsst-pro-page .jsst-pro-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--jsst-control-height);
+  padding: 0 var(--jsst-space-5);
+  border: 1px solid transparent;
+  border-radius: var(--jsst-radius-pill);
+  font-size: var(--jsst-fs-sm);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: var(--jsst-transition);
+}
+
+/* Drop any glyph the admin template attaches to outbound links. */
+#jsst-admin .jsst-pro-page .jsst-pro-btn::before,
+#jsst-admin .jsst-pro-page .jsst-pro-btn::after {
+  content: none;
+}
+
+/*
+ * Palette: the product is blue, so the buy action is blue and carries the
+ * strongest weight on the page. Amber stays reserved for the "*" marker and the
+ * highlighted card - as a button fill it competed with that ring and read as a
+ * warning rather than a call to action.
+ */
+#jsst-admin .jsst-pro-page .jsst-pro-btn--upgrade {
+  background: var(--jsst-primary);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .16);
+}
+#jsst-admin .jsst-pro-page .jsst-pro-btn--upgrade:hover {
+  background: var(--jsst-primary-dark);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, .3);
+}
+
+/* Secondary path for customers who already own a licence key. */
+#jsst-admin .jsst-pro-page .jsst-pro-btn--key {
+  background: var(--jsst-card);
+  color: var(--jsst-primary-dark);
+  border-color: var(--jsst-border-strong);
+}
+#jsst-admin .jsst-pro-page .jsst-pro-btn--key:hover {
+  background: var(--jsst-soft);
+  color: var(--jsst-primary-dark);
+  border-color: var(--jsst-primary);
+}
+
+/* On the blue hero the surface is already brand, so invert: solid white leads. */
+#jsst-admin .jsst-pro-page .jsst-pro-btn--onbrand {
+  background: #fff;
+  color: var(--jsst-primary-dark);
+}
+#jsst-admin .jsst-pro-page .jsst-pro-btn--onbrand:hover {
+  background: rgba(255, 255, 255, .9);
+  color: var(--jsst-primary-dark);
+}
+
+/*
+ * Darken rather than lighten. A translucent white sat on an already-light blue
+ * and pushed white label text to ~4.3:1; tinting toward the ink colour instead
+ * lifts it clear of the 4.5:1 minimum while still reading as secondary.
+ */
+#jsst-admin .jsst-pro-page .jsst-pro-btn--ghost {
+  background: rgba(15, 23, 42, .22);
+  color: #fff;
+  border-color: rgba(255, 255, 255, .65);
+}
+#jsst-admin .jsst-pro-page .jsst-pro-btn--ghost:hover {
+  background: rgba(15, 23, 42, .34);
+  color: #fff;
+  border-color: #fff;
+}
+
+/* --- Feature sections --------------------------------------------------- */
+
+.jsst-pro-section__head {
+  display: flex;
+  align-items: center;
+  gap: var(--jsst-space-4);
+  margin-bottom: var(--jsst-space-4);
+}
+
+.jsst-pro-section__head h3 {
+  margin: 0;
+  flex: 0 0 auto;
+  font-size: var(--jsst-fs-lg);
+  color: var(--jsst-ink);
+}
+
+.jsst-pro-section__rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--jsst-border);
+}
+
+.jsst-pro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--jsst-space-4);
+}
+
+.jsst-pro-card {
+  padding: var(--jsst-space-5);
+  border: 1px solid var(--jsst-border);
+  border-radius: var(--jsst-radius-md);
+  background: var(--jsst-card);
+  transition: var(--jsst-transition);
+}
+
+.jsst-pro-card:hover {
+  border-color: var(--jsst-border-strong);
+  box-shadow: var(--jsst-shadow-soft);
+  transform: translateY(-2px);
+}
+
+.jsst-pro-card.is-highlighted {
+  border-color: var(--jsst-orange);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, .15);
+}
+
+.jsst-pro-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: var(--jsst-space-3);
+  border-radius: var(--jsst-radius-sm);
+  background: var(--jsst-soft);
+}
+
+.jsst-pro-card__icon img { width: 20px; height: 20px; }
+
+.jsst-pro-card h4 {
+  margin: 0 0 6px;
+  font-size: var(--jsst-fs-base);
+  color: var(--jsst-ink);
+}
+
+.jsst-pro-card p {
+  margin: 0;
+  font-size: var(--jsst-fs-sm);
+  line-height: var(--jsst-lh-base);
+  color: var(--jsst-muted);
+}
+
+/* --- "Also included" ---------------------------------------------------- */
+
+.jsst-pro-extras {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--jsst-space-3);
+}
+
+.jsst-pro-extra {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--jsst-space-3);
+  padding: var(--jsst-space-3) var(--jsst-space-4);
+  border: 1px solid var(--jsst-border);
+  border-radius: var(--jsst-radius-sm);
+  background: var(--jsst-panel);
+}
+
+.jsst-pro-extra__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--jsst-radius-sm);
+  background: var(--jsst-card);
+  border: 1px solid var(--jsst-border);
+}
+
+.jsst-pro-extra__icon img { width: 16px; height: 16px; }
+.jsst-pro-extra strong { display: block; font-size: var(--jsst-fs-sm); color: var(--jsst-ink); }
+.jsst-pro-extra small { display: block; margin-top: 2px; font-size: var(--jsst-fs-xs); color: var(--jsst-muted); line-height: 1.5; }
+
+/* --- Footer CTA --------------------------------------------------------- */
+
+.jsst-pro-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--jsst-space-4);
+  padding: var(--jsst-space-5) var(--jsst-space-6);
+  border-radius: var(--jsst-radius-md);
+  background: var(--jsst-soft-accent);
+  border: 1px solid var(--jsst-border);
+}
+
+.jsst-pro-footer strong { display: block; font-size: var(--jsst-fs-lg); color: var(--jsst-ink); }
+.jsst-pro-footer span { display: block; margin-top: 2px; font-size: var(--jsst-fs-sm); color: var(--jsst-muted); }
+
+.jsst-pro-footer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--jsst-space-3);
+}
+
+/* --- Narrow screens ----------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .jsst-pro-hero {
+    grid-template-columns: 1fr;
+    padding: var(--jsst-space-5);
+  }
+  .jsst-pro-hero__badge { order: -1; }
+  .jsst-pro-page { padding: var(--jsst-space-4); }
+  .jsst-pro-footer { flex-direction: column; align-items: flex-start; }
+}

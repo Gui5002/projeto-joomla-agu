@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Control Panel">
+	<layout title="User Control Panel">
 		<message>
-			<![CDATA[JS Support Ticket Control Panel.]]>
+			<![CDATA[User control panel.]]>
 		</message>
 	</layout>
 	<state>
-		<name>Control Panel</name>
-		<description>JS Support Ticket Control Panel.</description>
+		<name>User Control Panel</name>
+		<description>User Control Panel.</description>
 	</state>
 </metadata>

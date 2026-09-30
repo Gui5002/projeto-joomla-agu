@@ -11,8 +11,8 @@
  */
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 ?>
 
@@ -24,20 +24,22 @@ use Joomla\CMS\HTML\HTMLHelper;
             return false;
     }
 </script>
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-screen-list">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-        <div id="js-tk-heading">
-            <h4><img id="js-admin-responsive-menu-link" src="components/com_jssupportticket/include/images/c_p/left-icons/menu.png" /><?php echo Text::_('User Fields'); ?></h4>
-            <?php $link = 'index.php?option='.$this->option.'&c=userfields&task=adduserfield&ff=1'; ?>
-            <a class="tk-heading-addbutton" href="<?php echo $link; ?>">
-                <img class="js-heading-addimage" src="components/com_jssupportticket/include/images/add-btn.png">
-                <?php echo Text::_('Add User Field'); ?>
-            </a>            
-        </div>
-        <form action="index.php" method="post" name="adminForm" id="adminForm">
+        <?php
+$jsstPageTitle = 'User Fields';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label_raw' => Text::_('User Fields'), 'link' => null),
+);
+$jsstAddLink = 'index.php?option='.$this->option.'&c=userfields&task=adduserfield&ff=1';
+$jsstAddLabel = 'Add User Field';
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?>
+        <form class="jsstadmin-data-wrp" action="index.php" method="post" name="adminForm" id="adminForm">
             <div id="js-tk-filter">
                 <div class="tk-search-value"><input type="text" placeholder="<?php echo Text::_('Title'); ?>" name="filter_fieldtitle" id="filter_fieldtitle" size="15" value="<?php if (isset($this->filter_fieldtitle)) echo $this->filter_fieldtitle; ?>" class="text_area"/></div>
                 <div class="tk-search-button">
@@ -75,12 +77,14 @@ use Joomla\CMS\HTML\HTMLHelper;
                                     <td><?php echo $row->type; ?></td>
                                     <td><img src="components/com_jssupportticket/include/images/<?php echo $icon_readonly; ?>"></td>
                                     <td class="center">
-                                        <a class="js-tk-button" href="<?php echo $editlink; ?>">
-                                            <img src="components/com_jssupportticket/include/images/edit_small.png">                     
-                                        </a>&nbsp;
-                                        <a class="js-tk-button" onclick="return confirmdelete()" href="<?php echo $deletelink; ?>">
-                                            <img src="components/com_jssupportticket/include/images/deletes.png">
-                                        </a>
+                                        <span class="jsst-field-action-group">
+                                            <a class="js-tk-button jsst-field-action jsst-field-edit-action" title="<?php echo htmlspecialchars(Text::_('Edit'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars(Text::_('Edit'), ENT_QUOTES, 'UTF-8'); ?>" href="<?php echo $editlink; ?>">
+                                                <img alt="" src="components/com_jssupportticket/include/images/edit_small.png">
+                                            </a>
+                                            <a class="js-tk-button jsst-field-action jsst-field-delete-action" title="<?php echo htmlspecialchars(Text::_('Delete'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars(Text::_('Delete'), ENT_QUOTES, 'UTF-8'); ?>" onclick="return confirmdelete()" href="<?php echo $deletelink; ?>">
+                                                <img alt="" src="components/com_jssupportticket/include/images/deletes.png">
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <?php
@@ -105,10 +109,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         </form>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>
 <script type="text/javascript">
     var headertext = [],
     headers = document.querySelectorAll("#js-table th"),

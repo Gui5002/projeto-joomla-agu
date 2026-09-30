@@ -2,7 +2,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -286,8 +286,8 @@ class Comment extends ItemModel
 			// Add like
 			$record = (object) [
 				'id' => null,
-				'user_id' => $userId,
-				'comment_id' => $commentId,
+				'user_id' => (int)$userId,
+				'comment_id' => (int)$commentId,
 				'created' => Date::sqlSafeDate()
 			];
 			

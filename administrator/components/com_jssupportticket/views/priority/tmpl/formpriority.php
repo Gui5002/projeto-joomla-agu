@@ -10,25 +10,40 @@
   ^
  */
 defined('_JEXEC') or die('Restricted access');
-
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
-  
 use Joomla\CMS\Editor\Editor;
+
 $conf   = Factory::getConfig();
 $editor = Editor::getInstance($conf->get('editor'));
 
 jimport('joomla.html.pane');
 HTMLHelper::_('behavior.formvalidator');
-
 $document = Factory::getDocument();
-$document->addStyleSheet(Uri::root() . 'administrator/components/com_jssupportticket/include/css/custom.boots.css');
-$document->addStyleSheet(Uri::root() . 'administrator/components/com_jssupportticket/include/css/jssupportticketadmin.css');
+// 
+if (JVERSION >= 3) {
+    HTMLHelper::_('bootstrap.framework');
+    HTMLHelper::_('jquery.framework');
+}
+$overduetype_array = array(
+    '0' => array('value' => '1',
+        'text' => Text::_('Days')),
+    '1' => array('value' => '2',
+        'text' => Text::_('Hours')));
+// $overduetype = HTMLHelper::_('select.genericList', $overduetype_array, 'ticket_overdue_type', 'class="inputbox" ' . '', 'value', 'text', $this->configuration['ticket_overdue_type']);
 
-$document->addScript('components/com_jssupportticket/include/js/colorpicker.js');
-$document->addStyleSheet('components/com_jssupportticket/include/css/colorpicker.css');
+$priorityColor = isset($this->priority) ? trim((string) $this->priority->prioritycolour) : '#00a650';
+if ($priorityColor === '') {
+    $priorityColor = '#00a650';
+}
+if ($priorityColor[0] !== '#') {
+    $priorityColor = '#' . $priorityColor;
+}
+if (!preg_match('/^#[0-9a-fA-F]{6}$/', $priorityColor)) {
+    $priorityColor = '#00a650';
+}
 ?>
 
 <script type="text/javascript">
@@ -59,56 +74,67 @@ $document->addStyleSheet('components/com_jssupportticket/include/css/colorpicker
         return true;
     }
     jQuery(document).ready(function(){
-        jQuery('input#color1').ColorPicker({
-            onChange: function (hsb, hex, rgb) {
-                jQuery('input#color1').css('backgroundColor', '#' + hex).val('#' + hex);                
+        var colorInput = jQuery('input#color1');
+        var colorPicker = jQuery('input#prioritycolour_picker');
+        var normalizeColor = function(value){
+            value = (value || '').toString().trim();
+            if (value.charAt(0) !== '#') {
+                value = '#' + value;
             }
+            if (!/^#[0-9a-fA-F]{6}$/.test(value)) {
+                value = '#00a650';
+            }
+            return value.toLowerCase();
+        };
+        var startColor = normalizeColor(colorInput.val() || colorPicker.val());
+        colorInput.val(startColor);
+        colorPicker.val(startColor);
+        colorPicker.on('input change', function(){
+            colorInput.val(normalizeColor(this.value));
+        });
+        colorInput.on('input change', function(){
+            var normalized = normalizeColor(this.value);
+            colorInput.val(normalized);
+            colorPicker.val(normalized);
         });
     });
 </script>
 
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-screen-form">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-        <div id="jsstadmin-wrapper-top">
-            <div id="jsstadmin-wrapper-top-left">
-                <div id="jsstadmin-breadcrunbs">
-                    <ul>
-                        <li><a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel" title="Dashboard"><?php echo Text::_('Dashboard'); ?></a></li>
-                        <li><?php echo Text::_('Add Priority'); ?></li>
-                    </ul>
-                </div>
-            </div>
-            <div id="jsstadmin-wrapper-top-right">
-                <div id="jsstadmin-config-btn">
-                    <a title="Configuration" href="index.php?option=com_jssupportticket&c=config&layout=config">
-                        <img alt="Configuration" src="components/com_jssupportticket/include/images/config.png">
-                    </a>
-                </div>
-                <div id="jsstadmin-vers-txt">
-                    <?php echo Text::_('Version').Text::_(' : '); ?>
-                    <span class="jsstadmin-ver">
-                        <?php $version = str_split($this->version);
-                        $version = implode('.', $version);
-                        echo $version; ?>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div id="js-tk-heading"><h1 class="jsstadmin-head-text"><?php echo Text::_('Add Priority'); ?></h1></div> 
-        <div id="jsstadmin-data-wrp" class="js-ticket-box-shadow">
+        <?php
+$jsstPageTitle = isset($this->priority) ? 'Edit Priority' : 'Add Priority';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label_raw' => Text::_(isset($this->priority) ? 'Edit Priority' : 'Add Priority'), 'link' => null),
+);
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?> 
+        <div id="jsstadmin-data-wrp" class="js-ticket-pagination-shadow">
         <form action="index.php" method="POST" enctype="multipart/form-data" name="adminForm" id="adminForm">
             <div class="js-form-wrapper">
-                <div class="js-title"><label for="title"><?php echo Text::_('Title'); ?><font color="red">*</font></label></div>
-                <div class="js-value"><input class="inputbox required" id="title" type="text" name="priority" size="40" maxlength="255" value="<?php if (isset($this->priority)) echo $this->priority->priority; ?>" /></div>
+                <div class="js-title"><label for="priority-title"><?php echo Text::_('Title'); ?><font color="red">*</font></label></div>
+                <div class="js-value"><input class="inputbox required" id="priority-title" type="text" name="priority" size="40" maxlength="255" value="<?php if (isset($this->priority)) echo $this->priority->priority; ?>" /></div>
             </div>
             <div class="js-form-wrapper">
                 <div class="js-title"><label for="color1"><?php echo Text::_('Color'); ?><font color="red">*</font></label></div>
                 <div class="js-value" id="color1_div">
-                <input id="color1" class="inputbox required" name="prioritycolour" type="text" value="<?php if (isset($this->priority)) echo $this->priority->prioritycolour; ?>"/>
+                    <div class="jsst-priority-color-control">
+                        <input id="prioritycolour_picker" type="color" value="<?php echo htmlspecialchars($priorityColor, ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo Text::_('Choose priority color'); ?>" />
+                        <input id="color1" class="inputbox required jsst-priority-color-text" name="prioritycolour" type="text" value="<?php echo htmlspecialchars($priorityColor, ENT_QUOTES, 'UTF-8'); ?>" maxlength="7" pattern="#[0-9a-fA-F]{6}" />
+                    </div>
                 </div>
+            </div>
+            <div class="js-form-wrapper">
+                <div class="js-title"><label for="overdueinterval"><?php echo Text::_('Overdue').' '.Text::_('type'); ?>:</label></div>
+                <div class="js-value"><?php echo HTMLHelper::_('select.genericList', $overduetype_array, 'overduetypeid', 'class="inputbox" ' . '', 'value', 'text', isset($this->priority) ? $this->priority->overduetypeid : 0); ?></div>
+            </div>
+            <div class="js-form-wrapper">
+                <div class="js-title"><label for="title"><?php echo Text::_('Overdue').' '.Text::_('interval'); ?>:</label></div>
+                <div class="js-value"><input class="inputbox required" id="overdueinterval" type="text" name="overdueinterval" size="10" maxlength="10" value="<?php if (isset($this->priority)) echo $this->priority->overdueinterval; else echo '5' ?>" /></div>
             </div>
             <div class="js-form-wrapper">
                 <div class="js-title"><?php echo Text::_('Type'); ?>:&nbsp;</div>
@@ -125,10 +151,10 @@ $document->addStyleSheet('components/com_jssupportticket/include/css/colorpicker
                 <div class="js-title"><?php echo Text::_('Default'); ?></div>
                 <div class="js-value-radio-btn">
                     <div class="jsst-formfield-status-radio-button-wrap">
-                        <input type="radio" value="1" id="yes" name="isdefault"<?php if (isset($this->priority)) {if ($this->priority->isdefault == 1) echo "checked=''"; } else echo "checked=''"; ?> /> <label for="yes"><?php echo Text::_('JYes'); ?></label>
+                        <input type="radio" value="1" id="yes" name="isdefault"<?php if (isset($this->priority)) {if ($this->priority->isdefault == 1) echo "checked=''"; } else echo "checked=''"; ?> /> <label for="yes"><?php echo Text::_('JYES'); ?></label>
                     </div>
                     <div class="jsst-formfield-status-radio-button-wrap">
-                        <input type="radio" value="0" id="no" name="isdefault"<?php if (isset($this->priority)) {if ($this->priority->isdefault == 0) echo "checked=''"; } ?> /><label for="no"><?php echo Text::_('JNo'); ?></label>
+                        <input type="radio" value="0" id="no" name="isdefault"<?php if (isset($this->priority)) {if ($this->priority->isdefault == 0) echo "checked=''"; } ?> /><label for="no"><?php echo Text::_('JNO'); ?></label>
                     </div>
                 </div>
             </div>
@@ -158,7 +184,4 @@ $document->addStyleSheet('components/com_jssupportticket/include/css/colorpicker
         </div>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>

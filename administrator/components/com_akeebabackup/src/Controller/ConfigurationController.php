@@ -168,6 +168,9 @@ class ConfigurationController extends BaseController
 	 */
 	public function dpecustomapi($cachable = false, $urlparams = [])
 	{
+		// Anti-CSRF protection. The token is sent by akeebabackup.System.doAjax() in the POST body.
+		$this->checkToken();
+
 		/** @var ConfigurationModel $model */
 		$model = $this->getModel('Configuration', 'Administrator');
 		$model->setState('engine', $this->input->get('engine', '', 'raw'));
@@ -196,6 +199,9 @@ class ConfigurationController extends BaseController
 	 */
 	public function dpecustomapiraw($cachable = false, $urlparams = [])
 	{
+		// Anti-CSRF protection. The token is sent by akeebabackup.System.doAjax() in the POST body.
+		$this->checkToken();
+
 		/** @var ConfigurationModel $model */
 		$model = $this->getModel('Configuration', 'Administrator');
 		$model->setState('engine', $this->input->get('engine', '', 'raw'));
@@ -218,6 +224,9 @@ class ConfigurationController extends BaseController
 	 */
 	public function dpeoauthopen($cachable = false, $urlparams = [])
 	{
+		// Anti-CSRF protection. The token is appended to the OAuth window URL built in the Configuration view.
+		$this->checkToken('get');
+
 		/** @var ConfigurationModel $model */
 		$model = $this->getModel('Configuration', 'Administrator');
 		$model->setState('engine', $this->input->get('engine', '', 'raw'));
@@ -302,6 +311,9 @@ class ConfigurationController extends BaseController
 	 */
 	public function testftp($cachable = false, $urlparams = [])
 	{
+		// Anti-CSRF protection. The token is sent by akeebabackup.System.doAjax() in the POST body.
+		$this->checkToken();
+
 		/** @var ConfigurationModel $model */
 		$model = $this->getModel('Configuration', 'Administrator');
 		$model->setState('isCurl', $this->input->get('isCurl', 0, 'int'));
@@ -344,6 +356,9 @@ class ConfigurationController extends BaseController
 	 */
 	public function testsftp($cachable = false, $urlparams = [])
 	{
+		// Anti-CSRF protection. The token is sent by akeebabackup.System.doAjax() in the POST body.
+		$this->checkToken();
+
 		/** @var ConfigurationModel $model */
 		$model = $this->getModel('Configuration', 'Administrator');
 		$model->setState('isCurl', $this->input->get('isCurl', 0, 'int'));

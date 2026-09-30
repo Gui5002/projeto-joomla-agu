@@ -15,157 +15,223 @@ use Joomla\CMS\Language\Text;
 
 ?>
 
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-jssupportticket-translation">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-        <div id="jsstadmin-wrapper-top">
-            <div id="jsstadmin-wrapper-top-left">
-                <div id="jsstadmin-breadcrunbs">
-                    <ul>
-                        <li>
-                            <a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel" title="Dashboard">
-                                <?php echo Text::_('Dashboard'); ?>
-                            </a>
-                        </li>
-                        <li>
-                            <?php echo Text::_('Language Translations'); ?>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div id="jsstadmin-wrapper-top-right">
-                <div id="jsstadmin-config-btn">
-                    <a title="Configuration" href="index.php?option=com_jssupportticket&c=config&layout=config">
-                        <img alt="Configuration" src="components/com_jssupportticket/include/images/config.png">
-                    </a>
-                </div>
-                <div id="jsstadmin-vers-txt">
-                    <?php echo Text::_('Version').Text::_(' : '); ?>
-                    <span class="jsstadmin-ver">
-                        <?php $version = str_split($this->version);
-                        $version = implode('.', $version);
-                        echo $version; ?>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div id="js-tk-heading">
-            <h1 class="jsstadmin-head-text"><?php echo Text::_('Language Translations'); ?></h4>
-        </div>
-        <div id="black_wrapper_translation"></div>
-        <div id="jstran_loading">
-            <img src="components/com_jssupportticket/include/images/spinning-wheel.gif" />
-        </div>
+        <?php
+$jsstPageTitle = 'LANGUAGE TRANSLATIONS';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label_raw' => Text::_('Language Translations'), 'link' => null),
+);
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?>
 
         <div id="jsstadmin-data-wrp" class="js-padding-all-null js-ticket-box-shadow">
-            <div id="js-language-wrapper">
-                <div class="jstopheading"><?php echo Text::_('Get JS Tickets Translations');?></div>
-                <div id="gettranslation" class="gettranslation"><img style="width:18px; height:auto;" src="components/com_jssupportticket/include/images/download-icon.png" /><?php echo Text::_('Get Translations');?></div>
-                <div id="js_ddl">
-                    <span class="title"><?php echo Text::_('Select Translation');?>:</span>
-                    <span class="combo" id="js_combo"></span>
-                    <span class="button" id="jsdownloadbutton"><img style="width:14px; height:auto;" src="components/com_jssupportticket/include/images/download-icon.png" /><?php echo Text::_('Download');?></span>
-                    <div id="jscodeinputbox" class="js-some-disc"></div>
-                    <div class="js-some-disc"><img style="width:18px; height:auto;" src="components/com_jssupportticket/include/images/info-icon.png" /><?php echo Text::_('When Joomla language change to ro, JS Jobs language will auto change to ro');?></div>
+            <div id="js-language-wrapper" class="jsa-translations-panel">
+
+                <div class="jsa-translations-head">
+                    <div class="jsa-translations-headtext">
+                        <div class="jstopheading"><?php echo Text::_('GET JS TICKETS TRANSLATIONS'); ?></div>
+                        <p class="jsa-translations-sub"><?php echo Text::_('Language files are downloaded from the JS Support Ticket translation server and verified before they are installed'); ?>.</p>
+                    </div>
+                    <button type="button" id="gettranslation" class="jsa-btn-primary">
+                        <span class="jsa-btn-label"><?php echo Text::_('GET TRANSLATIONS'); ?></span>
+                    </button>
                 </div>
-                <div id="js-emessage-wrapper">
-                    <img src="components/com_jssupportticket/include/images/c_error.png" />
+
+                <div id="js-emessage-wrapper" class="jsa-note jsa-note-error" style="display:none;">
                     <div id="jslang_em_text"></div>
                 </div>
-                <div id="js-emessage-wrapper_ok">
-                    <img src="components/com_jssupportticket/include/images/saved.png" />
+                <div id="js-emessage-wrapper_ok" class="jsa-note jsa-note-ok" style="display:none;">
                     <div id="jslang_em_text_ok"></div>
                 </div>
-            </div>
-            <div id="js-lang-toserver" class="jsticket-lang-btm-btn">
-                <div class="js-col-xs-12 js-col-md-8 col"><a class="anc one" href="https://www.transifex.com/joom-sky/js-support-ticket" target="_blank"><img src="components/com_jssupportticket/include/images/translation-icon.png" /><?php echo Text::_('Contribute In Translation');?></a></div>
+
+                <div id="jsa-translations-skeleton" class="jsa-translations-skeleton" style="display:none;">
+                    <span></span><span></span><span></span>
+                </div>
+
+                <div id="js_ddl" style="display:none;">
+                    <div class="jsa-translations-tablewrap">
+                        <table class="adminlist jsa-translations-table" id="jsa-translations-table">
+                            <thead>
+                                <tr>
+                                    <th><?php echo Text::_('Language'); ?></th>
+                                    <th class="center"><?php echo Text::_('Keys'); ?></th>
+                                    <th class="center"><?php echo Text::_('Updated'); ?></th>
+                                    <th class="center"><?php echo Text::_('Status'); ?></th>
+                                    <th class="center"><?php echo Text::_('Actions'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody id="jsa-translations-body"></tbody>
+                        </table>
+                    </div>
+                    <p class="jsa-translations-hint"><?php echo Text::_('When the Joomla language changes, the JS Support Ticket language changes automatically to match'); ?>.</p>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>
 <script type="text/javascript">
+    var jsstToken = <?php echo json_encode(Factory::getSession()->getFormToken()); ?>;
+    var jsaLang = {
+        installed:    <?php echo json_encode(Text::_('Installed')); ?>,
+        outdated:     <?php echo json_encode(Text::_('Update available')); ?>,
+        notInstalled: <?php echo json_encode(Text::_('Not installed')); ?>,
+        install:      <?php echo json_encode(Text::_('Install')); ?>,
+        update:       <?php echo json_encode(Text::_('Update')); ?>,
+        reinstall:    <?php echo json_encode(Text::_('Reinstall')); ?>,
+        working:      <?php echo json_encode(Text::_('Working')); ?>,
+        refresh:      <?php echo json_encode(Text::_('REFRESH LIST')); ?>,
+        noResults:    <?php echo json_encode(Text::_('No Record Found')); ?>,
+        noPack:       <?php echo json_encode(Text::_('Install the Joomla language pack to switch the site to this language')); ?>,
+        colLanguage:  <?php echo json_encode(Text::_('Language')); ?>,
+        colKeys:      <?php echo json_encode(Text::_('Keys')); ?>,
+        colUpdated:   <?php echo json_encode(Text::_('Updated')); ?>,
+        colStatus:    <?php echo json_encode(Text::_('Status')); ?>,
+        badResponse:  <?php echo json_encode(Text::_('The update server returned an unexpected response.')); ?>
+    };
+
+    function jsstTokenPayload(extra) {
+        var payload = extra || {};
+        payload[jsstToken] = 1;
+        return payload;
+    }
+
+    // Rows are built from JSON with jQuery text()/attr() only - the server never
+    // supplies HTML, so a compromised CDN cannot inject markup into this page.
+    function jsaRenderTranslations(languages) {
+        var $body = jQuery('#jsa-translations-body').empty();
+
+        if (!languages || !languages.length) {
+            jQuery('<tr>').append(
+                jQuery('<td colspan="5" class="jsa-translations-empty">').text(jsaLang.noResults)
+            ).appendTo($body);
+            return;
+        }
+
+        jQuery.each(languages, function (i, lang) {
+            var state  = lang.installed ? (lang.current ? 'ok' : 'stale') : 'none';
+            var status = state === 'ok' ? jsaLang.installed : (state === 'stale' ? jsaLang.outdated : jsaLang.notInstalled);
+            var action = state === 'ok' ? jsaLang.reinstall : (state === 'stale' ? jsaLang.update : jsaLang.install);
+
+            // name + code stacked, so the code stays readable next to a native name
+            var $name = jQuery('<td>')
+                .attr('data-jsa-label', jsaLang.colLanguage)
+                .addClass('jsa-lang-cell')
+                .append(jQuery('<span class="jsa-lang-name">').text(lang.name))
+                .append(jQuery('<span class="jsa-lang-code">').text(lang.code));
+
+            if (!lang.joomla) {
+                $name.append(jQuery('<span class="jsa-lang-warn">').text(jsaLang.noPack));
+            }
+
+            var $btn = jQuery('<button type="button">')
+                .addClass('jsa-install-translation')
+                .addClass(state === 'none' ? 'is-primary' : 'is-quiet')
+                .attr('data-code', lang.code)
+                .text(action);
+
+            jQuery('<tr>')
+                .attr('data-code', lang.code)
+                .append($name)
+                .append(jQuery('<td class="center jsa-num">').attr('data-jsa-label', jsaLang.colKeys).text(lang.keys ? lang.keys : '-'))
+                .append(jQuery('<td class="center jsa-num">').attr('data-jsa-label', jsaLang.colUpdated).text(lang.updated || '-'))
+                .append(
+                    jQuery('<td class="center">').attr('data-jsa-label', jsaLang.colStatus).append(
+                        jQuery('<span class="jsa-pill">').addClass('jsa-pill-' + state).text(status)
+                    )
+                )
+                .append(jQuery('<td class="center jsa-action-cell">').append($btn))
+                .appendTo($body);
+        });
+    }
+
+    function jsaShowError(msg) {
+        jQuery('#js-emessage-wrapper div').text(msg || jsaLang.badResponse);
+        jQuery('#js-emessage-wrapper').show();
+    }
+
+    function jsaLoadList(force, $btn) {
+        jQuery('#js-emessage-wrapper').hide();
+        if (!jQuery('#js_ddl').is(':visible')) {
+            jQuery('#jsa-translations-skeleton').show();
+        }
+        if ($btn) { $btn.prop('disabled', true).addClass('is-busy'); }
+
+        jQuery.post(
+            "index.php?option=com_jssupportticket&c=jssupportticket&task=translationslist",
+            jsstTokenPayload(force ? { refresh: 1 } : {}),
+            function (data) {
+                jQuery('#jsa-translations-skeleton').hide();
+                if ($btn) { $btn.prop('disabled', false).removeClass('is-busy'); }
+                if (!data || data.error) { jsaShowError(data && data.error); return; }
+
+                jQuery('#js_ddl').show();
+                // the button becomes a refresh control once the list is on screen
+                jQuery('#gettranslation').find('.jsa-btn-label').text(jsaLang.refresh);
+                jsaRenderTranslations(data.languages);
+            },
+            'json'
+        ).fail(function () {
+            jQuery('#jsa-translations-skeleton').hide();
+            if ($btn) { $btn.prop('disabled', false).removeClass('is-busy'); }
+            jsaShowError();
+        });
+    }
+
     jQuery(document).ready(function(){
+        // Show the catalogue straight away - the old flow made the admin click
+        // once before anything at all appeared on the page.
+        jsaLoadList(false, null);
+
         jQuery('#gettranslation').click(function(){
-            jsShowLoading();
-            jQuery.post("index.php?option=com_jssupportticket&c=jssupportticket&task=getlisttranslations&<?php echo Factory::getSession()->getFormToken(); ?>=1",{}, function (data) {
-                if (data) {
-                    jsHideLoading();
-                    data = JSON.parse(data);
-                    if(data['error']){
-                        jQuery('#js-emessage-wrapper div').html(data['error']);
-                        jQuery('#js-emessage-wrapper').show();
-                    }else{
-                        jQuery('#js-emessage-wrapper').hide();
-                        jQuery('#gettranslation').hide();
-                        jQuery('div#js_ddl').show();
-                        jQuery('span#js_combo').html(data['data']);
+            jsaLoadList(true, jQuery(this));
+        });
+
+        jQuery(document).on('click', '.jsa-install-translation', function () {
+            var $btn = jQuery(this);
+            var code = $btn.attr('data-code');
+            if (!code || $btn.prop('disabled')) { return; }
+
+            var previous = $btn.text();
+            $btn.prop('disabled', true).addClass('is-busy').text(jsaLang.working);
+            jQuery('#js-emessage-wrapper_ok').hide();
+            jQuery('#js-emessage-wrapper').hide();
+
+            jQuery.post(
+                "index.php?option=com_jssupportticket&c=jssupportticket&task=translationsinstall",
+                jsstTokenPayload({ code: code }),
+                function (data) {
+                    if (!data || data.error) {
+                        $btn.prop('disabled', false).removeClass('is-busy').text(previous);
+                        jsaShowError(data && data.error);
+                        return;
                     }
-                }
+                    jQuery('#jslang_em_text_ok').text(data.message);
+                    jQuery('#js-emessage-wrapper_ok').slideDown();
+                    // refresh so status/actions reflect what is now on disk
+                    jQuery.post(
+                        "index.php?option=com_jssupportticket&c=jssupportticket&task=translationslist",
+                        jsstTokenPayload({}),
+                        function (d) {
+                            if (d && !d.error) { jsaRenderTranslations(d.languages); }
+                            else { $btn.prop('disabled', false).removeClass('is-busy').text(previous); }
+                        },
+                        'json'
+                    ).fail(function () {
+                        $btn.prop('disabled', false).removeClass('is-busy').text(previous);
+                    });
+                },
+                'json'
+            ).fail(function () {
+                $btn.prop('disabled', false).removeClass('is-busy').text(previous);
+                jsaShowError();
             });
         });
-        
-        jQuery(document).on('change', 'select#translations' ,function() {
-            var lang_name = jQuery( this ).val();
-            if(lang_name != ''){
-                jQuery('#js-emessage-wrapper_ok').hide();
-                jsShowLoading();
-                jQuery.post("index.php?option=com_jssupportticket&c=jssupportticket&task=validateandshowdownloadfilename&<?php echo Factory::getSession()->getFormToken(); ?>=1",{ langname:lang_name}, function (data) {
-                    if (data) {
-                        jsHideLoading();
-                        data = JSON.parse(data);
-                        if(data['error']){
-                            jQuery('#js-emessage-wrapper div').html(data['error']);
-                            jQuery('#js-emessage-wrapper').show();
-                            jQuery('#jscodeinputbox').slideUp('400' , 'swing' , function(){
-                                jQuery('input#languagecode').val("");
-                            });
-                        }else{
-                            jQuery('#js-emessage-wrapper').hide();
-                            jQuery('#jscodeinputbox').html(data['path']+'/ '+data['input']);
-                            jQuery('#jscodeinputbox').slideDown();
-                        }
-                    }
-                });
-            }
-        });
-
-        jQuery('#jsdownloadbutton').click(function(){
-            jQuery('#js-emessage-wrapper_ok').hide();
-            var lang_name = jQuery('#translations').val();
-            var file_name = jQuery('#languagecode').val();
-            if(lang_name != '' && file_name != ''){
-                jsShowLoading();
-                jQuery.post("index.php?option=com_jssupportticket&c=jssupportticket&task=getlanguagetranslation&<?php echo Factory::getSession()->getFormToken(); ?>=1",{ langname:lang_name , filename: file_name}, function (data) {
-                    if (data) {
-                        jsHideLoading();
-                        data = JSON.parse(data);
-                        if(data['error']){
-                            jQuery('#js-emessage-wrapper div').html(data['error']);
-                            jQuery('#js-emessage-wrapper').show();
-                        }else{
-                            jQuery('#js-emessage-wrapper').hide();
-                            jQuery('#js-emessage-wrapper_ok div').html(data['data']);
-                            jQuery('#js-emessage-wrapper_ok').slideDown();
-                        }
-                    }
-                });
-            }
-        });
     });
-    
-    function jsShowLoading(){
-        jQuery('div#black_wrapper_translation').show();
-        jQuery('div#jstran_loading').show();
-    }    
-
-    function jsHideLoading(){
-        jQuery('div#black_wrapper_translation').hide();
-        jQuery('div#jstran_loading').hide();
-    }
 </script>

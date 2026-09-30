@@ -1,0 +1,16 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'MOD_MOODLE_COURSES' => 'Moodle Courses Showcase',
+  'MOD_MOODLE_COURSES_XML_DESCRIPTION' => 'Module to display courses fetched from Moodle REST API via access token.',
+  'MOD_MOODLE_COURSES_FIELD_URL_LABEL' => 'Moodle URL',
+  'MOD_MOODLE_COURSES_FIELD_URL_DESC' => 'Enter the full URL of your Moodle instance (e.g. https://ead.yoursite.com)',
+  'MOD_MOODLE_COURSES_FIELD_TOKEN_LABEL' => 'Web Service Token',
+  'MOD_MOODLE_COURSES_FIELD_TOKEN_DESC' => 'Moodle REST API Token generated for web service access',
+  'MOD_MOODLE_COURSES_FIELD_LIMIT_LABEL' => 'Max Courses',
+  'MOD_MOODLE_COURSES_FIELD_LIMIT_DESC' => 'Maximum number of courses to display on the page',
+  'MOD_MOODLE_COURSES_FIELD_SHOW_SUMMARY_LABEL' => 'Show Course Summary',
+  'MOD_MOODLE_COURSES_FIELD_SHOW_SUMMARY_DESC' => 'Toggle visibility of the short course description',
+  'MOD_MOODLE_COURSES_NO_COURSES' => 'No courses found or unable to connect to Moodle.',
+  'MOD_MOODLE_COURSES_VIEW_COURSE' => 'Access Course',
+);

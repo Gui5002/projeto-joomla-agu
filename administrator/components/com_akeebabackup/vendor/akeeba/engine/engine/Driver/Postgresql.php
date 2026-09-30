@@ -323,6 +323,17 @@ class Postgresql extends Base
 
 	public function escape($text, $extra = false)
 	{
+		// PDO hands back native ints and floats. Render them ourselves; PDO::quote() would cast the float lossily.
+		if (is_int($text))
+		{
+			return (string) $text;
+		}
+
+		if (is_float($text))
+		{
+			return $this->floatToSqlString($text);
+		}
+
 		if (is_object($this->connection))
 		{
 			$result = substr($this->connection->quote($text), 1, -1);

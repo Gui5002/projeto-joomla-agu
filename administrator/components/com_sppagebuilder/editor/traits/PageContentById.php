@@ -43,6 +43,14 @@ trait PageContentById
 
 		$content = ApplicationHelper::preparePageData($content);
 
+		// Legacy rows (created before language support, or inserted before the
+		// `language` column got a `'*'` default) can have an empty language value,
+		// which renders as a blank dropdown instead of "All". Normalize it here.
+		if (empty($content->language))
+		{
+			$content->language = '*';
+		}
+
 		$type = '';
 
 		if (!empty($content->extension_view) && $content->extension_view === 'popup') {

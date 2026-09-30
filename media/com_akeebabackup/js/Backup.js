@@ -15,6 +15,7 @@ if (typeof akeebabackup.Backup == "undefined")
     akeebabackup.Backup = {
         tag:           "",
         backupid:      null,
+        backupToken:   null,
         currentDomain: null,
         returnUrl:     "",
         timeoutTimer:  null,
@@ -63,9 +64,10 @@ akeebabackup.Backup.timerTick = function ()
 
     // Run the step
     akeebabackup.System.doAjax({
-        ajax:     "step",
-        tag:      akeebabackup.Backup.tag,
-        backupid: akeebabackup.Backup.backupid
+        ajax:        "step",
+        tag:         akeebabackup.Backup.tag,
+        backupid:    akeebabackup.Backup.backupid,
+        backupToken: akeebabackup.Backup.backupToken
     }, akeebabackup.Backup.onStep, akeebabackup.Backup.onError, false);
 };
 
@@ -368,6 +370,12 @@ akeebabackup.Backup.onStep = function (data)
     // Set the backup id
     akeebabackup.Backup.backupid = data.backupid;
 
+    // Capture the per-backup anti-CSRF token issued when the backup starts. It authenticates the subsequent steps.
+    if (data.backupToken)
+    {
+        akeebabackup.Backup.backupToken = data.backupToken;
+    }
+
     // Reset the retries
     akeebabackup.Backup.resume.retry = 0;
 
@@ -534,6 +542,7 @@ akeebabackup.Backup.endWithError = function (message)
         "ajax":         "pushFail",
         "tag":          akeebabackup.Backup.tag,
         "backupid":     akeebabackup.Backup.backupid,
+        "backupToken":  akeebabackup.Backup.backupToken,
         "errorMessage": message
     }, function (msg)
     {

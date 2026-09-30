@@ -256,9 +256,14 @@ class Pdomysql extends Mysql
 	 */
 	public function escape($text, $extra = false)
 	{
-		if (is_int($text) || is_float($text))
+		if (is_int($text))
 		{
-			return $text;
+			return (string) $text;
+		}
+
+		if (is_float($text))
+		{
+			return $this->floatToSqlString($text);
 		}
 
 		if (is_null($text))
@@ -589,6 +594,11 @@ class Pdomysql extends Mysql
 
 		$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+
+		// PHP 8.1+ returns native int/float from PDO MySQL. Casting a DOUBLE back to a string for the dump goes through
+		// PHP's `precision` ini setting (14 significant digits by default), silently truncating values which need up to
+		// 17. Fetch everything as strings, exactly as the MySQLi driver does, so dumped values survive a round trip.
+		$this->connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
 
 		if ($this->selectDatabase && !empty($this->_database))
 		{

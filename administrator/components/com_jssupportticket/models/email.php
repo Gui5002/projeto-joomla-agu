@@ -11,13 +11,13 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 jimport('joomla.application.component.model');
 jimport('joomla.html.html');
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\HTML\HTMLHelper;
 
 class JSSupportticketModelEmail extends JSSupportTicketModel {
 
@@ -36,7 +36,7 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
             $db->setQuery($query);
             $email = $db->loadObject();
         }
-        $priority = $this->getJSModel('priority')->getPrioritiesForCombobx(Text::_('Select Priority'));
+        $priority = $this->getJSModel('priority')->getPriority(Text::_('Select Priority'));
         $config = $this->getJSModel('config')->getConfigByFor('default');
 
         if (isset($email)) {
@@ -55,8 +55,15 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
     }
 
     function storeEmail($data) {
-        $row = $this->getTable('emails');
+        if(!$data['id'])
+        if($this->checkAlreadyExist($data['email'])){
+            return ALREADY_EXIST;
+        }
         $data = getJSTicketPHPFunctionsClass()->jsticket_sanitizeData($data);// Sanitize entire array to string
+        if($data['password'] != ""){
+            $data['password'] = getJSTicketPHPFunctionsClass()->jsticket_safe_encoding($data['password']);
+        }
+        $row = $this->getTable('emails');
         if (!$row->bind($data)) {
             $this->setError($row->getError());
             return SAVE_ERROR;
@@ -75,10 +82,21 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
         return SAVED;
     }
 
+    function checkAlreadyExist($email){
+        $db = Factory::getDbo();
+        $query = "SELECT COUNT(id) FROM `#__js_ticket_email` WHERE email = '".$email."'";
+        $db->setQuery($query);
+        $result = $db->loadResult();
+        if($result > 0)
+            return true;
+        else
+            return false;
+    }
+
     function getAllEmails($searchemail, $searchtype, $limitstart, $limit) {
         $type[] = array('value' => null, 'text' => Text::_('Select Email'));
-        $type[] = array('value' => 1, 'text' => Text::_('Yes'));
-        $type[] = array('value' => 0, 'text' => Text::_('No'));
+        $type[] = array('value' => 1, 'text' => Text::_('JYES'));
+        $type[] = array('value' => 0, 'text' => Text::_('JNO'));
         $lists['autoresponcetype'] = HTMLHelper::_('select.genericList', $type, 'filter_autoresponcetype', 'class="inputbox" ' . '', 'value', 'text', $searchtype);
         $db = $this->getDbo();
         //For Total Record
@@ -115,7 +133,7 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
         foreach ($c_id as $id) {
             if ($this->emailCanDelete($id) == true) {
                 if (!$row->delete($id)) {
-                    $this->setError($row->getError());
+                    $this->setError($row->getErrorMsg());
                     return DELETE_ERROR;
                 }
             }
@@ -124,11 +142,19 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
     }
 
     function emailCanDelete($id) {
-        if (!is_numeric($id)) return FALSE;
-        return true;
+        if (!is_numeric($id))
+            return FALSE;
+        $db = $this->getDBO();
+        $query = "SELECT COUNT(id) FROM `#__js_ticket_email` WHERE id=" . $id;
+        $db->setQuery($query);
+        $total = $db->loadResult();
+        if ($total > 0)
+            return true;
+        else
+            return false;
     }
 
-    function getEmailForCombobox($title = ''){
+    function getEmailList($title = ''){
         $db= $this->getDbo();
         $query="SELECT id, email FROM `#__js_ticket_email` WHERE status = 1 ORDER BY email ASC";
         try{
@@ -161,32 +187,53 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                         $username = $ticket->name;
                         $subject = $ticket->subject;
                         $trackingid = $ticket->ticketid;
+                        $HelptopicName = $ticket->topic;
                         $email = $ticket->email;
                         $message = $ticket->message;
                         $matcharray = array(
                             '{USERNAME}' => $username,
                             '{SUBJECT}' => $subject,
                             '{TRACKINGID}' => $trackingid,
+                            '{HELP_TOPIC}' => $HelptopicName,
                             '{EMAIL}' => $email,
                             '{MESSAGE}' => $message,
                             '{DEPARTMENT}' => $ticket->departmentname,
                             '{PRIORITY}' => $ticket->priority
                         );
+                        // code for handling custom fields start
+                        if(!empty($ticket->params)){
+                            $data = json_decode($ticket->params,true);
+                        }
+                        $fields = $this->getJSModel('userfields')->getUserfieldsfor(1);
+                        if( isset($data) && is_array($data) ){
+                            foreach ($fields as $field) {
+                                if($field->userfieldtype != 'file'){
+                                    $fvalue = '';
+                                    if(array_key_exists($field->field, $data)){
+                                        $fvalue = $data[$field->field];
+                                    }
+                                    $matcharray['{'.$field->field.'}'] = $fvalue;// match array new index for custom field
+                                }
+                            }
+                        }
+                        // code for handling custom fields end
                         $object = $this->getSenderEmailAndName($id);
                         $senderEmail = $object->email;
                         $senderName = $object->name;
 
                         // New ticket mail to User
                         $template = $this->getTemplateForEmail('ticket-new');
-						//Parsing template
-						$msgSubject = $template->subject;
-						$msgBody = $template->body;
-						$link = $this->setGuestUrl($trackingid,$email);
-						$matcharray['{TICKETURL}'] = $link;
-						$this->replaceMatches($msgSubject, $matcharray);
-						$this->replaceMatches($msgBody, $matcharray);
-						$msgBody .= '<input type="hidden" name="ticketid:' . $trackingid . '###" />';
-						$this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
+                        //Parsing template
+                        $msgSubject = $template->subject;
+                        $msgBody = $template->body;
+                        $link = $this->setGuestUrl($trackingid,$email);
+                        //echo $link;exit;
+                        $matcharray['{TICKETURL}'] = $link;
+                        $this->replaceMatches($msgSubject, $matcharray);
+                        $this->replaceMatches($msgBody, $matcharray);
+                        $msgBody .= '<input type="hidden" name="ticketid:' . $trackingid . '###user####" />';
+                        $msgBody .= '<span style="display:none;" ticketid:' . $trackingid . '###user#### ></span>';
+                        $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
                         // New ticket mail to admin
                         if ($config['new_ticket_admin'] == 1) {
                             $adminEmailid = $config['admin_email'];
@@ -197,10 +244,11 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             $msgBody = $template->body;
                             $link = $this->setAdminUrl($id);
                             $matcharray['{TICKETURL}'] = $link;
-                            $matcharray['{USERNAME}'] = $adminName;
+                            //$matcharray['{USERNAME}'] = $adminName;
                             $this->replaceMatches($msgSubject, $matcharray);
                             $this->replaceMatches($msgBody, $matcharray);
-
+                            $msgBody .= '<input type="hidden" name="ticketid:' . $trackingid . '###admin####" />';
+                            $msgBody .= '<span style="display:none;" ticketid:' . $trackingid . '###admin#### ></span>';
                             $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
                         }
                         break;
@@ -220,6 +268,23 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             '{DEPARTMENT}' => $ticket->departmentname,
                             '{PRIORITY}' => $ticket->priority
                         );
+                        // code for handling custom fields start
+                        if(!empty($ticket->params)){
+                            $data = json_decode($ticket->params,true);
+                        }
+                        $fields = $this->getJSModel('userfields')->getUserfieldsfor(1);
+                        if( isset($data) && is_array($data) ){
+                            foreach ($fields as $field) {
+                                if($field->userfieldtype != 'file'){
+                                    $fvalue = '';
+                                    if(array_key_exists($field->field, $data)){
+                                        $fvalue = $data[$field->field];
+                                    }
+                                    $matcharray['{'.$field->field.'}'] = $fvalue;// match array new index for custom field
+                                }
+                            }
+                        }
+                        // code for handling custom fields end
                         $object = $this->getSenderEmailAndName($id);
                         $senderEmail = $object->email;
                         $senderName = $object->name;
@@ -297,6 +362,23 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             '{DEPARTMENT}' => $ticket->departmentname,
                             '{PRIORITY}' => $ticket->priority
                         );
+                        // code for handling custom fields start
+                        if(!empty($ticket->params)){
+                            $data = json_decode($ticket->params,true);
+                        }
+                        $fields = $this->getJSModel('userfields')->getUserfieldsfor(1);
+                        if( isset($data) && is_array($data) ){
+                            foreach ($fields as $field) {
+                                if($field->userfieldtype != 'file'){
+                                    $fvalue = '';
+                                    if(array_key_exists($field->field, $data)){
+                                        $fvalue = $data[$field->field];
+                                    }
+                                    $matcharray['{'.$field->field.'}'] = $fvalue;// match array new index for custom field
+                                }
+                            }
+                        }
+                        // code for handling custom fields end
                         $object = $this->getSenderEmailAndName($id);
                         $senderEmail = $object->email;
                         $senderName = $object->name;
@@ -343,6 +425,23 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             '{DEPARTMENT}' => $ticket->departmentname,
                             '{PRIORITY}' => $ticket->priority
                         );
+                        // code for handling custom fields start
+                        if(!empty($ticket->params)){
+                            $data = json_decode($ticket->params,true);
+                        }
+                        $fields = $this->getJSModel('userfields')->getUserfieldsfor(1);
+                        if( isset($data) && is_array($data) ){
+                            foreach ($fields as $field) {
+                                if($field->userfieldtype != 'file'){
+                                    $fvalue = '';
+                                    if(array_key_exists($field->field, $data)){
+                                        $fvalue = $data[$field->field];
+                                    }
+                                    $matcharray['{'.$field->field.'}'] = $fvalue;// match array new index for custom field
+                                }
+                            }
+                        }
+                        // code for handling custom fields end
                         $object = $this->getSenderEmailAndName($id);
                         $senderEmail = $object->email;
                         $senderName = $object->name;
@@ -372,207 +471,6 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
                         }
                         break;
-                    case 6: // Lock Ticket
-                        $ticket = $this->getRecordByTablenameAndId('js_ticket_tickets', $id);
-                        $username = $ticket->name;
-                        $subject = $ticket->subject;
-                        $trackingid = $ticket->ticketid;
-                        $email = $ticket->email;
-                        $matcharray = array(
-                            '{USERNAME}' => $username,
-                            '{SUBJECT}' => $subject,
-                            '{TRACKINGID}' => $trackingid,
-                            '{EMAIL}' => $email,
-                            '{DEPARTMENT}' => $ticket->departmentname,
-                            '{PRIORITY}' => $ticket->priority
-                        );
-                        $object = $this->getSenderEmailAndName($id);
-                        $senderEmail = $object->email;
-                        $senderName = $object->name;
-                        $template = $this->getTemplateForEmail('lock-tk');
-                        // New ticket mail to admin
-                        if ($config['ticket_lock_admin'] == 1) {
-                            $adminEmailid = $config['admin_email'];
-                            $adminEmail = $this->getEmailById($adminEmailid);
-                            $link = $this->setAdminUrl($id);
-                            $msgSubject = $template->subject;
-                            $msgBody = $template->body;
-                            $matcharray['{TICKETURL}'] = $link;
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        // New ticket mail to User
-                        if ($config['ticket_lock_user'] == 1) {
-                            $link = $this->setUserUrl($id);
-                            $msgSubject = $template->subject;
-                            $msgBody = $template->body;
-                            $matcharray['{TICKETURL}'] = $link;
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        break;
-                    case 7: // Unlock Ticket
-                        $ticket = $this->getRecordByTablenameAndId('js_ticket_tickets', $id);
-                        $username = $ticket->name;
-                        $subject = $ticket->subject;
-                        $trackingid = $ticket->ticketid;
-                        $email = $ticket->email;
-                        $matcharray = array(
-                            '{USERNAME}' => $username,
-                            '{SUBJECT}' => $subject,
-                            '{TRACKINGID}' => $trackingid,
-                            '{EMAIL}' => $email,
-                            '{DEPARTMENT}' => $ticket->departmentname,
-                            '{PRIORITY}' => $ticket->priority
-                        );
-                        $object = $this->getSenderEmailAndName($id);
-                        $senderEmail = $object->email;
-                        $senderName = $object->name;
-                        $template = $this->getTemplateForEmail('unlock-tk');
-                        // New ticket mail to admin
-                        if ($config['ticket_unlock_admin'] == 1) {
-                            $adminEmailid = $config['admin_email'];
-                            $adminEmail = $this->getEmailById($adminEmailid);
-                            $link = $this->setAdminUrl($id);
-                            $msgSubject = $template->subject;
-                            $msgBody = $template->body;
-                            $matcharray['{TICKETURL}'] = $link;
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        // New ticket mail to User
-                        if ($config['ticket_unlock_user'] == 1) {
-                            $link = $this->setUserUrl($id);
-                            $msgSubject = $template->subject;
-                            $msgBody = $template->body;
-                            $matcharray['{TICKETURL}'] = $link;
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        break;
-                    case 8: // Markoverdue Ticket
-                        $ticket = $this->getRecordByTablenameAndId('js_ticket_tickets', $id);
-                        $trackingid = $ticket->ticketid;
-                        $email = $ticket->email;
-                        $subject = $ticket->subject;
-                        $matcharray = array(
-                            '{TRACKINGID}' => $trackingid,
-                            '{SUBJECT}' => $subject,
-                            '{DEPARTMENT}' => $ticket->departmentname,
-                            '{PRIORITY}' => $ticket->priority
-                        );
-                        $object = $this->getSenderEmailAndName($id);
-                        $senderEmail = $object->email;
-                        $senderName = $object->name;
-                        $template = $this->getTemplateForEmail('moverdue-tk');
-                        // New ticket mail to admin
-                        if ($config['ticket_overdue_admin'] == 1) {
-                            $adminEmailid = $config['admin_email'];
-                            $adminEmail = $this->getEmailById($adminEmailid);
-                            $link = $this->setAdminUrl($id);
-                            $msgSubject = $template->subject;
-                            $msgBody = $template->body;
-                            $matcharray['{TICKETURL}'] = $link;
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        // New ticket mail to User
-                        if ($config['ticket_overdue_user'] == 1) {
-                            $link = $this->setUserUrl($id);
-                            $msgSubject = $template->subject;
-                            $msgBody = $template->body;
-                            $matcharray['{TICKETURL}'] = $link;
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        break;
-                    case 9: // Mark in progress Ticket
-                        $ticket = $this->getRecordByTablenameAndId('js_ticket_tickets', $id);
-                        $trackingid = $ticket->ticketid;
-                        $email = $ticket->email;
-                        $subject = $ticket->subject;
-                        $matcharray = array(
-                            '{TRACKINGID}' => $trackingid,
-                            '{SUBJECT}' => $subject,
-                            '{DEPARTMENT}' => $ticket->departmentname,
-                            '{PRIORITY}' => $ticket->priority
-                        );
-                        $object = $this->getSenderEmailAndName($id);
-                        $senderEmail = $object->email;
-                        $senderName = $object->name;
-                        $template = $this->getTemplateForEmail('markprgs-tk');
-                        // New ticket mail to admin
-                        if ($config['ticket_progress_admin'] == 1) {
-                            $adminEmailid = $config['admin_email'];
-                            $adminEmail = $this->getEmailById($adminEmailid);
-                            $link = $this->setAdminUrl($id);
-                            $msgSubject = $template->subject;
-                            $msgBody = $template->body;
-                            $matcharray['{TICKETURL}'] = $link;
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        // New ticket mail to User
-                        if ($config['ticket_progress_user'] == 1) {
-                            $link = $this->setUserUrl($id);
-                            $msgSubject = $template->subject;
-                            $msgBody = $template->body;
-                            $matcharray['{TICKETURL}'] = $link;
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        break;
-                    case 10: // Ban email and close Ticket
-                        $ticket = $this->getRecordByTablenameAndId('js_ticket_tickets', $id);
-                        $trackingid = $ticket->ticketid;
-                        $email = $ticket->email;
-                        $subject = $ticket->subject;
-                        $matcharray = array(
-                            '{EMAIL_ADDRESS}' => $email,
-                            '{SUBJECT}' => $subject,
-                            '{TRACKINGID}' => $trackingid,
-                            '{DEPARTMENT}' => $ticket->departmentname,
-                            '{PRIORITY}' => $ticket->priority
-                        );
-                        $object = $this->getSenderEmailAndName($id);
-                        $senderEmail = $object->email;
-                        $senderName = $object->name;
-                        $template = $this->getTemplateForEmail('banemailcloseticket-tk');
-                        $msgSubject = $template->subject;
-                        $msgBody = $template->body;
-                        // New ticket mail to admin
-                        if ($config['ticker_ban_and_close_admin'] == 1) {
-                            $adminEmailid = $config['admin_email'];
-                            $adminEmail = $this->getEmailById($adminEmailid);
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        // New ticket mail to User
-                        if ($config['ticker_ban_and_close_user'] == 1) {
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
-                        break;
                     case 11: // Priority change ticket
                         $ticket = $this->getRecordByTablenameAndId('js_ticket_tickets', $id);
                         $trackingid = $ticket->ticketid;
@@ -583,8 +481,25 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             '{PRIORITY_TITLE}' => $Priority->priority,
                             '{SUBJECT}' => $subject,
                             '{TRACKINGID}' => $trackingid,
-                            '{DEPARTMENT}' => $ticket->departmentname,
+                            '{DEPARTMENT}' => $ticket->departmentname
                         );
+                        // code for handling custom fields start
+                        if(!empty($ticket->params)){
+                            $data = json_decode($ticket->params,true);
+                        }
+                        $fields = $this->getJSModel('userfields')->getUserfieldsfor(1);
+                        if( isset($data) && is_array($data) ){
+                            foreach ($fields as $field) {
+                                if($field->userfieldtype != 'file'){
+                                    $fvalue = '';
+                                    if(array_key_exists($field->field, $data)){
+                                        $fvalue = $data[$field->field];
+                                    }
+                                    $matcharray['{'.$field->field.'}'] = $fvalue;// match array new index for custom field
+                                }
+                            }
+                        }
+                        // code for handling custom fields end
                         $object = $this->getSenderEmailAndName($id);
                         $senderEmail = $object->email;
                         $senderName = $object->name;
@@ -599,6 +514,7 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             $adminEmail = $this->getEmailById($adminEmailid);
                             $this->replaceMatches($msgSubject, $matcharray);
                             $this->replaceMatches($msgBody, $matcharray);
+
                             $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
                         }
                         // New ticket mail to User
@@ -623,6 +539,23 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             '{TRACKINGID}' => $trackingid,
                             '{PRIORITY}' => $ticket->priority
                         );
+                        // code for handling custom fields start
+                        if(!empty($ticket->params)){
+                            $data = json_decode($ticket->params,true);
+                        }
+                        $fields = $this->getJSModel('userfields')->getUserfieldsfor(1);
+                        if( isset($data) && is_array($data) ){
+                            foreach ($fields as $field) {
+                                if($field->userfieldtype != 'file'){
+                                    $fvalue = '';
+                                    if(array_key_exists($field->field, $data)){
+                                        $fvalue = $data[$field->field];
+                                    }
+                                    $matcharray['{'.$field->field.'}'] = $fvalue;// match array new index for custom field
+                                }
+                            }
+                        }
+                        // code for handling custom fields end
                         $object = $this->getSenderEmailAndName($id);
                         $senderEmail = $object->email;
                         $senderName = $object->name;
@@ -635,7 +568,6 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             $adminEmail = $this->getEmailById($adminEmailid);
                             $this->replaceMatches($msgSubject, $matcharray);
                             $this->replaceMatches($msgBody, $matcharray);
-
                             $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
                         }
                         // New ticket mail to User
@@ -646,118 +578,46 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                             $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
                         }
                         break;
-                }
-                break;
-            case 2: // Ban Email
-                switch ($action) {
-                    case 1: // Ban Email
-                        if ($tablename != null)
-                            $banemailRecord = $this->getRecordByTablenameAndId($tablename, $id);
-                        else
-                            $banemailRecord = $this->getRecordByTablenameAndId('js_ticket_email_banlist', $id);
-                        $email = $banemailRecord->email;
+                    case 14: // email to user for repling closed ticket
+                        $ticketRecord = $this->getRecordByTablenameAndId('js_ticket_tickets', $id);
+                        $Subject = $ticketRecord->subject;
+                        $Email = $ticketRecord->email;
                         $matcharray = array(
-                            '{EMAIL_ADDRESS}' => $email
+                            '{SUBJECT}' => $Subject,
+                            '{DEPARTMENT}' => $ticketRecord->departmentname,
+                            '{PRIORITY}' => $ticketRecord->priority
                         );
-                        $object = $this->getDefaultSenderEmailAndName();
-                        $senderEmail = $object->email;
-                        $senderName = $object->name;
-                        $template = $this->getTemplateForEmail('banemail-tk');
-                        $msgSubject = $template->subject;
-                        $msgBody = $template->body;
-                        // New ticket mail to admin
-                        if ($config['ticket_ban_email_admin'] == 1) {
-                            $adminEmailid = $config['admin_email'];
-                            $adminEmail = $this->getEmailById($adminEmailid);
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
+                        // code for handling custom fields start
+                        if(!empty($ticketRecord->params)){
+                            $data = json_decode($ticketRecord->params,true);
                         }
-                        // New ticket mail to User
-                        if ($config['ticket_ban_email_user'] == 1) {
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
+                        $fields = $this->getJSModel('userfields')->getUserfieldsfor(1);
+                        if( isset($data) && is_array($data) ){
+                            foreach ($fields as $field) {
+                                if($field->userfieldtype != 'file'){
+                                    $fvalue = '';
+                                    if(array_key_exists($field->field, $data)){
+                                        $fvalue = $data[$field->field];
+                                    }
+                                    $matcharray['{'.$field->field.'}'] = $fvalue;// match array new index for custom field
+                                }
+                            }
                         }
-                        break;
-                    case 2: // Unban Email
-                        if ($tablename != null)
-                            $ticket = $this->getRecordByTablenameAndId($tablename, $id);
-                        else
-                            $ticket = $this->getRecordByTablenameAndId('js_ticket_tickets', $id);
-                        $email = $ticket->email;
-                        $matcharray = array(
-                            '{EMAIL_ADDRESS}' => $email
-                        );
+                        // code for handling custom fields end
                         $object = $this->getSenderEmailAndName($id);
                         $senderEmail = $object->email;
                         $senderName = $object->name;
-                        $template = $this->getTemplateForEmail('unbanemail-tk');
-                        $msgSubject = $template->subject;
-                        $msgBody = $template->body;
-                        // New ticket mail to admin
-                        if ($config['unban_email_admin'] == 1) {
-                            $adminEmailid = $config['admin_email'];
-                            $adminEmail = $this->getEmailById($adminEmailid);
-                            $this->replaceMatches($msgSubject, $matcharray);
-                            $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($adminEmail, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        }
+                        $template = $this->getTemplateForEmail('mail-rpy-closed');
                         // New ticket mail to User
-                        if ($config['unban_email_user'] == 1) {
-                            $this->replaceMatches($msgSubject, $matcharray);
+                        if ($config['ticket_reply_closed_ticket_user'] == 1) {
+                            $msgBody = $template->body;
                             $this->replaceMatches($msgBody, $matcharray);
-
-                            $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
+                            $this->sendEmail($Email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
                         }
-                        break;
-                }
-                break;
-            case 3: // Sending email alerts on mail system
-                switch ($action) {
-                    case 1: // Store message
-                        $mailRecord = $this->getMailRecordById($id);
-                        $matcharray = array(
-                            '{STAFF_MEMBER_NAME}' => $mailRecord->sendername,
-                            '{SUBJECT}' => $mailRecord->subject,
-                            '{MESSAGE}' => $mailRecord->message
-                        );
-                        $object = $this->getSenderEmailAndName(null);
-                        $senderEmail = $object->email;
-                        $senderName = $object->name;
-                        $template = $this->getTemplateForEmail('mail-new');
-                        $msgSubject = $template->subject;
-                        $msgBody = $template->body;
-                        $email = $mailRecord->receveremail;
-                        $this->replaceMatches($msgSubject, $matcharray);
-                        $this->replaceMatches($msgBody, $matcharray);
+                    break;
+		}
+		break;
 
-                        $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        break;
-                    case 2: // Store reply
-                        $mailRecord = $this->getMailRecordById($id, 1);
-                        $matcharray = array(
-                            '{STAFF_MEMBER_NAME}' => $mailRecord->sendername,
-                            '{SUBJECT}' => $mailRecord->subject,
-                            '{MESSAGE}' => $mailRecord->message
-                        );
-                        $object = $this->getSenderEmailAndName(null);
-                        $senderEmail = $object->email;
-                        $senderName = $object->name;
-                        $template = $this->getTemplateForEmail('mail-rpy');
-                        $msgSubject = $template->subject;
-                        $msgBody = $template->body;
-                        $email = $mailRecord->receveremail;
-                        $this->replaceMatches($msgSubject, $matcharray);
-                        $this->replaceMatches($msgBody, $matcharray);
-
-                        $this->sendEmail($email, $msgSubject, $msgBody, $senderEmail, $senderName, '', $action);
-                        break;
-                }
-                break;
             case 4: // GDPR
                 switch($action){
                     case 1: // erase data request email
@@ -818,15 +678,18 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
         }
     }
 
-    private function getRecordByTablenameAndId($tablename, $id) {
+    public function getRecordByTablenameAndId($tablename, $id) {
         if (!is_numeric($id))
             return false;
         $db = Factory::getDBO();
+
+
         switch($tablename){
             case 'js_ticket_tickets':
-                $query = "SELECT ticket.*,department.departmentname,priority.priority "
+                $query = "SELECT ticket.*,department.departmentname,helptopic.topic,priority.priority "
                     . " FROM `#__" . $tablename . "` AS ticket "
                     . " LEFT JOIN `#__js_ticket_departments` AS department ON department.id = ticket.departmentid "
+                    . " LEFT JOIN `#__js_ticket_help_topics` AS helptopic ON helptopic.id = ticket.helptopicid "
                     . " LEFT JOIN `#__js_ticket_priorities` AS priority ON priority.id = ticket.priorityid "
                     . " WHERE ticket.id = " . $id;
             break;
@@ -844,7 +707,6 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
         $record = $db->loadObject();
         return $record;
     }
-
 
     private function replaceMatches(&$string, $matcharray) {
         foreach ($matcharray AS $find => $replace) {
@@ -906,7 +768,54 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
         return $template;
     }
 
-     private function sendEmail($recevierEmail, $subject, $body, $senderEmail, $senderName, $attachments, $action) {
+    function sendEmail($recevierEmail, $subject, $body, $senderEmail, $senderName, $attachments, $action) {
+        $transport =  'default';
+        $sent = null;
+        $errorMessage = '';
+        try {
+                $sent = $this->sendEmailDefault($recevierEmail, $subject, $body, $senderEmail, $senderName, $attachments, $action);
+        } catch (Throwable $e) {
+            $sent = false;
+            $errorMessage = $e->getMessage();
+        }
+        $this->storeOutgoingEmailLog($recevierEmail, $subject, $senderEmail, $action, $transport, $sent, $errorMessage);
+        return $sent;
+    }
+
+    private function storeOutgoingEmailLog($recevierEmail, $subject, $senderEmail, $action, $transport, $sent, $errorMessage = '') {
+        try {
+            $status = ($sent === false || $sent === null) ? 'failed' : 'sent';
+            if (empty($recevierEmail) || empty($senderEmail)) {
+                $status = 'skipped';
+            }
+            $db = Factory::getDbo();
+            $recipient = is_array($recevierEmail) ? implode(',', $recevierEmail) : (string) $recevierEmail;
+            $columns = array('recipient_email', 'sender_email', 'subject', 'action', 'status', 'transport', 'error_message', 'metadata', 'created');
+            $metadata = json_encode(array('action' => (int) $action));
+            $values = array(
+                $db->quote($recipient),
+                $db->quote((string) $senderEmail),
+                $db->quote(substr((string) $subject, 0, 255)),
+                $db->quote('ticket_email_' . (int) $action),
+                $db->quote($status),
+                $db->quote($transport),
+                $db->quote((string) $errorMessage),
+                $db->quote($metadata === false ? '' : $metadata),
+                $db->quote(Factory::getDate()->toSql())
+            );
+            $query = $db->getQuery(true)
+                ->insert($db->quoteName('#__js_ticket_email_logs'))
+                ->columns(array_map(array($db, 'quoteName'), $columns))
+                ->values(implode(',', $values));
+            $db->setQuery($query);
+            $db->execute();
+        } catch (Throwable $e) {
+            // Email logging must never block the original mail workflow.
+        }
+    }
+
+    private function sendEmailDefault($recevierEmail, $subject, $body, $senderEmail, $senderName, $attachments, $action) {
+
         /*
           $attachments = array( WP_CONTENT_DIR . '/uploads/file_to_attach.zip' );
           $headers = 'From: My Name <myname@example.com>' . "\r\n";
@@ -934,21 +843,11 @@ class JSSupportticketModelEmail extends JSSupportTicketModel {
                     do_action('jsst-beforeemailticketdelete', $recevierEmail, $subject, $body, $senderEmail);
                     break;
             }
-         */
+        */
         if(empty($senderName)){
             $senderName = $this->getJSModel('config')->getConfigurationByName('title');
         }
         $headers = 'From: ' . $senderName . ' <' . $senderEmail . '>' . "\r\n";
-        // echo 'before <br/>'.$body;
-        // //$body = preg_replace('/\r?\n|\r/', '<br/>', $body);
-        // echo '1st <br/>'.$body;
-        // //$body = getJSTicketPHPFunctionsClass()->jsticket_str_replace(array("\r\n", "\r", "\n"), "<br/>", $body);
-        // echo '2nd <br/>'.$body;
-        // //$body = nl2br($body);
-        // echo 'last <br/>'.$body;
-        // die('here');
-        // echo '<br/>'.$subject.'<br/>';
-        // echo $body.'<br/>';
 
         if(!empty($recevierEmail) && !empty($senderEmail)){
             $message = Factory::getMailer();

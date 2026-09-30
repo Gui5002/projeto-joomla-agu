@@ -13,11 +13,8 @@
 
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\MVC\View\HtmlView;
-
-
 
 if (JVERSION < 3) {
     jimport('joomla.application.component.model');
@@ -151,7 +148,6 @@ if (JVERSION < 3) {
 
     }
 } else {
-
     if (!class_exists('JSSupportTicketController', false)) {
 
         abstract class JSSupportTicketController extends BaseController {
@@ -214,6 +210,6 @@ if (JVERSION < 3) {
 
         }
 
-    }
+    }    
 }
 ?>

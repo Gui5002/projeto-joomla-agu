@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -367,34 +367,41 @@ class SpPgaeBuilderBase
 		$loader = function () {
 			$db = Factory::getDbo();
 			$query = $db->getQuery(true)
-				->select('DISTINCT a.id, a.title, a.level, a.published, a.lft, a.parent_id, parent.title AS parent_title');
-			$subQuery = $db->getQuery(true)
-				->select('id,title,level,published,parent_id,lft,rgt')
-				->from('#__tags')
-				->where(
-					$db->quoteName('published') . ' = ' . $db->quote(1)
-				);
+				->select([
+					'a.id',
+					'a.title',
+					'a.level',
+					'a.published',
+					'a.lft',
+					'a.parent_id',
+					'parent.title AS parent_title'
+				])
+				->from($db->quoteName('#__tags', 'a'))
+				->join(
+					'LEFT',
+					$db->quoteName('#__tags', 'parent')
+					. ' ON a.parent_id = parent.id'
+					. ' AND parent.published = 1'
+				)
+				->where($db->quoteName('a.published') . ' = ' . $db->quote(1))
+				->where($db->quoteName('a.level') . ' != ' . $db->quote(0))
+				->order($db->quoteName('a.lft') . ' ASC');
 
-			$query->from('(' . $subQuery->__toString() . ') AS a')
-				->join('LEFT', $db->quoteName('#__tags') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')
-				->join('LEFT', $db->quoteName('#__tags') . ' AS parent ON a.parent_id = parent.id AND parent.published = 1');
-			$query->where($db->quoteName('a.level') . ' != ' . $db->quote(0));
-			$query->order('a.lft ASC');
 			$db->setQuery($query);
 			$tags = $db->loadObjectList();
 
 			$article_tags = array();
-			if (count((array) $tags))
+
+			foreach ((array) $tags as $tag)
 			{
-				foreach ($tags as $tag)
+				$parent_tag = '';
+
+				if ($tag->level > 1 && !empty($tag->parent_title))
 				{
-					$parent_tag = '';
-					if (!empty($tag->parent_title) && $tag->level > 1)
-					{
-						$parent_tag = $tag->parent_title . '/';
-					}
-					$article_tags[$tag->id] = $parent_tag . $tag->title;
+					$parent_tag = $tag->parent_title . '/';
 				}
+
+				$article_tags[$tag->id] = $parent_tag . $tag->title;
 			}
 
 			return $article_tags;
@@ -405,9 +412,9 @@ class SpPgaeBuilderBase
 			return self::$articleTagsCache;
 		}
 
-		$result = $loader();
-		self::$articleTagsCache = $result;
-		return $result;
+		self::$articleTagsCache = $loader();
+
+		return self::$articleTagsCache;
 	}
 	/**
 	 *  get parent tag info by tag id

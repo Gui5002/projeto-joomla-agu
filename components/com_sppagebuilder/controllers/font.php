@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -11,8 +11,10 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Response\JsonResponse;
+use Joomla\CMS\Session\Session;
 
 /**
  * Fonts Controller class
@@ -21,6 +23,38 @@ use Joomla\CMS\Response\JsonResponse;
  */
 class SppagebuilderControllerFont extends FormController
 {
+    public function __construct($config = [])
+	{
+		parent::__construct($config);
+
+		$user = Factory::getUser();
+		$authorised = $user->authorise('core.admin', 'com_sppagebuilder') || $user->authorise('core.manage', 'com_sppagebuilder');
+
+        $app   = Factory::getApplication();
+		$method = $app->input->getMethod();
+
+        if ($method == 'GET') {
+			$authorised = $user->authorise('core.edit', 'com_sppagebuilder') || $user->authorise('core.edit.own', 'com_sppagebuilder');
+		}
+
+		if (!$authorised)
+		{
+			$response['message'] = Text::_('COM_SPPAGEBUILDER_EDITOR_ADMIN_ACCESS_REQUIRED');
+			$this->sendResponse($response, 403, true);
+		}
+
+		if (!$user->id)
+		{
+			$response['message'] = Text::_('COM_SPPAGEBUILDER_EDITOR_LOGIN_SESSION_EXPIRED');
+			$this->sendResponse($response, 401, true);
+		}
+
+		if (!Session::checkToken())
+		{
+			$response['message'] = Text::_('COM_SPPAGEBUILDER_EDITOR_SESSION_MISMATCHED');
+			$this->sendResponse($response, 403, true);
+		}
+	}
     /**
      * Get installed fonts.
      *

@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -16,6 +16,7 @@ use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Response\JsonResponse;
 
 JLoader::register('SppagebuilderHelperRoute', JPATH_ROOT . '/components/com_sppagebuilder/helpers/route.php');
 
@@ -25,6 +26,28 @@ class SppagebuilderControllerPage extends FormController
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+
+		$user = Factory::getUser();
+		$authorised = $user->authorise('core.admin', 'com_sppagebuilder') || $user->authorise('core.manage', 'com_sppagebuilder');
+
+		if (!$authorised)
+		{
+			$response['message'] = Text::_('COM_SPPAGEBUILDER_EDITOR_ADMIN_ACCESS_REQUIRED');
+
+			$this->sendResponse($response, 403);
+		}
+
+		if (!$user->id)
+		{
+			$response['message'] = Text::_('COM_SPPAGEBUILDER_EDITOR_LOGIN_SESSION_EXPIRED');
+			$this->sendResponse($response, 401);
+		}
+
+		if (!Session::checkToken())
+		{
+			$response['message'] = Text::_('COM_SPPAGEBUILDER_EDITOR_SESSION_MISMATCHED');
+			$this->sendResponse($response, 403);
+		}
 	}
 
 	/**
@@ -129,7 +152,7 @@ class SppagebuilderControllerPage extends FormController
 		}
 		else
 		{
-			$authorised = $user->authorise('core.edit', 'com_sppagebuilder') || $user->authorise('core.edit', 'com_sppagebuilder.page.' . $recordId) || $user->authorise('core.edit', 'com_sppagebuilder.page.' . $recordId) || ($user->authorise('core.edit.own',   'com_sppagebuilder.page.' . $recordId) && $data['created_by'] == $user->id);
+			$authorised = $user->authorise('core.edit', 'com_sppagebuilder') || $user->authorise('core.edit', 'com_sppagebuilder.page.' . $recordId) || ($user->authorise('core.edit.own', 'com_sppagebuilder.page.' . $recordId) && $model->getPageCreatorId($recordId) == $user->id);
 		}
 
 		if ($authorised !== true)
@@ -476,5 +499,18 @@ class SppagebuilderControllerPage extends FormController
 		}
 
 		$this->setRedirect(AuthHelper::generateLink($hash[$landing]));
+	}
+
+	private function sendResponse($response, int $statusCode = 200)
+	{
+		$this->app->setHeader('Content-Type', 'application/json');
+
+		$this->app->setHeader('status', $statusCode, true);
+
+		$this->app->sendHeaders();
+
+		echo new JsonResponse($response);
+
+		$this->app->close();
 	}
 }

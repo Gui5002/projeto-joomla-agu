@@ -11,11 +11,10 @@
 */
  
 defined('_JEXEC') or die('Restricted access');
-
-jimport('joomla.application.component.view');
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Text;
 
+jimport('joomla.application.component.view');
 
 class JSSupportticketViewPostInstallation extends JSSupportTicketView
 {

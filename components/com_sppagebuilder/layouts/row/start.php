@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -22,7 +22,8 @@ $config = ComponentHelper::getParams('com_sppagebuilder');
 $lazyload = $config->get('lazyloadimg', '0');
 
 $custom_class  	= (isset($options->class) && ($options->class)) ? ' ' . $options->class : '';
-$row_id     	= (isset($options->id) && $options->id) ? $options->id : 'section-id-' . $options->dynamicId;
+// Used as an HTML id and in CSS selectors — restrict to identifier characters so it cannot break out.
+$row_id     	= (isset($options->id) && $options->id) ? preg_replace('/[^A-Za-z0-9_-]/', '', (string) $options->id) : 'section-id-' . $options->dynamicId;
 $fluid_row 		= (isset($options->fullscreen) && $options->fullscreen) ? $options->fullscreen : 0;
 $stretch_section = (isset($options->stretch_section) && $options->stretch_section) ? $options->stretch_section : 0;
 $row_class 		= (isset($options->no_gutter) && $options->no_gutter) ? ' sppb-no-gutter' : '';
@@ -113,16 +114,16 @@ else
 
 if ($isAnimationEnabled)
 {
-	$custom_class .= ' sppb-wow ' . $options->animation;
+	$custom_class .= ' sppb-wow ' . preg_replace('/[^A-Za-z0-9_-]/', '', (string) $options->animation);
 
 	if (!empty($options->animationduration))
 	{
-		$addon_attr .= ' data-sppb-wow-duration="' . $options->animationduration . 'ms"';
+		$addon_attr .= ' data-sppb-wow-duration="' . (int) $options->animationduration . 'ms"';
 	}
 
 	if (!empty($options->animationdelay))
 	{
-		$addon_attr .= ' data-sppb-wow-delay="' . $options->animationdelay . 'ms"';
+		$addon_attr .= ' data-sppb-wow-delay="' . (int) $options->animationdelay . 'ms"';
 	}
 }
 

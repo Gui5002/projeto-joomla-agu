@@ -212,7 +212,7 @@ class PclZip {
 
         // ----- Tests the zlib
         if (!function_exists('gzopen')) {
-            die('Abort ' . getJSTicketPHPFunctionsClass()->jsticket_basename(__FILE__) . ' : Missing zlib extensions');
+            die('Abort ' . basename(__FILE__) . ' : Missing zlib extensions');
         }
 
         // ----- Set the attributes
@@ -350,7 +350,7 @@ class PclZip {
         // ----- Look if the $p_filelist is a string
         else if (is_string($p_filelist)) {
             // ----- Create a list from the string
-            $v_string_list = getJSTicketPHPFunctionsClass()->jsticket_explode(PCLZIP_SEPARATOR, $p_filelist);
+            $v_string_list = explode(PCLZIP_SEPARATOR, $p_filelist);
         }
 
         // ----- Invalid variable type for $p_filelist
@@ -530,7 +530,7 @@ class PclZip {
         // ----- Look if the $p_filelist is a string
         else if (is_string($p_filelist)) {
             // ----- Create a list from the string
-            $v_string_list = getJSTicketPHPFunctionsClass()->jsticket_explode(PCLZIP_SEPARATOR, $p_filelist);
+            $v_string_list = explode(PCLZIP_SEPARATOR, $p_filelist);
         }
 
         // ----- Invalid variable type for $p_filelist
@@ -743,7 +743,7 @@ class PclZip {
                 }
                 if (isset($v_options[PCLZIP_OPT_ADD_PATH])) {
                     // ----- Check for '/' in last path char
-                    if ((getJSTicketPHPFunctionsClass()->jsticket_strlen($v_path) > 0) && (getJSTicketPHPFunctionsClass()->jsticket_substr($v_path, -1) != '/')) {
+                    if ((strlen($v_path) > 0) && (substr($v_path, -1) != '/')) {
                         $v_path .= '/';
                     }
                     $v_path .= $v_options[PCLZIP_OPT_ADD_PATH];
@@ -893,7 +893,7 @@ class PclZip {
                 }
                 if (isset($v_options[PCLZIP_OPT_ADD_PATH])) {
                     // ----- Check for '/' in last path char
-                    if ((getJSTicketPHPFunctionsClass()->jsticket_strlen($v_path) > 0) && (getJSTicketPHPFunctionsClass()->jsticket_substr($v_path, -1) != '/')) {
+                    if ((strlen($v_path) > 0) && (substr($v_path, -1) != '/')) {
                         $v_path .= '/';
                     }
                     $v_path .= $v_options[PCLZIP_OPT_ADD_PATH];
@@ -1561,10 +1561,10 @@ class PclZip {
                     if (is_string($p_options_list[$i + 1])) {
 
                         // ----- Remove spaces
-                        $p_options_list[$i + 1] = strtr($p_options_list[$i + 1], ' ', '');
+                        $p_options_list[$i + 1] = strstr($p_options_list[$i + 1], ' ', '');
 
                         // ----- Parse items
-                        $v_work_list = getJSTicketPHPFunctionsClass()->jsticket_explode(",", $p_options_list[$i + 1]);
+                        $v_work_list = explode(",", $p_options_list[$i + 1]);
                     } else if (is_integer($p_options_list[$i + 1])) {
                         $v_work_list[0] = $p_options_list[$i + 1] . '-' . $p_options_list[$i + 1];
                     } else if (is_array($p_options_list[$i + 1])) {
@@ -1585,7 +1585,7 @@ class PclZip {
                     $v_sort_value = 0;
                     for ($j = 0; $j < sizeof($v_work_list); $j++) {
                         // ----- Explode the item
-                        $v_item_list = getJSTicketPHPFunctionsClass()->jsticket_explode("-", $v_work_list[$j]);
+                        $v_item_list = explode("-", $v_work_list[$j]);
                         $v_size_item_list = sizeof($v_item_list);
 
                         // ----- TBC : Here we might check that each item is a
@@ -1750,20 +1750,20 @@ class PclZip {
         // ----- Get 'memory_limit' configuration value
         $v_memory_limit = ini_get('memory_limit');
         $v_memory_limit = getJSTicketPHPFunctionsClass()->jsticket_trim($v_memory_limit);
-        $last = getJSTicketPHPFunctionsClass()->jsticket_strtolower(getJSTicketPHPFunctionsClass()->jsticket_substr($v_memory_limit, -1));
+        $last = getJSTicketPHPFunctionsClass()->jsticket_strtolower(substr($v_memory_limit, -1));
 
         if ($last == 'g'){
             //$v_memory_limit = $v_memory_limit*1024*1024*1024;
-            $v_memory_limit = getJSTicketPHPFunctionsClass()->jsticket_str_replace("G", "", $v_memory_limit) ;
+            $v_memory_limit = str_replace("G", "", $v_memory_limit) ;
             $v_memory_limit = $v_memory_limit * 1073741824;
           }
         if ($last == 'm'){
             //$v_memory_limit = $v_memory_limit*1024*1024;
-            $v_memory_limit = getJSTicketPHPFunctionsClass()->jsticket_str_replace("M", "", $v_memory_limit) ;
+            $v_memory_limit = str_replace("M", "", $v_memory_limit) ;
             $v_memory_limit = $v_memory_limit * 1048576;
         }
         if ($last == 'k'){
-            $v_memory_limit = getJSTicketPHPFunctionsClass()->jsticket_str_replace("K", "", $v_memory_limit) ;
+            $v_memory_limit = str_replace("K", "", $v_memory_limit) ;
             $v_memory_limit = $v_memory_limit * 1024;
         }
 
@@ -2520,7 +2520,7 @@ class PclZip {
         }
 
         // ----- Check the path length
-        if (getJSTicketPHPFunctionsClass()->jsticket_strlen($p_header['stored_filename']) > 0xFF) {
+        if (strlen($p_header['stored_filename']) > 0xFF) {
             $p_header['status'] = 'filename_too_long';
         }
 
@@ -2824,19 +2824,19 @@ class PclZip {
 
             // ----- Look for all path to remove
             if ($p_remove_all_dir) {
-                $v_stored_filename = getJSTicketPHPFunctionsClass()->jsticket_basename($p_filename);
+                $v_stored_filename = basename($p_filename);
             }
             // ----- Look for partial path remove
             else if ($p_remove_dir != "") {
-                if (getJSTicketPHPFunctionsClass()->jsticket_substr($p_remove_dir, -1) != '/')
+                if (substr($p_remove_dir, -1) != '/')
                     $p_remove_dir .= "/";
 
-                if ((getJSTicketPHPFunctionsClass()->jsticket_substr($p_filename, 0, 2) == "./") || (getJSTicketPHPFunctionsClass()->jsticket_substr($p_remove_dir, 0, 2) == "./")) {
+                if ((substr($p_filename, 0, 2) == "./") || (substr($p_remove_dir, 0, 2) == "./")) {
 
-                    if ((getJSTicketPHPFunctionsClass()->jsticket_substr($p_filename, 0, 2) == "./") && (getJSTicketPHPFunctionsClass()->jsticket_substr($p_remove_dir, 0, 2) != "./")) {
+                    if ((substr($p_filename, 0, 2) == "./") && (substr($p_remove_dir, 0, 2) != "./")) {
                         $p_remove_dir = "./" . $p_remove_dir;
                     }
-                    if ((getJSTicketPHPFunctionsClass()->jsticket_substr($p_filename, 0, 2) != "./") && (getJSTicketPHPFunctionsClass()->jsticket_substr($p_remove_dir, 0, 2) == "./")) {
+                    if ((substr($p_filename, 0, 2) != "./") && (substr($p_remove_dir, 0, 2) == "./")) {
                         $p_remove_dir = getJSTicketPHPFunctionsClass()->jsticket_substr($p_remove_dir, 2);
                     }
                 }
@@ -2856,7 +2856,7 @@ class PclZip {
 
             // ----- Look for path to add
             if ($p_add_dir != "") {
-                if (getJSTicketPHPFunctionsClass()->jsticket_substr($p_add_dir, -1) == "/")
+                if (substr($p_add_dir, -1) == "/")
                     $v_stored_filename = $p_add_dir . $v_stored_filename;
                 else
                     $v_stored_filename = $p_add_dir . "/" . $v_stored_filename;
@@ -2896,7 +2896,7 @@ class PclZip {
         fputs($this->zip_fd, $v_binary_data, 30);
 
         // ----- Write the variable fields
-        if (getJSTicketPHPFunctionsClass()->jsticket_strlen($p_header['stored_filename']) != 0) {
+        if (strlen($p_header['stored_filename']) != 0) {
             fputs($this->zip_fd, $p_header['stored_filename'], getJSTicketPHPFunctionsClass()->jsticket_strlen($p_header['stored_filename']));
         }
         if ($p_header['extra_len'] != 0) {
@@ -2933,7 +2933,7 @@ class PclZip {
         fputs($this->zip_fd, $v_binary_data, 46);
 
         // ----- Write the variable fields
-        if (getJSTicketPHPFunctionsClass()->jsticket_strlen($p_header['stored_filename']) != 0) {
+        if (strlen($p_header['stored_filename']) != 0) {
             fputs($this->zip_fd, $p_header['stored_filename'], getJSTicketPHPFunctionsClass()->jsticket_strlen($p_header['stored_filename']));
         }
         if ($p_header['extra_len'] != 0) {
@@ -2964,7 +2964,7 @@ class PclZip {
         fputs($this->zip_fd, $v_binary_data, 22);
 
         // ----- Write the variable fields
-        if (getJSTicketPHPFunctionsClass()->jsticket_strlen($p_comment) != 0) {
+        if (strlen($p_comment) != 0) {
             fputs($this->zip_fd, $p_comment, getJSTicketPHPFunctionsClass()->jsticket_strlen($p_comment));
         }
 
@@ -3105,19 +3105,19 @@ class PclZip {
         $this->privDisableMagicQuotes();
 
         // ----- Check the path
-        if (($p_path == "") || ( (getJSTicketPHPFunctionsClass()->jsticket_substr($p_path, 0, 1) != "/") && (getJSTicketPHPFunctionsClass()->jsticket_substr($p_path, 0, 3) != "../") && (getJSTicketPHPFunctionsClass()->jsticket_substr($p_path, 1, 2) != ":/")))
+        if (($p_path == "") || ( (substr($p_path, 0, 1) != "/") && (substr($p_path, 0, 3) != "../") && (substr($p_path, 1, 2) != ":/")))
             $p_path = "./" . $p_path;
 
         // ----- Reduce the path last (and duplicated) '/'
         if (($p_path != "./") && ($p_path != "/")) {
             // ----- Look for the path end '/'
-            while (getJSTicketPHPFunctionsClass()->jsticket_substr($p_path, -1) == "/") {
+            while (substr($p_path, -1) == "/") {
                 $p_path = getJSTicketPHPFunctionsClass()->jsticket_substr($p_path, 0, getJSTicketPHPFunctionsClass()->jsticket_strlen($p_path) - 1);
             }
         }
 
         // ----- Look for path to remove format (should end by /)
-        if (($p_remove_path != "") && (getJSTicketPHPFunctionsClass()->jsticket_substr($p_remove_path, -1) != '/')) {
+        if (($p_remove_path != "") && (substr($p_remove_path, -1) != '/')) {
             $p_remove_path .= '/';
         }
         $p_remove_path_size = getJSTicketPHPFunctionsClass()->jsticket_strlen($p_remove_path);
@@ -3185,10 +3185,10 @@ class PclZip {
                 for ($j = 0; ($j < sizeof($p_options[PCLZIP_OPT_BY_NAME])) && (!$v_extract); $j++) {
 
                     // ----- Look for a directory
-                    if (getJSTicketPHPFunctionsClass()->jsticket_substr($p_options[PCLZIP_OPT_BY_NAME][$j], -1) == "/") {
+                    if (substr($p_options[PCLZIP_OPT_BY_NAME][$j], -1) == "/") {
 
                         // ----- Look if the directory is in the filename path
-                        if ((getJSTicketPHPFunctionsClass()->jsticket_strlen($v_header['stored_filename']) > getJSTicketPHPFunctionsClass()->jsticket_strlen($p_options[PCLZIP_OPT_BY_NAME][$j])) && (getJSTicketPHPFunctionsClass()->jsticket_substr($v_header['stored_filename'], 0, getJSTicketPHPFunctionsClass()->jsticket_strlen($p_options[PCLZIP_OPT_BY_NAME][$j])) == $p_options[PCLZIP_OPT_BY_NAME][$j])) {
+                        if ((strlen($v_header['stored_filename']) > getJSTicketPHPFunctionsClass()->jsticket_strlen($p_options[PCLZIP_OPT_BY_NAME][$j])) && (substr($v_header['stored_filename'], 0, getJSTicketPHPFunctionsClass()->jsticket_strlen($p_options[PCLZIP_OPT_BY_NAME][$j])) == $p_options[PCLZIP_OPT_BY_NAME][$j])) {
                             $v_extract = true;
                         }
                     }
@@ -3433,7 +3433,7 @@ class PclZip {
             }
 
             // ----- Get the basename of the path
-            $p_entry['filename'] = getJSTicketPHPFunctionsClass()->jsticket_basename($p_entry['filename']);
+            $p_entry['filename'] = basename($p_entry['filename']);
         }
 
         // ----- Look for path to remove
@@ -3448,7 +3448,7 @@ class PclZip {
             }
 
             $p_remove_path_size = getJSTicketPHPFunctionsClass()->jsticket_strlen($p_remove_path);
-            if (getJSTicketPHPFunctionsClass()->jsticket_substr($p_entry['filename'], 0, $p_remove_path_size) == $p_remove_path) {
+            if (substr($p_entry['filename'], 0, $p_remove_path_size) == $p_remove_path) {
 
                 // ----- Remove the path
                 $p_entry['filename'] = getJSTicketPHPFunctionsClass()->jsticket_substr($p_entry['filename'], $p_remove_path_size);
@@ -3570,7 +3570,7 @@ class PclZip {
 
             // ----- Check the directory availability and create it if necessary
             else {
-                if ((($p_entry['external'] & 0x00000010) == 0x00000010) || (getJSTicketPHPFunctionsClass()->jsticket_substr($p_entry['filename'], -1) == '/'))
+                if ((($p_entry['external'] & 0x00000010) == 0x00000010) || (substr($p_entry['filename'], -1) == '/'))
                     $v_dir_to_check = $p_entry['filename'];
                 else if (!getJSTicketPHPFunctionsClass()->jsticket_strstr($p_entry['filename'], "/"))
                     $v_dir_to_check = "";
@@ -4049,7 +4049,7 @@ class PclZip {
         $v_binary_data = fread($this->zip_fd, 26);
 
         // ----- Look for invalid block size
-        if (getJSTicketPHPFunctionsClass()->jsticket_strlen($v_binary_data) != 26) {
+        if (strlen($v_binary_data) != 26) {
             $p_header['filename'] = "";
             $p_header['status'] = "invalid_header";
 
@@ -4143,7 +4143,7 @@ class PclZip {
         $v_binary_data = fread($this->zip_fd, 42);
 
         // ----- Look for invalid block size
-        if (getJSTicketPHPFunctionsClass()->jsticket_strlen($v_binary_data) != 42) {
+        if (strlen($v_binary_data) != 42) {
             $p_header['filename'] = "";
             $p_header['status'] = "invalid_header";
 
@@ -4203,7 +4203,7 @@ class PclZip {
         $p_header['status'] = 'ok';
 
         // ----- Look if it is a directory
-        if (getJSTicketPHPFunctionsClass()->jsticket_substr($p_header['filename'], -1) == '/') {
+        if (substr($p_header['filename'], -1) == '/') {
             //$p_header['external'] = 0x41FF0010;
             $p_header['external'] = 0x00000010;
         }
@@ -4354,7 +4354,7 @@ class PclZip {
         $v_binary_data = fread($this->zip_fd, 18);
 
         // ----- Look for invalid block size
-        if (getJSTicketPHPFunctionsClass()->jsticket_strlen($v_binary_data) != 18) {
+        if (strlen($v_binary_data) != 18) {
 
             // ----- Error log
             PclZip::privErrorLog(PCLZIP_ERR_BAD_FORMAT, "Invalid End of Central Dir Record size : " . getJSTicketPHPFunctionsClass()->jsticket_strlen($v_binary_data));
@@ -4473,10 +4473,10 @@ class PclZip {
                 for ($j = 0; ($j < sizeof($p_options[PCLZIP_OPT_BY_NAME])) && (!$v_found); $j++) {
 
                     // ----- Look for a directory
-                    if (getJSTicketPHPFunctionsClass()->jsticket_substr($p_options[PCLZIP_OPT_BY_NAME][$j], -1) == "/") {
+                    if (substr($p_options[PCLZIP_OPT_BY_NAME][$j], -1) == "/") {
 
                         // ----- Look if the directory is in the filename path
-                        if ((getJSTicketPHPFunctionsClass()->jsticket_strlen($v_header_list[$v_nb_extracted]['stored_filename']) > getJSTicketPHPFunctionsClass()->jsticket_strlen($p_options[PCLZIP_OPT_BY_NAME][$j])) && (getJSTicketPHPFunctionsClass()->jsticket_substr($v_header_list[$v_nb_extracted]['stored_filename'], 0, getJSTicketPHPFunctionsClass()->jsticket_strlen($p_options[PCLZIP_OPT_BY_NAME][$j])) == $p_options[PCLZIP_OPT_BY_NAME][$j])) {
+                        if ((strlen($v_header_list[$v_nb_extracted]['stored_filename']) > getJSTicketPHPFunctionsClass()->jsticket_strlen($p_options[PCLZIP_OPT_BY_NAME][$j])) && (substr($v_header_list[$v_nb_extracted]['stored_filename'], 0, getJSTicketPHPFunctionsClass()->jsticket_strlen($p_options[PCLZIP_OPT_BY_NAME][$j])) == $p_options[PCLZIP_OPT_BY_NAME][$j])) {
                             $v_found = true;
                         } elseif ((($v_header_list[$v_nb_extracted]['external'] & 0x00000010) == 0x00000010) /* Indicates a folder */ && ($v_header_list[$v_nb_extracted]['stored_filename'] . '/' == $p_options[PCLZIP_OPT_BY_NAME][$j])) {
                             $v_found = true;
@@ -4708,7 +4708,7 @@ class PclZip {
 
 
         // ----- Remove the final '/'
-        if (($p_is_dir) && (getJSTicketPHPFunctionsClass()->jsticket_substr($p_dir, -1) == '/')) {
+        if (($p_is_dir) && (substr($p_dir, -1) == '/')) {
             $p_dir = getJSTicketPHPFunctionsClass()->jsticket_substr($p_dir, 0, getJSTicketPHPFunctionsClass()->jsticket_strlen($p_dir) - 1);
         }
 
@@ -5080,7 +5080,7 @@ function PclZipUtilPathReduction($p_dir) {
     // ----- Look for not empty path
     if ($p_dir != "") {
         // ----- Explode path by directory names
-        $v_list = getJSTicketPHPFunctionsClass()->jsticket_explode("/", $p_dir);
+        $v_list = explode("/", $p_dir);
 
         // ----- Study directories from last to first
         $v_skip = 0;
@@ -5154,17 +5154,17 @@ function PclZipUtilPathInclusion($p_dir, $p_path) {
     $v_result = 1;
 
     // ----- Look for path beginning by ./
-    if (($p_dir == '.') || ((getJSTicketPHPFunctionsClass()->jsticket_strlen($p_dir) >= 2) && (getJSTicketPHPFunctionsClass()->jsticket_substr($p_dir, 0, 2) == './'))) {
-        $p_dir = PclZipUtilTranslateWinPath(getcwd(), FALSE) . '/' . getJSTicketPHPFunctionsClass()->jsticket_substr($p_dir, 1);
+    if (($p_dir == '.') || ((strlen($p_dir) >= 2) && (substr($p_dir, 0, 2) == './'))) {
+        $p_dir = PclZipUtilTranslateWinPath(getcwd(), FALSE) . '/' . substr($p_dir, 1);
     }
-    if (($p_path == '.') || ((getJSTicketPHPFunctionsClass()->jsticket_strlen($p_path) >= 2) && (getJSTicketPHPFunctionsClass()->jsticket_substr($p_path, 0, 2) == './'))) {
-        $p_path = PclZipUtilTranslateWinPath(getcwd(), FALSE) . '/' . getJSTicketPHPFunctionsClass()->jsticket_substr($p_path, 1);
+    if (($p_path == '.') || ((strlen($p_path) >= 2) && (substr($p_path, 0, 2) == './'))) {
+        $p_path = PclZipUtilTranslateWinPath(getcwd(), FALSE) . '/' . substr($p_path, 1);
     }
 
     // ----- Explode dir and path by directory separator
-    $v_list_dir = getJSTicketPHPFunctionsClass()->jsticket_explode("/", $p_dir);
+    $v_list_dir = explode("/", $p_dir);
     $v_list_dir_size = sizeof($v_list_dir);
-    $v_list_path = getJSTicketPHPFunctionsClass()->jsticket_explode("/", $p_path);
+    $v_list_path = explode("/", $p_path);
     $v_list_path_size = sizeof($v_list_path);
 
     // ----- Study directories paths
@@ -5338,7 +5338,7 @@ function PclZipUtilTranslateWinPath($p_path, $p_remove_disk_letter = true) {
         }
         // ----- Change potential windows directory separator
         if ((getJSTicketPHPFunctionsClass()->jsticket_strpos($p_path, '\\') > 0) || (getJSTicketPHPFunctionsClass()->jsticket_substr($p_path, 0, 1) == '\\')) {
-            $p_path = strtr($p_path, '\\', '/');
+            $p_path = strstr($p_path, '\\', '/');
         }
     }
     return $p_path;

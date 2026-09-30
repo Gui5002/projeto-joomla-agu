@@ -17,6 +17,8 @@ namespace Akeeba\Component\AkeebaBackup\Administrator\Controller;
 
 defined('_JEXEC') || die;
 
+use Akeeba\Component\AkeebaBackup\Administrator\Mixin\ControllerCustomACLTrait;
+use Akeeba\Component\AkeebaBackup\Administrator\Mixin\ControllerEventsTrait;
 use Akeeba\WebPush\NotificationOptions;
 use Akeeba\WebPush\WebPush\WebPush;
 use Akeeba\WebPush\WebPushControllerTrait;
@@ -35,6 +37,8 @@ if (!class_exists(WebPush::class))
  */
 class PushController extends BaseController
 {
+	use ControllerEventsTrait;
+	use ControllerCustomACLTrait;
 	use WebPushControllerTrait;
 
 	/** @inheritDoc */

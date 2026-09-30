@@ -40,6 +40,8 @@ if (!class_exists('SppagebuilderHelperSite'))
 	require_once JPATH_ROOT . '/components/com_sppagebuilder/helpers/helper.php';
 }
 
+BuilderAutoload::loadAliases();
+
 // Load language file
 $language = Factory::getLanguage();
 $language->load('com_sppagebuilder', JPATH_SITE, 'en-GB', true);
@@ -74,7 +76,7 @@ class PlgContentSppagebuilder extends CMSPlugin
 		}
 
 		$sppagebuilder_active = (isset($form['attribs']['sppagebuilder_active']) && $form['attribs']['sppagebuilder_active']) ? (int) $form['attribs']['sppagebuilder_active'] : 0;
-		$sppagebuilder_module_id = (isset($form['attribs']['sppagebuilder_module_id']) && $form['attribs']['sppagebuilder_module_id']) ? $form['attribs']['sppagebuilder_module_id'] : null;
+		$sppagebuilder_module_id = (isset($form['attribs']['sppagebuilder_module_id']) && $form['attribs']['sppagebuilder_module_id']) ? (int) $form['attribs']['sppagebuilder_module_id'] : 0;
 		$sppagebuilder_content = '[]';
 
 		if ($sppagebuilder_module_id)
@@ -82,7 +84,7 @@ class PlgContentSppagebuilder extends CMSPlugin
 			$db = Factory::getDbo();
 			$query = $db->getQuery();
 			$query->clear();
-			$query->select('*')->from($db->quoteName('#__sppagebuilder'))->where($db->quoteName('view_id') . '=' . $sppagebuilder_module_id);
+			$query->select('*')->from($db->quoteName('#__sppagebuilder'))->where($db->quoteName('view_id') . '=' . (int)$sppagebuilder_module_id);
 			$db->setQuery($query);
 			$result = $db->loadObject();
 			$sppagebuilder_content = $result->content ?? $result->text ?? '[]';
@@ -103,7 +105,7 @@ class PlgContentSppagebuilder extends CMSPlugin
 				'content' => $sppagebuilder_content,
 				'option' => 'mod_sppagebuilder',
 				'view' => 'module',
-				'id' => $module_data->id,
+				'id' => (int)$module_data->id,
 				'active' => $sppagebuilder_active,
 				'published' => 1,
 				'catid'		=> 0,
@@ -130,7 +132,7 @@ class PlgContentSppagebuilder extends CMSPlugin
 		$view = 'article';
 		$form = $input->post->get('jform', array(), 'ARRAY');
 		$sppagebuilder_active = (isset($form['attribs']['sppagebuilder_active']) && $form['attribs']['sppagebuilder_active']) ? (int) $form['attribs']['sppagebuilder_active'] : 0;
-		$sppagebuilder_article_id = (isset($form['attribs']['sppagebuilder_article_id']) && $form['attribs']['sppagebuilder_article_id']) ? $form['attribs']['sppagebuilder_article_id'] : null;
+		$sppagebuilder_article_id = (isset($form['attribs']['sppagebuilder_article_id']) && $form['attribs']['sppagebuilder_article_id']) ? (int) $form['attribs']['sppagebuilder_article_id'] : 0;
 		$sppagebuilder_content = '[]';
 
 		if ($sppagebuilder_article_id)
@@ -138,7 +140,7 @@ class PlgContentSppagebuilder extends CMSPlugin
 			$db = Factory::getDbo();
 			$query = $db->getQuery();
 			$query->clear();
-			$query->select('*')->from($db->quoteName('#__sppagebuilder'))->where($db->quoteName('view_id') . '=' . $sppagebuilder_article_id);
+			$query->select('*')->from($db->quoteName('#__sppagebuilder'))->where($db->quoteName('view_id') . '=' . (int)$sppagebuilder_article_id);
 			$db->setQuery($query);
 			$result = $db->loadObject();
 			$sppagebuilder_content = $result->content ?? $result->text ?? '[]';
@@ -161,7 +163,7 @@ class PlgContentSppagebuilder extends CMSPlugin
 				'content' => $sppagebuilder_content,
 				'option' => $option,
 				'view' => $view,
-				'id' => $article->id,
+				'id' => (int)$article->id,
 				'active' => $sppagebuilder_active,
 				'published' => $article_state,
 				'catid'		=> $article->catid,
@@ -214,12 +216,12 @@ class PlgContentSppagebuilder extends CMSPlugin
 			if (($option === 'com_content') && ($view === 'article'))
 			{
 
-				$article->text = SppagebuilderHelper::onIntegrationPrepareContent($article->text, $option, $view, $article->id);
+				$article->text = SppagebuilderHelper::onIntegrationPrepareContent($article->text, $option, $view, (int)$article->id);
 			}
 
 			if (($option == 'com_j2store') && ($view === 'products') && ($task === 'view') && ($context === 'com_content.article.productlist'))
 			{
-				$article->text = SppagebuilderHelper::onIntegrationPrepareContent($article->text, 'com_content', 'article', $article->id);
+				$article->text = SppagebuilderHelper::onIntegrationPrepareContent($article->text, 'com_content', 'article', (int)$article->id);
 			}
 		}
 	}
@@ -236,7 +238,7 @@ class PlgContentSppagebuilder extends CMSPlugin
 				$values = array(
 					'option' => $option,
 					'view' => 'article',
-					'id' => $data->id,
+					'id' => (int)$data->id,
 					'action' => 'delete'
 				);
 				SppagebuilderHelper::onAfterIntegrationSave($values);
@@ -289,7 +291,7 @@ class PlgContentSppagebuilder extends CMSPlugin
 					$values = array(
 						'option' => $option,
 						'view' => 'article',
-						'id' => $id,
+						'id' => (int)$id,
 						'published' => $value,
 						'action' => 'stateChange'
 					);

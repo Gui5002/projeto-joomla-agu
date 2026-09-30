@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -75,6 +75,13 @@ class AddonParser
 	 */
 	public static function getAddonPath($addon_name = '')
 	{
+		// The addon name becomes a filesystem path below, so it must be a bare
+		// directory name. Anything else (traversal, separators, null bytes) is rejected.
+		if (!is_string($addon_name) || !preg_match('/^[A-Za-z0-9_-]+$/', $addon_name))
+		{
+			return '';
+		}
+
 		$isEasyStoreAddon = stripos($addon_name, 'easystore_') === 0;
 
 		if ($isEasyStoreAddon && ApplicationHelper::isProVersion())
@@ -541,7 +548,7 @@ class AddonParser
 
 						if (file_exists($css_file_path))
 						{
-							$doc->addStylesheet($css_file_url);
+							$doc->addStylesheet($css_file_url, ['version' => md5($inline_css)]);
 						}
 						else
 						{

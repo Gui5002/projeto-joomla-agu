@@ -84,7 +84,7 @@ $allRemoteFilesGone = $downloadToFileNotAvailable && $deleteNotAvailable;
 
 				<?php if($this->actions['delete']): ?>
 					<a class="btn btn-danger text-decoration-none akeebaRemoteFilesShowWait"
-					   href="index.php?option=com_akeebabackup&view=Remotefiles&task=delete&tmpl=component&id=<?= $this->id ?>&part=-1"
+					   href="index.php?option=com_akeebabackup&view=Remotefiles&task=delete&tmpl=component&id=<?= $this->id ?>&part=-1&<?= \Joomla\CMS\Factory::getApplication()->getFormToken() ?>=1"
 					>
 						<span class="fa fa-trash"></span>
 						<span><?= JText::_('COM_AKEEBABACKUP_REMOTEFILES_DELETE')?></span>
@@ -109,7 +109,7 @@ $allRemoteFilesGone = $downloadToFileNotAvailable && $deleteNotAvailable;
 
 			<div class="card-body">
 				<?php for($part = 0; $part < $this->actions['downloadToBrowser']; $part++): ?>
-					<a href="index.php?option=com_akeebabackup&view=Remotefiles&task=dlfromremote&id=<?= $this->id ?>&part=<?= $part ?>"
+					<a href="index.php?option=com_akeebabackup&view=Remotefiles&task=dlfromremote&id=<?= $this->id ?>&part=<?= $part ?>&<?= \Joomla\CMS\Factory::getApplication()->getFormToken() ?>=1"
 					   class="btn btn-sm btn-secondary">
 						<span class="fa fa-file-download"></span>
 						<?= JText::sprintf('COM_AKEEBABACKUP_REMOTEFILES_PART', $part) ?>

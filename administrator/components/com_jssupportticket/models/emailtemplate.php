@@ -11,10 +11,10 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Factory;
 
 jimport('joomla.application.component.model');
 jimport('joomla.html.html');
-use Joomla\CMS\Factory;
 
 class JSSupportticketModelEmailtemplate extends JSSupportTicketModel {
 

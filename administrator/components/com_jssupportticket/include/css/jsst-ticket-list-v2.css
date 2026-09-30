@@ -1,0 +1,1150 @@
+/* JS Support Ticket 1.3.3 admin tickets list redesign.
+   Scope is intentionally limited to the tickets list screen wrapper. */
+
+#jsst-admin .jsst-ticket-list-v2,
+#jsst-admin .jsst-ticket-list-v2 * {
+    box-sizing: border-box;
+}
+
+#jsst-admin .jsst-ticket-list-v2 {
+    --jsst-bg: #f4f7fb;
+    --jsst-panel: #ffffff;
+    --jsst-muted-panel: #f8fafc;
+    --jsst-border: #e5eaf2;
+    --jsst-border-strong: #d7deea;
+    --jsst-text: #172033;
+    --jsst-muted: #64748b;
+    --jsst-soft: #eef4ff;
+    --jsst-blue: #2563eb;
+    --jsst-sky: #0891b2;
+    --jsst-green: #16a34a;
+    --jsst-orange: #f97316;
+    --jsst-red: #ef4444;
+    --jsst-pink: #db2777;
+    --jsst-shadow: 0 18px 55px rgba(15, 23, 42, 0.12);
+    width: 100%;
+    max-width: 1370px;
+    margin: 0 auto;
+    padding: 26px 12px 34px;
+    color: var(--jsst-text);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+#jsst-admin .jsst-ticket-list-v2 a {
+    text-decoration: none;
+}
+
+#jsst-admin .jsst-ticket-hero {
+    overflow: hidden;
+    position: relative;
+    border-radius: 22px;
+    padding: 22px 28px 30px;
+    background:
+        radial-gradient(circle at 82% 12%, rgba(255, 255, 255, 0.24) 0, rgba(255, 255, 255, 0.24) 110px, transparent 112px),
+        linear-gradient(125deg, var(--jsst-primary-dark, #1d4ed8) 0%, var(--jsst-primary, #2563eb) 48%, var(--jsst-sky, #0ea5e9) 100%);
+    color: var(--jsst-card, #ffffff);
+    box-shadow: var(--jsst-shadow);
+}
+
+#jsst-admin .jsst-ticket-hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+#jsst-admin .jsst-ticket-hero-meta a {
+    color: var(--jsst-card, #ffffff);
+    font-weight: 700;
+}
+
+
+#jsst-admin .jsst-ticket-kicker {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 4px 12px;
+    border-radius:var(--jsst-radius-pill, 999px);
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--jsst-card, #ffffff);
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+
+
+
+#jsst-admin .jsst-ticket-version,
+#jsst-admin .jsst-ticket-primary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    border-radius:var(--jsst-radius-md, 12px);
+    padding: 0 16px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+#jsst-admin .jsst-ticket-version {
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--jsst-card, #ffffff);
+}
+
+
+#jsst-admin .jsst-ticket-status-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+}
+
+#jsst-admin .jsst-ticket-status-card {
+    display: flex;
+    min-height: 132px;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px;
+    border: 1px solid var(--jsst-border);
+    border-radius:var(--jsst-radius-lg, 18px);
+    background: var(--jsst-panel);
+    color: var(--jsst-text);
+    box-shadow: 0 10px 32px rgba(15, 23, 42, 0.08);
+    transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+#jsst-admin .jsst-ticket-status-card:hover,
+#jsst-admin .jsst-ticket-status-card.is-selected {
+    transform: translateY(-2px);
+    border-color: rgba(37, 99, 235, 0.34);
+    box-shadow: 0 16px 42px rgba(37, 99, 235, 0.15);
+}
+
+#jsst-admin .jsst-ticket-status-icon {
+    display: inline-flex;
+    width: 38px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    border-radius:var(--jsst-radius-md, 12px);
+    color: var(--jsst-card, #ffffff);
+    background: var(--jsst-blue);
+    font-weight: 900;
+}
+
+#jsst-admin .jsst-ticket-status-card.is-open .jsst-ticket-status-icon { background: var(--jsst-green); }
+#jsst-admin .jsst-ticket-status-card.is-closed .jsst-ticket-status-icon { background: var(--jsst-red); }
+#jsst-admin .jsst-ticket-status-card.is-overdue .jsst-ticket-status-icon { background: var(--jsst-orange); }
+#jsst-admin .jsst-ticket-status-card.is-answered .jsst-ticket-status-icon { background: var(--jsst-pink); }
+#jsst-admin .jsst-ticket-status-card.is-all .jsst-ticket-status-icon { background: var(--jsst-sky); }
+
+#jsst-admin .jsst-ticket-status-label {
+    color: var(--jsst-muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+#jsst-admin .jsst-ticket-status-card strong {
+    color: var(--jsst-text);
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 950;
+}
+
+#jsst-admin .jsst-ticket-status-bar {
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 7px;
+    margin-top: auto;
+    border-radius:var(--jsst-radius-pill, 999px);
+    background: #edf2f7;
+}
+
+#jsst-admin .jsst-ticket-status-bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: currentColor;
+}
+
+#jsst-admin .jsst-ticket-status-card.is-open { color: var(--jsst-green); }
+#jsst-admin .jsst-ticket-status-card.is-closed { color: var(--jsst-red); }
+#jsst-admin .jsst-ticket-status-card.is-overdue { color: var(--jsst-orange); }
+#jsst-admin .jsst-ticket-status-card.is-answered { color: var(--jsst-pink); }
+#jsst-admin .jsst-ticket-status-card.is-all { color: var(--jsst-sky); }
+
+#jsst-admin .jsst-ticket-filter-card,
+#jsst-admin .jsst-ticket-list-card {
+    margin-top: 18px;
+    border: 1px solid var(--jsst-border);
+    border-radius: 20px;
+    background: var(--jsst-panel);
+    box-shadow: 0 14px 44px rgba(15, 23, 42, 0.08);
+}
+
+#jsst-admin .jsst-ticket-filter-card {
+    padding: 20px;
+}
+
+#jsst-admin .jsst-ticket-section-head,
+#jsst-admin .jsst-ticket-list-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+}
+
+#jsst-admin .jsst-ticket-section-head h2,
+#jsst-admin .jsst-ticket-list-head h2 {
+    margin: 0 0 5px;
+    color: var(--jsst-text);
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 950;
+}
+
+#jsst-admin .jsst-ticket-section-head p,
+#jsst-admin .jsst-ticket-list-head p {
+    margin: 0;
+    color: var(--jsst-muted);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+#jsst-admin .jsst-ticket-filter-toggle a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 13px;
+    border-radius:var(--jsst-radius-pill, 999px);
+    background: #eff6ff;
+    color: var(--jsst-blue);
+    font-size: 12px;
+    font-weight: 900;
+}
+
+#jsst-admin .jsst-ticket-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+#jsst-admin .jsst-ticket-filter-field {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 7px;
+    margin: 0;
+    color: var(--jsst-text);
+    font-size: 13px;
+    font-weight: 850;
+}
+
+#jsst-admin .jsst-ticket-filter-field > span {
+    color: #334155;
+}
+
+#jsst-admin .jsst-ticket-filter-field input,
+#jsst-admin .jsst-ticket-filter-field select,
+#jsst-admin .jsst-ticket-filter-field textarea,
+#jsst-admin .jsst-ticket-sort select {
+    float: none;
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid var(--jsst-border);
+    border-radius:var(--jsst-radius-md, 12px);
+    background: var(--jsst-card, #ffffff);
+    color: var(--jsst-text);
+    padding: 9px 12px;
+    font-size: 14px;
+    outline: none;
+    text-transform: none;
+    box-shadow: none;
+}
+#jsst-admin .jsst-ticket-filter-field .js-ticket-signature-radio-box-wrp input.radiobutton.js-ticket-radio-btn{
+    min-height:unset;
+}
+
+#jsst-admin .jsst-ticket-filter-field input:focus,
+#jsst-admin .jsst-ticket-filter-field select:focus,
+#jsst-admin .jsst-ticket-sort select:focus {
+    border-color: rgba(37, 99, 235, .55);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, .10);
+}
+
+#jsst-admin #js-filter-wrapper-toggle-area {
+    grid-column: 1 / -1;
+}
+
+#jsst-admin .jsst-ticket-filter-advanced {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    padding-top: 4px;
+}
+
+#jsst-admin .jsst-ticket-filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 10px;
+    grid-column: 1 / -1;
+    padding-top: 4px;
+}
+
+#jsst-admin .jsst-ticket-search-btn,
+#jsst-admin .jsst-ticket-reset-btn {
+    float: none;
+    min-height: 42px;
+    border: 0;
+    border-radius:var(--jsst-radius-md, 12px);
+    padding: 0 18px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+#jsst-admin .jsst-ticket-search-btn {
+    background: var(--jsst-blue);
+    color: var(--jsst-card, #ffffff);
+    box-shadow: 0 10px 22px rgba(37, 99, 235, .22);
+}
+
+#jsst-admin .jsst-ticket-reset-btn {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+#jsst-admin .jsst-ticket-list-card {
+    overflow: hidden;
+}
+
+#jsst-admin .jsst-ticket-list-head {
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+    border-bottom: 1px solid var(--jsst-border);
+    background: linear-gradient(180deg, var(--jsst-card, #ffffff) 0%, #f8fbff 100%);
+}
+
+#jsst-admin .jsst-ticket-sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#jsst-admin .jsst-ticket-sort label {
+    margin: 0;
+    color: var(--jsst-muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    white-space: nowrap;
+}
+
+#jsst-admin .jsst-ticket-sort select {
+    min-width: 170px;
+    float: none;
+}
+
+#jsst-admin .jsst-ticket-sort-direction {
+    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius:var(--jsst-radius-md, 12px);
+    background: var(--jsst-blue);
+}
+
+#jsst-admin .jsst-ticket-sort-direction img {
+    max-width: 18px;
+    max-height: 18px;
+    filter: brightness(0) invert(1);
+}
+
+#jsst-admin .jsst-ticket-feed {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+    background: var(--jsst-soft, #f8fafc);
+}
+
+#jsst-admin .jsst-ticket-item {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 16px;
+    padding: 18px;
+    border: 1px solid var(--jsst-border);
+    border-radius:var(--jsst-radius-lg, 18px);
+    background: var(--jsst-card, #ffffff);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, .06);
+}
+
+#jsst-admin .jsst-ticket-avatar {
+    overflow: hidden;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--jsst-primary, #2563eb), var(--jsst-sky, #0ea5e9));
+    color: var(--jsst-card, #ffffff);
+    font-size: 17px;
+    font-weight: 950;
+}
+
+#jsst-admin .jsst-ticket-avatar img,
+#jsst-admin .jsst-ticket-avatar span {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    object-fit: cover;
+}
+
+#jsst-admin .jsst-ticket-main {
+    min-width: 0;
+}
+
+#jsst-admin .jsst-ticket-title-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+#jsst-admin .jsst-ticket-customer {
+    display: inline-flex;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--jsst-muted);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 850;
+}
+
+#jsst-admin .jsst-ticket-subject {
+    display: block;
+    margin-top: 5px;
+    color: var(--jsst-text);
+    font-size: 18px;
+    line-height: 1.35;
+    font-weight: 950;
+    word-break: break-word;
+}
+
+#jsst-admin .jsst-ticket-subject:hover {
+    color: var(--jsst-blue);
+}
+
+#jsst-admin .jsst-ticket-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    max-width: 48%;
+}
+
+#jsst-admin .jsst-ticket-badge,
+#jsst-admin .jsst-ticket-priority {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    border-radius:var(--jsst-radius-pill, 999px);
+    padding: 0 10px;
+    font-size: 11px;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+#jsst-admin .jsst-ticket-badge {
+    background: #eef2ff;
+    color: #3730a3;
+}
+
+#jsst-admin .jsst-ticket-badge.is-email { background: #ecfeff; color: #0e7490; }
+#jsst-admin .jsst-ticket-badge.is-lock { background: #f1f5f9; color: #334155; }
+#jsst-admin .jsst-ticket-badge.is-overdue { background: #fff7ed; color: #c2410c; }
+#jsst-admin .jsst-ticket-badge.is-new,
+#jsst-admin .jsst-ticket-badge.is-open { background: #ecfdf5; color: #047857; }
+#jsst-admin .jsst-ticket-badge.is-waiting { background: #fff7ed; color: #c2410c; }
+#jsst-admin .jsst-ticket-badge.is-progress { background: #eff6ff; color: var(--jsst-primary-dark, #1d4ed8); }
+#jsst-admin .jsst-ticket-badge.is-replied { background: #eef2ff; color: #4338ca; }
+#jsst-admin .jsst-ticket-badge.is-closed,
+#jsst-admin .jsst-ticket-badge.is-merged { background: #fef2f2; color: #b91c1c; }
+
+#jsst-admin .jsst-ticket-priority {
+    background: var(--jsst-priority-color, #2563eb);
+    color: var(--jsst-card, #ffffff);
+}
+
+#jsst-admin .jsst-ticket-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+}
+
+#jsst-admin .jsst-ticket-meta {
+    display: flex;
+    min-width: 0;
+    min-height: 66px;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+    border: 1px solid var(--jsst-border);
+    border-radius: 14px;
+    background: var(--jsst-muted-panel);
+    padding: 10px 12px;
+    color: var(--jsst-text);
+    text-align: left;
+}
+
+#jsst-admin button.jsst-ticket-meta {
+    cursor: pointer;
+}
+
+#jsst-admin .jsst-ticket-meta span {
+    color: var(--jsst-muted);
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+#jsst-admin .jsst-ticket-meta strong {
+    overflow: hidden;
+    color: var(--jsst-text);
+    font-size: 13px;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#jsst-admin .jsst-ticket-custom-fields {
+    margin-top: 12px;
+    color: var(--jsst-muted);
+    font-size: 13px;
+}
+
+/* Each field row (.js-wrapper) has zero CSS of its own anywhere in the
+   component; for a plain text/date/dropdown field that's harmless (a
+   normal-flow div, title/value both plain inline spans, renders in
+   document order). The "file" field type is different: its value
+   (.js_ticketattachment) is float:inline-start (jsticketadmin.css, a
+   ~50%-wide bordered box), while its title (.js-tk-title) is a plain
+   non-floated span. A float positioned before non-floated inline content
+   on the same line still claims the containing block's leading edge, so
+   the floated value box visually renders BEFORE its own title even
+   though it comes after it in the DOM - "Upload ( file.jpg ) Download
+   Upload:" instead of "Upload: Upload ( file.jpg ) Download". Flex
+   neutralizes float on both children per spec and lays them out in
+   document order instead. */
+#jsst-admin .jsst-ticket-custom-fields .js-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 6px;
+}
+
+#jsst-admin .jsst-ticket-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--jsst-border);
+}
+
+#jsst-admin .jsst-ticket-actions a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #334155;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+#jsst-admin .jsst-ticket-actions a.is-view {
+    background: #eff6ff;
+    color: var(--jsst-primary-dark, #1d4ed8);
+}
+
+#jsst-admin .jsst-ticket-actions a.is-danger {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+#jsst-admin .jsst-ticket-actions a.is-danger-soft {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+#jsst-admin .jsst-ticket-pagination {
+    padding: 16px 18px 20px;
+    background: var(--jsst-card, #ffffff);
+}
+
+#jsst-admin .jsst-ticket-empty-state {
+    padding: 20px;
+    background: var(--jsst-soft, #f8fafc);
+}
+
+#jsst-admin .jsst-ticket-empty-state > * {
+    border-radius:var(--jsst-radius-lg, 18px);
+}
+
+@media (max-width: 1280px) {
+    #jsst-admin .jsst-ticket-status-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #jsst-admin .jsst-ticket-meta-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 980px) {
+    #jsst-admin .jsst-ticket-list-v2 {
+        padding: 18px 10px 28px;
+    }
+
+    #jsst-admin .jsst-ticket-hero-body,
+    #jsst-admin .jsst-ticket-section-head,
+    #jsst-admin .jsst-ticket-list-head,
+    #jsst-admin .jsst-ticket-title-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #jsst-admin .jsst-ticket-hero-actions,
+    #jsst-admin .jsst-ticket-badges {
+        justify-content: flex-start;
+        max-width: none;
+    }
+
+    #jsst-admin .jsst-ticket-filter-grid,
+    #jsst-admin .jsst-ticket-filter-advanced {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #jsst-admin .jsst-ticket-item {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 680px) {
+    #jsst-admin .jsst-ticket-hero {
+        padding: 20px;
+        border-radius:var(--jsst-radius-lg, 18px);
+    }
+
+    #jsst-admin .jsst-ticket-status-grid,
+    #jsst-admin .jsst-ticket-filter-grid,
+    #jsst-admin .jsst-ticket-filter-advanced,
+    #jsst-admin .jsst-ticket-meta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #jsst-admin .jsst-ticket-filter-actions,
+    #jsst-admin .jsst-ticket-sort {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    #jsst-admin .jsst-ticket-search-btn,
+    #jsst-admin .jsst-ticket-reset-btn,
+    #jsst-admin .jsst-ticket-sort select,
+    #jsst-admin .jsst-ticket-sort-direction {
+        width: 100%;
+    }
+}
+
+
+/* 1.6.9 saved ticket views on admin ticket list. */
+#jsst-admin .jsst-ticket-saved-views{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 18px;padding:14px;border:1px solid #e5e7eb;border-radius:16px;background:var(--jsst-soft, #f8fafc);}
+#jsst-admin .jsst-ticket-saved-apply,#jsst-admin .jsst-ticket-saved-create{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;}
+#jsst-admin .jsst-ticket-saved-views select,#jsst-admin .jsst-ticket-saved-views input{width:100%;height:42px;border:1px solid #dbe3ef;border-radius:var(--jsst-radius-md, 12px);background:#fff;color:var(--jsst-ink, #0f172a);padding:0 12px;box-sizing:border-box;}
+#jsst-admin .jsst-ticket-saved-btn{height:42px;border:0;border-radius:var(--jsst-radius-md, 12px);background:var(--jsst-primary, #2563eb);color:#fff;font-weight:900;padding:0 16px;cursor:pointer;box-shadow:0 8px 18px rgba(37,99,235,.18);}
+#jsst-admin .jsst-ticket-saved-btn.is-green{background:var(--jsst-green, #16a34a);box-shadow:0 8px 18px rgba(22,163,74,.18);}
+@media (max-width:980px){#jsst-admin .jsst-ticket-saved-views{grid-template-columns:1fr;}#jsst-admin .jsst-ticket-saved-apply,#jsst-admin .jsst-ticket-saved-create{grid-template-columns:1fr;}}
+
+/* =========================================================
+   JS Support Ticket 1.7.3 - Admin tickets list final polish
+   Scope: tickets list only.
+   ========================================================= */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell.menu-collasped-active{
+  max-width:1280px;
+  margin:0 auto;
+  position:relative;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell div#js-tk-cparea{
+  float:none;
+  display:block;
+  width:auto;
+  min-width:0;
+  margin:0;
+  padding-left:70px;
+}
+#jsst-admin .jsst-ticket-list-v2 .jsst-ticket-empty-state{
+  padding:14px;
+  background:var(--jsst-soft, #f8fafc);
+}
+#jsst-admin .jsst-ticket-list-v2 .jsst-ticket-empty-state div[id^="js-messagelayout-wrapper"],
+#jsst-admin .jsst-ticket-list-v2 .jsst-ticket-empty-state div#js-messagelayout-wrapper{
+  min-height:0;
+  padding:54px 18px;
+  border-radius:18px;
+  box-shadow:none;
+}
+#jsst-admin .jsst-ticket-list-v2 .jsst-ticket-empty-state #js-imgfor-message img{
+  width:126px;
+  max-width:28vw;
+  opacity:.68;
+}
+@media (max-width:900px){
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell.menu-collasped-active{
+    width:100%;
+    max-width:100%;
+    padding:10px 8px 28px;
+    overflow:visible;
+  }
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell > div#js-tk-leftmenu,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell.menu-collasped-active > div#js-tk-leftmenu{
+    display:block;
+    visibility:visible;
+    width:100%;
+    max-width:100%;
+    height:auto;
+    min-height:0;
+    margin:0 0 12px 0;
+    padding:0;
+    overflow:visible;
+    position:relative;
+    left:auto;
+    top:auto;
+  }
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell > div#js-tk-cparea,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell.menu-collasped-active > div#js-tk-cparea{
+    width:100%;
+    max-width:100%;
+    margin:0;
+    padding:0;
+  }
+  #jsst-admin .jsst-ticket-list-v2{
+    width:100%;
+    max-width:100%;
+    padding:0;
+  }
+  #jsst-admin .jsst-ticket-status-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+  #jsst-admin .jsst-ticket-status-card{
+    min-height:118px;
+    padding:16px;
+  }
+  #jsst-admin .jsst-ticket-filter-card,
+  #jsst-admin .jsst-ticket-list-card{
+    border-radius:18px;
+  }
+  #jsst-admin .jsst-ticket-filter-grid,
+  #jsst-admin .jsst-ticket-filter-advanced{
+    grid-template-columns:1fr;
+  }
+  #jsst-admin .jsst-ticket-filter-actions{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  #jsst-admin .jsst-ticket-search-btn,
+  #jsst-admin .jsst-ticket-reset-btn{
+    width:100%;
+    min-height:52px;
+  }
+  #jsst-admin .jsst-ticket-list-head{
+    align-items:stretch;
+    gap:14px;
+  }
+  #jsst-admin .jsst-ticket-sort{
+    display:grid;
+    grid-template-columns:1fr 48px;
+    align-items:center;
+  }
+  #jsst-admin .jsst-ticket-sort label{grid-column:1 / -1;}
+  #jsst-admin .jsst-ticket-feed{padding:12px;}
+  #jsst-admin .jsst-ticket-item{padding:16px;}
+  #jsst-admin .jsst-ticket-badges{max-width:100%;justify-content:flex-start;}
+  #jsst-admin .jsst-ticket-meta-grid{grid-template-columns:1fr 1fr;}
+  #jsst-admin .jsst-ticket-actions{display:grid;grid-template-columns:1fr 1fr;}
+  #jsst-admin .jsst-ticket-actions a{justify-content:center;}
+}
+@media (max-width:520px){
+  #jsst-admin .jsst-ticket-status-grid{grid-template-columns:1fr;}
+  #jsst-admin .jsst-ticket-meta-grid{grid-template-columns:1fr;}
+  #jsst-admin .jsst-ticket-actions{grid-template-columns:1fr;}
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-empty-state div[id^="js-messagelayout-wrapper"],
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-empty-state div#js-messagelayout-wrapper{padding:36px 14px !important;}
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-empty-state #js-imgfor-message img{width:96px !important;}
+}
+
+/* =========================================================
+   JS Support Ticket tickets list v29 shell/header alignment
+   Match dashboard width/header rules and remove public version badge.
+   ========================================================= */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell.menu-collasped-active{
+  width:100%;
+  max-width:1280px;
+  margin-left:auto;
+  margin-right:auto;
+  padding-left:0;
+  padding-right:0;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell div#js-tk-cparea,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell.menu-collasped-active div#js-tk-cparea{
+  width:100%;
+  max-width:100%;
+  margin:0;
+  padding-left:0;
+  padding-right:0;
+}
+#jsst-admin .jsst-ticket-list-v2{
+  width:100%;
+  max-width:100%;
+  margin:0;
+  padding:0 0 34px;
+}
+#jsst-admin .jsst-ticket-version{display:none;}
+#jsst-admin .jsst-ticket-hero{
+  margin:0;
+  border-radius:24px;
+}
+#jsst-admin .jsst-ticket-status-grid{
+  margin-top:18px;
+}
+#jsst-admin .jsst-ticket-filter-card,
+#jsst-admin .jsst-ticket-list-card{
+  width:calc(100% - 44px);
+  max-width:100%;
+}
+@media (max-width:900px){
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell.menu-collasped-active{
+    padding:10px 8px 28px;
+  }
+  #jsst-admin .jsst-ticket-list-v2{padding:0;}
+}
+
+
+/* =========================================================
+   JS Support Ticket v30 tickets header consistency
+   Make All Tickets use the same world-class compact header
+   language as the other admin list pages, while keeping the
+   ticket stats/filter/list design below it.
+   ========================================================= */
+#jsst-admin .jsst-ticket-list-v2{
+    max-width:100%;
+    padding:18px 0 30px;
+}
+
+#jsst-admin .jsst-ticket-hero{
+    overflow:hidden;
+    position:relative;
+    min-height:112px;
+    padding:28px 32px;
+    display:flex;
+    align-items:center;
+    background:var(--jsst-card, #ffffff);
+    background-image:none;
+    border:1px solid #e4edf7;
+    border-radius:24px 24px 0 0;
+    border-top:0;
+    box-shadow:0 20px 45px rgba(15,23,42,.08);
+    color:var(--jsst-ink, #0f172a);
+}
+
+#jsst-admin .jsst-ticket-hero:before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto 0;
+    height:4px;
+    background:linear-gradient(90deg,var(--jsst-primary, #2563eb) 0%,var(--jsst-sky, #0ea5e9) 100%);
+}
+
+#jsst-admin .jsst-ticket-hero-body{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+#jsst-admin .jsst-ticket-kicker{
+    display:none;
+}
+
+#jsst-admin .jsst-ticket-hero h1{
+  margin:0 0 8px;
+  color:var(--jsst-ink, #0f172a);
+  font-size:34px;
+  line-height:1.08;
+  font-weight:950;
+  letter-spacing:-.04em;
+}
+
+#jsst-admin .jsst-ticket-hero p{
+  max-width:720px;
+  margin:0;
+  color:var(--jsst-muted, #64748b);
+  font-size:14px;
+  line-height:1.55;
+}
+
+#jsst-admin .jsst-ticket-hero-actions{
+  min-width:auto;
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+#jsst-admin .jsst-ticket-primary-action{
+  min-height:48px;
+  padding:0 22px;
+  border-radius:0;
+  background:var(--jsst-green, #16a34a);
+  border:1px solid rgba(21,128,61,.38);
+  box-shadow:0 14px 28px rgba(22,163,74,.20);
+  color:var(--jsst-card, #ffffff);
+  font-size:15px;
+  font-weight:950;
+}
+
+#jsst-admin .jsst-ticket-primary-action:hover{
+    background:#15803d;
+    color:var(--jsst-card, #ffffff);
+}
+
+#jsst-admin .jsst-ticket-status-grid{
+    margin-top:0;
+    padding-top:18px;
+    background:var(--jsst-bg, #f4f7fb);
+}
+
+#jsst-admin .jsst-ticket-filter-card,
+#jsst-admin .jsst-ticket-list-card{
+    margin-top:18px;
+}
+
+@media (max-width:900px){
+    #jsst-admin .jsst-ticket-list-v2{
+        padding:10px 0 24px;
+    }
+    #jsst-admin .jsst-ticket-hero{
+  min-height:0;
+  padding:22px 18px;
+  border-radius:20px;
+}
+    #jsst-admin .jsst-ticket-hero-body{
+        flex-direction:column;
+        align-items:stretch;
+    }
+    #jsst-admin .jsst-ticket-hero h1{
+        font-size:30px;
+    }
+    #jsst-admin .jsst-ticket-primary-action{
+        width:100%;
+    }
+    #jsst-admin .jsst-ticket-status-grid{
+        padding-top:14px;
+        background:transparent;
+    }
+}
+
+
+/* =========================================================
+   JS Support Ticket v82 - ticket list heading normalization
+   Keep the All Tickets header color and top accent consistent with
+   the standard Create/Edit ticket form header.
+   Scope: ticket list screen only.
+   ========================================================= */
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero{
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    align-items:center;
+    width:100%;
+    min-height:110px;
+    margin:0;
+    padding:28px 32px;
+    background:var(--jsst-card, #ffffff);
+    background-image:none;
+    border:1px solid #e4edf7;
+    border-top:4px solid transparent;
+    border-image:linear-gradient(90deg,var(--jsst-primary, #2563eb),var(--jsst-sky, #0ea5e9)) 1;
+    border-radius:24px 24px 0 0;
+    box-shadow:0 20px 45px rgba(15,23,42,.08);
+    color:var(--jsst-ink, #0f172a);
+}
+
+
+
+
+
+
+
+@media (max-width:900px){
+}
+
+/* =========================================================
+   JS Support Ticket v83 - ticket list page correction
+   The v82 header used border-image, which made the Tickets page show
+   a blue rectangle/extra bottom line. Keep the standard white heading
+   but render only one clean top accent and keep the whole list as one card.
+   Scope: tickets list screen only.
+   ========================================================= */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-list-v2{
+  padding:0 0 34px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero{
+    position:relative;
+    overflow:hidden;
+    width:100%;
+    min-height:120px;
+    margin:0;
+    padding:34px 36px;
+    border:0;
+    border-image:none;
+    border-radius:24px 24px 0 0;
+    border-bottom:1px solid #e5edf7;
+    background:var(--jsst-card, #ffffff);
+    background-image:none;
+    box-shadow:none;
+    color:var(--jsst-ink, #0f172a);
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero::before{
+  content:"" !important;
+  display:block !important;
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:4px;
+  background:linear-gradient(90deg,var(--jsst-primary, #2563eb) 0%,var(--jsst-sky, #0ea5e9) 100%);
+  pointer-events:none;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero-body{
+  position:relative;
+  z-index:1;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:22px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-kicker{
+    display:none;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero h1{
+  margin:0 0 8px;
+  color:var(--jsst-ink, #0f172a);
+  font-size:34px;
+  line-height:1.08;
+  font-weight:900;
+  letter-spacing:-.04em;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero p{
+  max-width:720px;
+  margin:0;
+  color:var(--jsst-muted, #64748b);
+  font-size:14px;
+  line-height:1.55;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero-actions{
+    flex:0 0 auto;
+    min-width:0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-primary-action{
+  min-height:48px;
+  padding:0 24px;
+  border:1px solid rgba(21,128,61,.35);
+  border-radius:0;
+  background:var(--jsst-green, #16a34a);
+  box-shadow:0 14px 30px rgba(22,163,74,.22);
+  color:var(--jsst-card, #ffffff);
+  font-size:15px;
+  font-weight:900;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-primary-action:hover{
+    background:#15803d;
+    color:var(--jsst-card, #ffffff);
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-status-grid{
+  margin:0;
+  padding:26px 22px 0;
+  border-top:0;
+  background:var(--jsst-bg, #f4f7fb);
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-filter-card,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-list-card{
+    margin:18px 22px 0;
+}
+
+@media (max-width:900px){
+    #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-list-v2{
+  margin-top:10px;
+  padding-bottom:22px;
+  border-radius:20px;
+}
+    #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero{
+  min-height:0;
+  padding:26px 20px;
+  border-radius:20px 20px 0 0;
+}
+    #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero-body{
+        flex-direction:column;
+        align-items:stretch;
+    }
+    #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-hero h1{
+        font-size:30px;
+    }
+    #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-primary-action{
+        width:100%;
+    }
+    #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-status-grid{
+        padding:18px 14px 0;
+    }
+    #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-filter-card,
+    #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-list-shell .jsst-ticket-list-card{
+        margin:16px 14px 0;
+    }
+}

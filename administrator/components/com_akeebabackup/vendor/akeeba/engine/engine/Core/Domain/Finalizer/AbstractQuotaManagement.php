@@ -201,22 +201,24 @@ abstract class AbstractQuotaManagement extends AbstractFinalizer
 
 			$logPath = dirname($filePath) . '/' . $def['logname'];
 
-			if (@file_exists($logPath))
+			/**
+			 * Bad host: the log file akeeba.tag.log.php may not exist but the akeeba.tag.php or the akeeba.tag.log
+			 * file does. This code addresses this problem.
+			 */
+			$candidates = [
+				$logPath,
+				substr($logPath, 0, -8) . '.php',
+				substr($logPath, 0, -4),
+			];
+
+			foreach ($candidates as $candidate)
 			{
-				$removeLogPaths[] = $logPath;
+				if (@file_exists($candidate))
+				{
+					$removeLogPaths[] = $candidate;
 
-				continue;
-			}
-
-			$altLogPath = substr($logPath, 0, -4);
-
-			if (@file_exists($altLogPath))
-			{
-				/**
-				 * Bad host: the log file akeeba.tag.log.php may not exist but the akeeba.tag.log file
-				 * does. This code addresses this problem.
-				 */
-				$removeLogPaths[] = $altLogPath;
+					break;
+				}
 			}
 		}
 	}

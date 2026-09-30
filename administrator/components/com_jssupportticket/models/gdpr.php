@@ -11,11 +11,11 @@
  */
 
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 jimport('joomla.application.component.model');
 jimport('joomla.html.html');
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 
 class JSSupportticketModelGdpr extends JSSupportTicketModel {
 
@@ -84,7 +84,7 @@ class JSSupportticketModelGdpr extends JSSupportTicketModel {
             return MESSAGE_EMPTY;
         }
         if (!$row->store()) {
-            $this->getJSModel('systemerrors')->updateSystemErrors($row->getError());
+            $this->getJSModel('systemerrors')->updateSystemErrors($row->getErrorMsg());
             $this->setError($row->getError());
             $return_value = false;
         }
@@ -158,7 +158,7 @@ class JSSupportticketModelGdpr extends JSSupportTicketModel {
         $result['id'] = $id;
 
         //Query to get Data
-        $query = "SELECT created FROM `#__js_ticket_tickets` WHERE status = 0 AND (lastreply = '0000-00-00 00:00:00' OR lastreply IS NULL) AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "'";
+        $query = "SELECT created FROM `#__js_ticket_tickets` WHERE status = 0 AND (lastreply IS NULL OR lastreply < '1971-01-01') AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "'";
         if($id) $query .= " AND uid = ".$id;
         $db->setQuery($query);
         $result['openticket'] = $db->loadObjectList();
@@ -178,17 +178,17 @@ class JSSupportticketModelGdpr extends JSSupportTicketModel {
         $db->setQuery($query);
         $result['overdueticket'] = $db->loadObjectList();
 
-        $query = "SELECT created FROM `#__js_ticket_tickets` WHERE isanswered != 1 AND status != 4 AND (lastreply != '0000-00-00 00:00:00' ) AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "'";
+        $query = "SELECT created FROM `#__js_ticket_tickets` WHERE isanswered != 1 AND status != 4 AND (lastreply IS NOT NULL AND lastreply >= '1971-01-01') AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "'";
         if($id) $query .= " AND uid = ".$id;
         $db->setQuery($query);
         $result['pendingticket'] = $db->loadObjectList();
         //user detail
         $query = "SELECT user.name as display_name,user.email AS user_email,user.username,user.id,
-                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE status = 0  AND (lastreply = '0000-00-00 00:00:00' OR lastreply IS NULL) AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "' AND uid = user.id) AS openticket,
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE status = 0  AND (lastreply IS NULL OR lastreply < '1971-01-01') AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "' AND uid = user.id) AS openticket,
                     (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE status = 4 AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "' AND uid = user.id) AS closeticket,
                     (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isanswered = 1 AND status != 4 AND status != 0 AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "' AND uid = user.id) AS answeredticket,
                     (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isoverdue = 1 AND status != 4 AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "' AND uid = user.id) AS overdueticket,
-                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isanswered != 1 AND status != 4  AND (lastreply != '0000-00-00 00:00:00' ) AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "' AND uid = user.id) AS pendingticket
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isanswered != 1 AND status != 4  AND (lastreply IS NOT NULL AND lastreply >= '1971-01-01') AND created >= '" . $curdate . "' AND created <= '" . $fromdate . "' AND uid = user.id) AS pendingticket
                     FROM `#__users` AS user
                     WHERE user.id = ".$id;
         $db->setQuery($query);
@@ -386,7 +386,7 @@ class JSSupportticketModelGdpr extends JSSupportTicketModel {
             $row = $this->getTable('tickets');
             $row->delete($ticket->id);
             // delete replies
-            $this->getJSModel('ticketreply')->removeTicketReplies($ticket->id);
+            $this->getJSModel('ticket')->removeTicketReplies($ticket->id);
             // ticket attachments.
             $datadirectory = $this->getJSModel('config')->getConfigurationByName('data_directory');
             $mainpath = JPATH_BASE;

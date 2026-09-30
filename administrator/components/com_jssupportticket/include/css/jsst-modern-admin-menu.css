@@ -1,0 +1,2227 @@
+/* JS Support Ticket admin navigation + unified shell
+   v36 form headline + menu polish: one menu system, no stacked version patches, no legacy left-rail offset. */
+
+#jsst-admin{
+  --jsst-shell-max:1440px;
+  --jsst-shell-gutter:18px;
+  --jsst-blue:#2563eb;
+  --jsst-cyan:#0ea5e9;
+  --jsst-navy:#0f172a;
+  --jsst-muted:#64748b;
+  --jsst-line:#e5eaf2;
+  --jsst-soft:#f8fafc;
+  --jsst-card:#ffffff;
+  --jsst-green:#16a34a;
+}
+
+#jsst-admin,
+#jsst-admin *{
+  box-sizing:border-box;
+}
+
+#jsst-admin div#js-tk-admin-wrapper,
+#jsst-admin div#js-tk-admin-wrapper.menu-collasped-active{
+  width:100%;
+  max-width:var(--jsst-shell-max);
+  margin:26px auto 0;
+  padding:0;
+  display:block;
+  float:none;
+  position:relative;
+  overflow:visible;
+}
+
+#jsst-admin div#js-tk-admin-wrapper > div#js-tk-leftmenu,
+#jsst-admin div#js-tk-admin-wrapper.menu-collasped-active > div#js-tk-leftmenu,
+#jsst-admin div#js-tk-leftmenu{
+  width:100%;
+  max-width:100%;
+  min-height:0;
+  height:auto;
+  margin:0 0 18px 0;
+  padding:0;
+  display:block;
+  float:none;
+  position:relative;
+  left:auto;
+  top:auto;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  overflow:visible;
+  z-index:1000;
+}
+
+#jsst-admin div#js-tk-admin-wrapper > div#js-tk-cparea,
+#jsst-admin div#js-tk-admin-wrapper.menu-collasped-active > div#js-tk-cparea,
+#jsst-admin div#js-tk-cparea{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  margin:0;
+  padding:0;
+  padding-left:0;
+  display:block;
+  float:none;
+  clear:both;
+  position:relative;
+  overflow:visible;
+}
+
+#jsst-admin img#js-admin-responsive-menu-link,
+#jsst-admin #jsstadmin-logo,
+#jsst-admin #js-tk-leftmenu > #js-tk-links{
+  display:none;
+}
+
+/* Top navigation */
+#jsst-admin .jsst-modern-admin-nav,
+#jsst-admin .jsst-modern-admin-nav *{
+  box-sizing:border-box;
+}
+
+#jsst-admin .jsst-modern-admin-nav{
+  width:100%;
+  display:grid;
+  grid-template-columns:62px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  padding:10px;
+  min-height:70px;
+  border-radius:15px;
+  border:1px solid rgba(255,255,255,.58);
+  background:linear-gradient(135deg,var(--jsst-blue),var(--jsst-cyan));
+  box-shadow:0 18px 42px rgba(15,23,42,.14);
+  color:#fff;
+  position:relative;
+  overflow:visible;
+  isolation:isolate;
+}
+
+#jsst-admin .jsst-modern-nav-head{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+
+#jsst-admin .jsst-modern-brand{
+  width:52px;
+  min-width:52px;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  text-decoration:none;
+}
+
+#jsst-admin .jsst-modern-brand-mark{
+  width:48px;
+  height:48px;
+  flex:0 0 48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:15px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 10px 22px rgba(15,23,42,.12);
+}
+
+#jsst-admin .jsst-modern-brand-mark img{
+  width:38px;
+  height:38px;
+  object-fit:contain;
+  display:block;
+}
+
+#jsst-admin .jsst-modern-brand-text{
+  display:none;
+}
+
+#jsst-admin .jsst-modern-nav-toggle{
+  display:none;
+}
+
+#jsst-admin .jsst-modern-nav-body{
+  width:100%;
+  min-width:0;
+  display:block;
+  overflow:visible;
+}
+
+#jsst-admin .jsst-modern-nav-quick{
+  display:none;
+}
+
+#jsst-admin .jsst-modern-nav-groups{
+  width:100%;
+  min-width:0;
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  gap:8px;
+  align-items:center;
+  overflow:visible;
+}
+
+#jsst-admin .jsst-modern-nav-group{
+  min-width:0;
+  position:relative;
+  z-index:1;
+}
+
+#jsst-admin .jsst-modern-nav-group[open]{
+  z-index:2000;
+}
+
+#jsst-admin .jsst-modern-nav-group > summary{
+  height:48px;
+  min-height:48px;
+  width:100%;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:0 10px;
+  border-radius:13px;
+  background:rgba(15,64,137,.42) !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15);
+  color:#fff;
+  cursor:pointer;
+  list-style:none;
+  user-select:none;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:900;
+  line-height:1;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+#jsst-admin .jsst-modern-nav-group > summary::-webkit-details-marker{
+  display:none;
+}
+
+#jsst-admin .jsst-modern-nav-group > summary:hover,
+#jsst-admin .jsst-modern-nav-group[open] > summary,
+#jsst-admin .jsst-modern-nav-group.is-active > summary{
+  background:rgba(15,23,42,.42);
+  border-color:rgba(255,255,255,.35);
+}
+
+#jsst-admin .jsst-modern-group-icon{
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  background:rgba(255,255,255,.14);
+}
+
+#jsst-admin .jsst-modern-group-icon img,
+#jsst-admin .jsst-modern-submenu-icon img,
+#jsst-admin .jsst-modern-quick-link img{
+  width:22px;
+  height:22px;
+  object-fit:contain;
+  display:block;
+}
+
+#jsst-admin .jsst-modern-group-label{
+  min-width:0;
+  display:inline-flex;
+  align-items:center;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+#jsst-admin .jsst-modern-group-label-full{
+  display:inline;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+#jsst-admin .jsst-modern-group-label-short{
+  display:none;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+#jsst-admin .jsst-modern-nav-group > summary i{
+  width:7px;
+  height:7px;
+  flex:0 0 7px;
+  border-right:2px solid currentColor;
+  border-bottom:2px solid currentColor;
+  transform:rotate(45deg) translateY(-2px);
+  opacity:.85;
+}
+
+#jsst-admin .jsst-modern-nav-group[open] > summary i{
+  transform:rotate(225deg) translateY(-1px);
+}
+
+#jsst-admin .jsst-modern-submenu{
+  position:absolute;
+  top:calc(100% + 10px);
+  min-width:330px;
+  max-width:min(520px,calc(100vw - 48px));
+  max-height:min(70vh,620px);
+  overflow:auto;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid var(--jsst-line);
+  background:#fff;
+  color:var(--jsst-navy);
+  box-shadow:0 28px 80px rgba(15,23,42,.24);
+}
+
+#jsst-admin .jsst-modern-submenu-link{
+  min-height:58px;
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:10px;
+  border-radius:14px;
+  color:var(--jsst-navy);
+  text-decoration:none;
+  background:#fff;
+  border:1px solid transparent;
+}
+
+#jsst-admin .jsst-modern-submenu-link:hover,
+#jsst-admin .jsst-modern-submenu-link.is-active{
+  background:#f4f8ff;
+  border-color:#e4edf7;
+}
+
+#jsst-admin .jsst-modern-submenu-icon{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:var(--jsst-radius-md, 12px);
+  background:#f2f6fb;
+  border:1px solid #e6eef7;
+}
+
+#jsst-admin .jsst-modern-submenu-copy{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+#jsst-admin .jsst-modern-submenu-copy strong{
+  color:var(--jsst-ink, #0f172a);
+  font-size:13px;
+  font-weight:900;
+  line-height:1.18;
+}
+
+#jsst-admin .jsst-modern-submenu-copy small{
+  color:var(--jsst-muted, #64748b);
+  font-size:11px;
+  font-weight:700;
+  line-height:1.2;
+}
+
+@media (max-width:1320px) and (min-width:901px){
+  #jsst-admin .jsst-modern-admin-nav{
+    grid-template-columns:56px minmax(0,1fr);
+    gap:8px;
+    padding:9px;
+  }
+  #jsst-admin .jsst-modern-brand,
+  #jsst-admin .jsst-modern-brand-mark{
+    width:44px;
+    min-width:44px;
+    height:44px;
+    flex-basis:44px;
+  }
+  #jsst-admin .jsst-modern-brand-mark img{
+    width:34px;
+    height:34px;
+  }
+  #jsst-admin .jsst-modern-nav-groups{
+    gap:6px;
+  }
+  #jsst-admin .jsst-modern-nav-group > summary{
+    height:42px;
+    min-height:42px;
+    padding:0 7px;
+    gap:5px;
+    font-size:11.5px;
+  }
+  #jsst-admin .jsst-modern-group-icon{
+    width:20px;
+    height:20px;
+    flex-basis:20px;
+  }
+}
+
+@media (max-width:1280px) and (min-width:901px){
+  #jsst-admin .jsst-modern-group-label-full{
+    display:none;
+  }
+  #jsst-admin .jsst-modern-group-label-short{
+    display:inline;
+  }
+  #jsst-admin .jsst-modern-nav-group > summary{
+    font-size:12px;
+    padding:0 7px;
+  }
+}
+
+@media (max-width:1080px) and (min-width:901px){
+  #jsst-admin .jsst-modern-admin-nav{
+    grid-template-columns:48px minmax(0,1fr);
+    gap:6px;
+    padding:8px;
+  }
+  #jsst-admin .jsst-modern-brand,
+  #jsst-admin .jsst-modern-brand-mark{
+    width:40px;
+    min-width:40px;
+    height:40px;
+    flex-basis:40px;
+  }
+  #jsst-admin .jsst-modern-brand-mark img{
+    width:32px;
+    height:32px;
+  }
+  #jsst-admin .jsst-modern-nav-groups{
+    gap:5px;
+  }
+  #jsst-admin .jsst-modern-nav-group > summary{
+    height:40px;
+    min-height:40px;
+    padding:0 6px;
+    gap:4px;
+    font-size:11px;
+    border-radius:10px;
+  }
+  #jsst-admin .jsst-modern-group-icon{
+    width:18px;
+    height:18px;
+    flex-basis:18px;
+    border-radius:7px;
+  }
+  #jsst-admin .jsst-modern-nav-group > summary i{
+    width:6px;
+    height:6px;
+    flex-basis:6px;
+  }
+}
+
+/* Mobile menu */
+@media (max-width:900px){
+  #jsst-admin{
+    --jsst-shell-gutter:10px;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper,
+  #jsst-admin div#js-tk-admin-wrapper.menu-collasped-active{
+    max-width:100%;
+    margin:0 auto;
+    padding:10px;
+  }
+
+  #jsst-admin .jsst-modern-admin-nav{
+    display:block;
+    min-height:0;
+    padding:10px;
+    border-radius:16px;
+  }
+
+  #jsst-admin .jsst-modern-nav-head{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+  }
+
+  #jsst-admin .jsst-modern-brand,
+  #jsst-admin .jsst-modern-brand-mark{
+    width:44px;
+    min-width:44px;
+    height:44px;
+    flex-basis:44px;
+  }
+
+  #jsst-admin .jsst-modern-brand-mark img{
+    width:34px;
+    height:34px;
+  }
+
+  #jsst-admin .jsst-modern-nav-toggle{
+    width:44px;
+    height:44px;
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    border:0;
+    border-radius:14px;
+    background:rgba(15,23,42,.30);
+    cursor:pointer;
+  }
+
+  #jsst-admin .jsst-modern-nav-toggle span{
+    width:18px;
+    height:2px;
+    display:block;
+    border-radius:999px;
+    background:#fff;
+  }
+
+  #jsst-admin .jsst-modern-nav-toggle em{
+    display:none;
+  }
+
+  #jsst-admin .jsst-modern-nav-body{
+    margin-top:8px;
+  }
+
+  #jsst-admin .jsst-modern-nav-quick{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+
+  #jsst-admin .jsst-modern-quick-link{
+    min-height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:8px;
+    border-radius:11px;
+    background:rgba(15,64,137,.42);
+    border:1px solid rgba(255,255,255,.18);
+    color:#fff;
+    text-decoration:none;
+    font-size:11px;
+    font-weight:900;
+  }
+
+  #jsst-admin .jsst-modern-quick-link.is-active{
+    background:rgba(15,23,42,.45);
+  }
+
+  #jsst-admin .jsst-modern-nav-groups{
+    display:none !important;
+    margin-top:10px;
+    grid-template-columns:1fr;
+    gap:8px;
+    padding:10px;
+    border-radius:14px;
+    background:#fff;
+    border:1px solid rgba(219,231,243,.9);
+    box-shadow:0 16px 40px rgba(15,23,42,.18);
+  }
+
+  #jsst-admin .jsst-modern-admin-nav.is-open .jsst-modern-nav-groups,
+  #jsst-admin .jsst-modern-admin-nav.is-open #jsst-modern-nav-groups{
+    display:grid !important;
+  }
+
+  #jsst-admin .jsst-modern-nav-group > summary{
+    justify-content:space-between;
+    color:#0f172a;
+    background:#f8fbff;
+    border-color:#e5eef8;
+  }
+
+  #jsst-admin .jsst-modern-submenu{
+    position:static;
+    min-width:0;
+    max-width:100%;
+    max-height:none;
+    grid-template-columns:1fr;
+    margin-top:8px;
+    padding:8px;
+    border-radius:12px;
+    box-shadow:none;
+    background:#f8fbff;
+  }
+}
+
+/* Unified old-template page polish */
+#jsst-admin div#jsstadmin-wrapper-top{
+  display:none;
+}
+
+#jsst-admin div#js-tk-cparea > div#js-tk-heading{
+  width:100%;
+  min-height:112px;
+  margin:0;
+  padding:32px 34px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  border-radius:24px 24px 0 0;
+  border:1px solid #e4edf7;
+  border-bottom:0;
+  background:#fff;
+  box-shadow:0 18px 42px rgba(15,23,42,.08);
+  overflow:visible;
+  position:relative;
+  z-index:2;
+}
+
+#jsst-admin div#js-tk-heading h1,
+#jsst-admin div#js-tk-heading h4,
+#jsst-admin div#js-tk-heading .jsstadmin-head-text{
+  margin:0;
+  padding:0;
+  color:var(--jsst-ink, #0f172a);
+  font-size:32px;
+  font-weight:950;
+  line-height:1.28;
+  letter-spacing:-.035em;
+  display:block;
+  overflow:visible;
+  text-overflow:clip;
+  white-space:normal;
+  height:auto;
+  min-height:0;
+}
+
+#jsst-admin div#js-tk-heading .tk-heading-addbutton,
+#jsst-admin div#js-tk-heading a.tk-heading-addbutton{
+  min-height:46px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:0 22px;
+  border:1px solid rgba(21,128,61,.35);
+  border-radius:0;
+  background:var(--jsst-green);
+  color:#fff;
+  box-shadow:0 12px 24px rgba(22,163,74,.22);
+  text-decoration:none;
+  font-size:15px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+#jsst-admin div#js-tk-heading .tk-heading-addbutton:hover,
+#jsst-admin div#js-tk-heading a.tk-heading-addbutton:hover{
+  background:#15803d;
+  color:#fff;
+  text-decoration:none;
+}
+
+#jsst-admin div#js-tk-heading .tk-heading-addbutton img,
+#jsst-admin div#js-tk-heading img.js-heading-addimage{
+  width:16px;
+  height:16px;
+  filter:brightness(0) invert(1);
+  object-fit:contain;
+}
+
+#jsst-admin div#js-tk-cparea > form.jsstadmin-data-wrp,
+#jsst-admin div#js-tk-cparea > form#adminForm,
+#jsst-admin div#js-tk-cparea > div.jsstadmin-data-wrp,
+#jsst-admin div#js-tk-cparea > div#adminForm{
+  display: flex;
+  flex-wrap: wrap;
+  width:100%;
+  max-width:100%;
+  float:none;
+  margin:0;
+  padding:24px;
+  border:1px solid #e4edf7;
+  border-radius:0 0 24px 24px;
+  background:#fff;
+  box-shadow:0 26px 70px rgba(15,23,42,.08);
+  overflow:visible;
+}
+
+#jsst-admin #js-tk-filter{
+  width:100%;
+  max-width:100%;
+  margin:0 0 24px !important;
+  padding:18px 22px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  border:1px solid #e1eaf4;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 12px 32px rgba(15,23,42,.05);
+}
+
+#jsst-admin #js-tk-filter .tk-search-value,
+#jsst-admin #js-tk-filter .tk-search-button{
+  margin:0;
+  float:none;
+  display:flex !important;
+  align-items:center;
+  gap:12px;
+  width:auto;
+}
+
+#jsst-admin #js-tk-filter .tk-search-value{
+  flex:1 1 260px;
+}
+
+#jsst-admin #js-tk-filter input,
+#jsst-admin #js-tk-filter select,
+#jsst-admin .jsstadmin-data-wrp input[type="text"],
+#jsst-admin .jsstadmin-data-wrp input[type="email"],
+#jsst-admin .jsstadmin-data-wrp select,
+#jsst-admin .jsstadmin-data-wrp textarea{
+  min-height:44px;
+  border:1px solid #d9e4f0 !important;
+  border-radius:12px !important;
+  background:#fff !important;
+  color:var(--jsst-ink, #0f172a) !important;
+  box-shadow:none;
+}
+
+#jsst-admin .js-form-search,
+#jsst-admin button.js-form-search{
+  min-height:44px;
+  padding:0 24px;
+  border:0;
+  border-radius:12px;
+  background:#4f63f3;
+  color:#fff;
+  font-weight:900;
+  box-shadow:0 12px 24px rgba(79,99,243,.22);
+}
+
+#jsst-admin .js-form-reset,
+#jsst-admin button.js-form-reset{
+  min-height:44px;
+  padding:0 24px;
+  border:0;
+  border-radius:12px;
+  background:#111827;
+  color:#fff;
+  font-weight:900;
+}
+
+#jsst-admin table#js-table{
+  width:100%;
+  max-width:100%;
+  margin:0;
+  border-collapse:separate;
+  border-spacing:0;
+  overflow:hidden;
+  border:1px solid #e4edf7 !important;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:none !important;
+}
+
+#jsst-admin table#js-table th{
+  padding:18px 16px;
+  background:#f5f8fc;
+  color:#475569;
+  border-color:#e4edf7;
+  font-size:12px;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.02em !important;
+}
+
+#jsst-admin table#js-table td{
+  padding:18px 16px;
+  border-color:#e4edf7;
+  color:#1f2937;
+}
+
+#jsst-admin table#js-table a{
+  color:var(--jsst-primary, #2563eb);
+  font-weight:800;
+}
+
+#jsst-admin .js-tk-pagination,
+#jsst-admin .js-ticket-pagination-shadow{
+  width:100%;
+  max-width:100%;
+  margin:20px 0 0;
+  padding:18px 20px;
+  border:1px solid #e4edf7;
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 10px 24px rgba(15,23,42,.04);
+}
+/* Lay the pagination footer's <nav> (Joomla's own getListFooter() markup)
+   out as a single, right-aligned flex row: the "x - y / z items" summary and
+   the page-number buttons sit together on one compact line at the right edge.
+   Without this the nav shrink-wraps its content and, worse, its two children
+   (the summary div and the `.pagination-toolbar` div - the latter also matches
+   the generic `.pagination{display:flex;width:100%}` rule) each claim their own
+   full-width row, leaving most of the card as tall dead blank space with the
+   content stranded. */
+#jsst-admin .js-tk-pagination .pagination__wrapper{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:16px;
+  flex-wrap:wrap;
+  width:100%;
+}
+/* Both the toolbar wrapper and its inner page-link <ul> match the generic
+   `.pagination` selector (display:flex; width:100%; margin-top:18px) - inside
+   the single-row nav above, that full width would force each onto its own row
+   again and the stray top margin would re-inflate the card. Shrink them to
+   their content and drop the margin so they flow inline, right-aligned, next
+   to the summary text. */
+#jsst-admin .js-tk-pagination .pagination-toolbar,
+#jsst-admin .js-tk-pagination .pagination-toolbar ul.pagination{
+  width:auto;
+  margin:0;
+}
+/* The card carries the `.js-row` clearfix `::before`/`::after` (display:table)
+   pseudo-elements; because the card itself is a flex container those become
+   phantom flex items that pad the card ~18px taller than its single row of
+   content needs. The clearfix is pointless on a flex container, so remove it. */
+#jsst-admin .js-tk-pagination::before,
+#jsst-admin .js-tk-pagination::after{
+  display:none;
+}
+/* The legacy `#jsst-admin div.js-tk-pagination{float:left}` rule still floats
+   the pagination card, so on pages whose data-wrp is overflow:visible (plain
+   `.jsst-screen` list pages) the form doesn't contain it and it spills below
+   the card. `div.` here matches that rule's specificity and, loading later,
+   wins - de-floated, it's a normal block the form contains. Its own layout is
+   the flex row above, unaffected by float. */
+#jsst-admin div.js-tk-pagination{
+  float:none;
+}
+
+#jsst-admin .js-ticket-box-shadow{
+  box-shadow:none;
+}
+
+#jsst-admin div#js-tk-copyright{
+  width:100%;
+  max-width:var(--jsst-shell-max);
+  margin:18px auto 0;
+  padding:0 0 18px;
+  text-align:center;
+  color:var(--jsst-muted, #64748b);
+}
+
+/* Do not over-style the dashboard and ticket list cards; they have dedicated CSS. */
+#jsst-admin .jsst-dashboard-v2,
+#jsst-admin .jsst-ticket-list-v2{
+  width:100%;
+  max-width:100%;
+}
+
+@media (max-width:900px){
+  #jsst-admin div#js-tk-cparea > div#js-tk-heading{
+    min-height:0;
+    padding:22px 18px;
+    flex-direction:column;
+    align-items:stretch;
+    border-radius:20px 20px 0 0;
+  }
+  #jsst-admin div#js-tk-heading h1,
+  #jsst-admin div#js-tk-heading h4,
+  #jsst-admin div#js-tk-heading .jsstadmin-head-text{
+    font-size:26px;
+  }
+  #jsst-admin div#js-tk-heading .tk-heading-addbutton,
+  #jsst-admin div#js-tk-heading a.tk-heading-addbutton{
+    width:100%;
+  }
+  #jsst-admin div#js-tk-cparea > form.jsstadmin-data-wrp,
+  #jsst-admin div#js-tk-cparea > form#adminForm,
+  #jsst-admin div#js-tk-cparea > div.jsstadmin-data-wrp,
+  #jsst-admin div#js-tk-cparea > div#adminForm{
+    padding:14px;
+    border-radius:0 0 20px 20px;
+  }
+  #jsst-admin #js-tk-filter{
+    padding:14px;
+    display:block;
+  }
+  #jsst-admin #js-tk-filter .tk-search-value,
+  #jsst-admin #js-tk-filter .tk-search-button{
+    width:100%;
+    margin:0 0 10px;
+    display:block;
+  }
+  #jsst-admin #js-tk-filter .tk-search-button{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+}
+
+
+/* v35 headline safety: keep form/list page titles from being clipped by legacy heading/form rules. */
+#jsst-admin div#js-tk-cparea > div#js-tk-heading,
+#jsst-admin .jsst-admin-form div#js-tk-heading,
+#jsst-admin .jsst-management div#js-tk-heading,
+#jsst-admin .jsst-config-v2 div#js-tk-heading{
+  min-height:112px;
+  height:auto;
+  padding-top:32px;
+  padding-bottom:32px;
+  overflow:visible;
+  position:relative;
+  z-index:2;
+}
+
+#jsst-admin div#js-tk-heading .jsstadmin-head-text,
+#jsst-admin div#js-tk-heading h1,
+#jsst-admin div#js-tk-heading h4{
+  line-height:1.28;
+  height:auto;
+  min-height:0;
+  max-height:none;
+  overflow:visible;
+  display:block;
+  transform:none;
+  -webkit-line-clamp:unset;
+  white-space:normal;
+}
+
+#jsst-admin div#js-tk-cparea > form.jsstadmin-data-wrp,
+#jsst-admin div#js-tk-cparea > form#adminForm,
+#jsst-admin div#js-tk-cparea > div.jsstadmin-data-wrp,
+#jsst-admin div#js-tk-cparea > div#adminForm{
+  position:relative;
+  z-index:1;
+  margin-top:0;
+}
+
+
+/* v36 form headline + compact menu polish */
+@media (max-width:900px){
+  #jsst-admin .jsst-modern-group-label-full{
+    display:inline;
+  }
+}
+
+/* Some legacy form pages use old form/header markup and later CSS can still crowd the title.
+   This keeps titles visible and gives role/category form pages a cleaner start. */
+#jsst-admin .jsst-admin-form div#js-tk-heading,
+#jsst-admin .jsst-management div#js-tk-heading,
+#jsst-admin .jsst-config-v2 div#js-tk-heading,
+#jsst-admin div#js-tk-cparea > div#js-tk-heading{
+  min-height:104px;
+  height:auto;
+  padding:30px 34px 24px;
+  align-items:center;
+  overflow:visible;
+  contain:none;
+}
+
+#jsst-admin .jsst-admin-form div#js-tk-heading::before,
+#jsst-admin .jsst-management div#js-tk-heading::before,
+#jsst-admin .jsst-config-v2 div#js-tk-heading::before,
+#jsst-admin div#js-tk-cparea > div#js-tk-heading::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:4px;
+  border-radius:24px 24px 0 0;
+  background:linear-gradient(90deg,var(--jsst-primary, #2563eb),#06a6cf);
+}
+
+#jsst-admin .jsst-admin-form div#js-tk-heading h1.jsstadmin-head-text,
+#jsst-admin .jsst-management div#js-tk-heading h1.jsstadmin-head-text,
+#jsst-admin .jsst-config-v2 div#js-tk-heading h1.jsstadmin-head-text,
+#jsst-admin div#js-tk-cparea > div#js-tk-heading h1.jsstadmin-head-text{
+  display:block;
+  width:auto;
+  min-width:0;
+  max-width:100%;
+  margin:0;
+  padding:0;
+  font-size:30px;
+  line-height:1.45;
+  font-weight:950;
+  letter-spacing:-.03em;
+  color:var(--jsst-ink, #0f172a);
+  overflow:visible;
+  clip:auto;
+  transform:none;
+}
+
+/* Role permission grids need breathing room and a readable modern rhythm. */
+#jsst-admin form#adminForm .js-per-subheading{
+  margin:18px 0 0;
+  padding:12px 16px;
+  border-radius:12px 12px 0 0;
+  background:var(--jsst-ink, #0f172a);
+  color:#fff;
+  box-shadow:none;
+}
+
+#jsst-admin form#adminForm .js-per-wrapper{
+  margin:0 0 14px;
+  padding:8px 10px 12px;
+  border:1px solid #e4edf7;
+  border-top:0;
+  border-radius:0 0 14px 14px;
+  background:#f8fbff;
+  box-shadow:none;
+}
+
+#jsst-admin form#adminForm .js-per-wrapper .js-per-data{
+  min-height:32px;
+  margin:4px 0;
+  padding:7px 10px;
+  border:1px solid #e7eef7;
+  border-radius:8px;
+  background:#fff;
+  color:#334155;
+}
+
+@media (max-width:900px){
+  #jsst-admin .jsst-admin-form div#js-tk-heading,
+  #jsst-admin .jsst-management div#js-tk-heading,
+  #jsst-admin .jsst-config-v2 div#js-tk-heading,
+  #jsst-admin div#js-tk-cparea > div#js-tk-heading{
+    min-height:0;
+    padding:24px 18px 18px;
+  }
+  #jsst-admin .jsst-admin-form div#js-tk-heading h1.jsstadmin-head-text,
+  #jsst-admin .jsst-management div#js-tk-heading h1.jsstadmin-head-text,
+  #jsst-admin .jsst-config-v2 div#js-tk-heading h1.jsstadmin-head-text,
+  #jsst-admin div#js-tk-cparea > div#js-tk-heading h1.jsstadmin-head-text{
+    font-size:25px;
+    line-height:1.35;
+  }
+}
+
+
+/* v37 popup, form and report polish */
+
+/* Better desktop top menu readability without going back to broken overflow. */
+@media (min-width:901px){
+  #jsst-admin .jsst-modern-nav-groups{
+    gap:8px;
+  }
+}
+
+@media (min-width:1321px){
+  #jsst-admin .jsst-modern-nav-group > summary{
+    font-size:13px;
+  }
+  #jsst-admin .jsst-modern-group-label-full{
+    display:inline;
+  }
+  #jsst-admin .jsst-modern-group-label-short{
+    display:none;
+  }
+}
+
+@media (max-width:1320px) and (min-width:901px){
+  #jsst-admin .jsst-modern-group-label-full{
+    display:none;
+  }
+  #jsst-admin .jsst-modern-group-label-short{
+    display:inline;
+  }
+  #jsst-admin .jsst-modern-nav-group > summary{
+    font-size:12px;
+  }
+}
+
+/* Select user popup / modal */
+#jsst-admin div#userpopupblack{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  background:rgba(15,23,42,.72);
+  backdrop-filter:blur(2px);
+  z-index:99980 !important;
+}
+
+#jsst-admin div#userpopup{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:min(760px,calc(100vw - 36px));
+  max-height:min(78vh,680px);
+  /* Must scroll vertically. A max-height with overflow:hidden simply amputates
+     the dialog: on the Edit Field popup the Advanced Options section and the
+     bottom of the Save button fell past the cap and could not be reached at
+     all, and the dark page backdrop showing through the cut looked like a
+     black bar sitting on the button. */
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  z-index:99990;
+  border:1px solid rgba(219,231,243,.95);
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 32px 90px rgba(15,23,42,.35);
+}
+
+#jsst-admin div#userpopup form#userpopupsearch{
+  margin:0;
+  padding:0;
+}
+
+#jsst-admin div#userpopup .search-center{
+  display:block;
+  width:100%;
+  margin:0;
+  padding:0;
+  background:#fff;
+}
+
+#jsst-admin div#userpopup .search-center-heading{
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:0 16px 0 20px;
+  background:linear-gradient(135deg,var(--jsst-primary, #2563eb),#06a6cf);
+  color:#fff;
+  font-size:18px;
+  font-weight:950;
+  line-height:1.2;
+}
+
+#jsst-admin div#userpopup .search-center-heading span.close{
+  width:36px;
+  height:36px;
+  flex:0 0 36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  margin:0;
+  padding:0;
+  border-radius:12px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.28);
+  opacity:1;
+  cursor:pointer;
+  text-indent:-9999px;
+  overflow:hidden;
+}
+
+#jsst-admin div#userpopup .search-center-heading span.close::before,
+#jsst-admin div#userpopup .search-center-heading span.close::after{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:3px;
+  border-radius:999px;
+  background:#fff;
+  left:50%;
+  top:50%;
+}
+
+#jsst-admin div#userpopup .search-center-heading span.close::before{
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+
+#jsst-admin div#userpopup .search-center-heading span.close::after{
+  transform:translate(-50%,-50%) rotate(-45deg);
+}
+
+#jsst-admin div#userpopup .search-center > .js-col-md-12{
+  width:100%;
+  margin:0;
+  padding:16px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr)) auto;
+  gap:10px;
+  align-items:center;
+  float:none;
+  background:#f8fbff;
+  border-bottom:1px solid #e4edf7;
+}
+
+#jsst-admin div#userpopup .js-search-value,
+#jsst-admin div#userpopup .js-search-value-button,
+#jsst-admin div#userpopup .js-button{
+  width:auto;
+  max-width:100%;
+  margin:0;
+  padding:0;
+  float:none;
+  display:block;
+}
+
+#jsst-admin div#userpopup input[type="text"]{
+  width:100%;
+  min-height:40px;
+  border:1px solid #dbe7f3;
+  border-radius:10px;
+  background:#fff;
+  padding:0 12px;
+}
+
+#jsst-admin div#userpopup .js-search-value-button{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+#jsst-admin div#userpopup input.js-button-search,
+#jsst-admin div#userpopup input.js-button-reset{
+  min-height:40px;
+  padding:0 14px;
+  border:0;
+  border-radius:10px;
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
+
+#jsst-admin div#userpopup input.js-button-search{
+  background:var(--jsst-primary, #2563eb);
+}
+
+#jsst-admin div#userpopup input.js-button-reset{
+  background:#111827;
+}
+
+#jsst-admin div#userpopup #records{
+  width:100%;
+  max-height:calc(min(78vh,680px) - 118px);
+  overflow:auto;
+  margin:0;
+  padding:0 16px 16px;
+  background:#fff;
+}
+
+#jsst-admin div#userpopup #records-inner,
+#jsst-admin div#userpopup table{
+  width:100%;
+}
+
+#jsst-admin div#userpopup table{
+  border-collapse:separate;
+  border-spacing:0;
+  font-size:12px;
+}
+
+#jsst-admin div#userpopup th,
+#jsst-admin div#userpopup td{
+  padding:10px 12px;
+  border-color:#e7eef7;
+}
+
+#jsst-admin div#userpopup th{
+  background:var(--jsst-soft, #f8fafc);
+  color:var(--jsst-ink, #0f172a);
+  font-weight:900;
+  text-transform:uppercase;
+  font-size:11px;
+}
+
+#jsst-admin div#userpopup .jsst_userpages{
+  padding:12px 0 0;
+}
+
+/* Old form polish: prevent headings from touching/cutting, and add consistent spacing below nav. */
+#jsst-admin div#js-tk-cparea > div#js-tk-heading,
+#jsst-admin .jsst-admin-form div#js-tk-heading,
+#jsst-admin .jsst-management div#js-tk-heading,
+#jsst-admin .jsst-config-v2 div#js-tk-heading{
+  margin-top:18px;
+  min-height:118px;
+  padding:38px 34px 28px;
+  border-radius:24px 24px 0 0;
+}
+
+#jsst-admin div#js-tk-heading h1.jsstadmin-head-text,
+#jsst-admin div#js-tk-heading .jsstadmin-head-text{
+  line-height:1.55;
+  padding-bottom:2px;
+}
+
+/* Form cards and editors */
+#jsst-admin div#jsstadmin-data-wrp,
+#jsst-admin form#adminForm,
+#jsst-admin .jsstadmin-data-wrp{
+  overflow:visible;
+}
+
+#jsst-admin form#adminForm .js-form-wrapper{
+  margin-bottom:14px;
+  overflow:visible;
+}
+
+#jsst-admin form#adminForm .js-title,
+#jsst-admin form#adminForm .js-value{
+  overflow:visible;
+}
+
+#jsst-admin .mce-tinymce,
+#jsst-admin .tox-tinymce,
+#jsst-admin .mce-container,
+#jsst-admin .wf-editor-container{
+  max-width:100%;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+/* Report/config pages: cleaner section cards without heavy old black bars. */
+#jsst-admin .js-admin-report-wrapper,
+#jsst-admin .js-admin-report,
+#jsst-admin .js-ticket-configuration-row,
+#jsst-admin .js-ticket-configuration-row-mail{
+  border-radius:14px;
+  border:1px solid #e4edf7;
+  background:#fff;
+  box-shadow:0 10px 28px rgba(15,23,42,.04);
+}
+
+#jsst-admin .js-admin-report-wrapper .js-admin-subtitle,
+#jsst-admin .js-admin-report .js-admin-subtitle,
+#jsst-admin .js-ticket-configuration-title,
+#jsst-admin .js-configuration-title,
+#jsst-admin .js-config-title{
+  border-radius:12px 12px 0 0;
+  background:#172033;
+  color:#fff;
+  padding:12px 16px;
+  font-weight:900;
+}
+
+/* Tab buttons on configuration page. */
+#jsst-admin div#tabs,
+#jsst-admin ul#tabs,
+#jsst-admin .js-config-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:0 0 16px;
+}
+
+#jsst-admin div#tabs a,
+#jsst-admin ul#tabs li a,
+#jsst-admin .js-config-tab{
+  border-radius:10px;
+  border:1px solid #dbe7f3;
+  background:#f8fbff;
+  color:var(--jsst-ink, #0f172a);
+  font-weight:800;
+}
+
+@media (max-width:900px){
+  #jsst-admin div#userpopup{
+    top:16px;
+    left:50%;
+    transform:translateX(-50%);
+    width:calc(100vw - 20px);
+    max-height:calc(100vh - 32px);
+    border-radius:16px;
+  }
+  #jsst-admin div#userpopup .search-center > .js-col-md-12{
+    grid-template-columns:1fr;
+  }
+  #jsst-admin div#userpopup .js-search-value-button{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  #jsst-admin div#userpopup #records{
+    max-height:calc(100vh - 240px);
+    overflow:auto;
+  }
+  #jsst-admin div#js-tk-cparea > div#js-tk-heading,
+  #jsst-admin .jsst-admin-form div#js-tk-heading,
+  #jsst-admin .jsst-management div#js-tk-heading,
+  #jsst-admin .jsst-config-v2 div#js-tk-heading{
+    margin-top:12px;
+    min-height:0;
+    padding:26px 18px 20px;
+  }
+}
+
+
+/* v38 top menu no-cut alignment
+   Final desktop top-bar treatment: use short stable labels, no ugly ellipsis,
+   consistent button height, and better alignment in Joomla's available content width. */
+@media (min-width:901px){
+  #jsst-admin .jsst-modern-nav-body{
+    width:100%;
+    min-width:0;
+    overflow:visible;
+  }
+
+  #jsst-admin .jsst-modern-nav-groups{
+    width:100%;
+    min-width:0;
+    display:grid;
+    grid-template-columns:repeat(8,minmax(82px,1fr));
+    gap:8px;
+    align-items:center;
+    overflow:visible;
+  }
+
+
+  #jsst-admin .jsst-modern-group-icon{
+    width:28px;
+    height:28px;
+    flex:0 0 28px;
+    border-radius:8px;
+  }
+
+  #jsst-admin .jsst-modern-group-icon img{
+    width:22px;
+    height:22px;
+  }
+
+  #jsst-admin .jsst-modern-group-label{
+    display:inline-block;
+    flex:0 1 auto;
+    min-width:0;
+    max-width:none;
+    overflow:visible;
+    text-overflow:clip;
+    white-space:nowrap;
+  }
+
+  #jsst-admin .jsst-modern-group-label-full,
+  #jsst-admin .jsst-modern-group-label-short{
+    display:none;
+  }
+
+  #jsst-admin .jsst-modern-nav-group > summary i{
+    width:6px;
+    height:6px;
+    flex:0 0 6px;
+    margin-left:1px;
+  }
+}
+
+/* Slightly wider desktop: keep the same short labels, just give the buttons more breathing room. */
+@media (min-width:1360px){
+}
+
+/* Tight desktop inside Joomla admin: preserve icons + short labels, never clip text. */
+@media (max-width:1120px) and (min-width:901px){
+
+
+  #jsst-admin .jsst-modern-nav-group > summary{
+    height:40px;
+    min-height:40px;
+    padding:0 5px;
+    gap:4px;
+    font-size:10.5px;
+    border-radius:10px;
+  }
+
+  #jsst-admin .jsst-modern-group-icon img{
+    width:22px;
+    height:22px;
+  }
+}
+
+/* If the available content width is extremely small, switch desktop nav to icon-only
+   instead of showing broken labels. Full names remain available in the title and dropdown. */
+@media (max-width:980px) and (min-width:901px){
+
+  #jsst-admin .jsst-modern-nav-group > summary{
+    padding:0 6px;
+  }
+}
+
+/* Keep dropdowns readable and aligned after the compact top bar. */
+@media (min-width:901px){
+  #jsst-admin .jsst-modern-submenu{
+    z-index:99999;
+  }
+
+  #jsst-admin .jsst-modern-nav-group-dashboard .jsst-modern-submenu,
+  #jsst-admin .jsst-modern-nav-group-tickets .jsst-modern-submenu,
+  #jsst-admin .jsst-modern-nav-group-people .jsst-modern-submenu,
+  #jsst-admin .jsst-modern-nav-group-workflow .jsst-modern-submenu{
+    left:0;
+    right:auto;
+  }
+
+  #jsst-admin .jsst-modern-nav-group-content .jsst-modern-submenu,
+  #jsst-admin .jsst-modern-nav-group-email .jsst-modern-submenu,
+  #jsst-admin .jsst-modern-nav-group-reports .jsst-modern-submenu,
+  #jsst-admin .jsst-modern-nav-group-system .jsst-modern-submenu{
+    right:0;
+    left:auto;
+  }
+}
+
+
+/* v41 configuration text polish */
+
+
+#jsst-admin .js-ticket-configuration-row .js-config-title{
+  line-height:1.35;
+}
+
+#jsst-admin .js-ticket-configuration-row .js-config-value{
+  min-width:0;
+}
+
+
+/* v42 wording and help text polish */
+#jsst-admin .js-config-help,
+#jsst-admin .js-config-value.js-config-help{
+  display:block;
+  min-width:0;
+  overflow:visible;
+}
+
+#jsst-admin .js-config-help small,
+#jsst-admin .js-ticket-configuration-row small{
+  word-break:normal;
+  display:block;
+  width:100%;
+  max-width:100%;
+  margin-top:6px;
+  color:var(--jsst-muted, #64748b);
+  font-size:12px;
+  line-height:1.55;
+  white-space:normal;
+  overflow:visible;
+  text-overflow:clip;
+  overflow-wrap:break-word;
+}
+
+#jsst-admin .js-config-help small b,
+#jsst-admin .js-ticket-configuration-row small b{
+  display:block;
+  margin-top:6px;
+  color:var(--jsst-ink, #0f172a);
+  font-weight:800;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+
+
+/* v43 top menu alignment and footer polish */
+
+/* Top menu: align the shell with page content, use consistent column math,
+   and avoid the visual "floating left/right" feel inside Joomla admin. */
+#jsst-admin .jsst-modern-admin-nav{
+  box-sizing:border-box;
+}
+
+@media (min-width:901px){
+  #jsst-admin #jsstadmin-wrapper-top,
+  #jsst-admin .jsst-dashboard-v2,
+  #jsst-admin div#js-tk-cparea > .jsst-modern-admin-nav,
+  #jsst-admin .jsst-modern-admin-nav{
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  #jsst-admin .jsst-modern-admin-nav{
+  width:100%;
+  max-width:1280px;
+  min-height:78px;
+  padding:12px;
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  border-radius:16px;
+}
+  #jsst-admin .jsst-modern-brand,
+  #jsst-admin .jsst-modern-brand-mark{
+  width:48px;
+  min-width:48px;
+  height:48px;
+  flex-basis:48px;
+}
+
+  #jsst-admin .jsst-modern-brand-mark img{
+  width:38px;
+  height:38px;
+}
+
+  #jsst-admin .jsst-modern-nav-body,
+  #jsst-admin .jsst-modern-nav-groups{
+    min-width:0;
+    width:100%;
+  }
+
+  #jsst-admin .jsst-modern-nav-groups{
+    display:grid;
+    grid-template-columns:repeat(8,minmax(82px,1fr));
+    gap:8px;
+    align-items:center;
+  }
+
+  #jsst-admin .jsst-modern-nav-group{
+    min-width:0;
+    width:100%;
+  }
+
+  #jsst-admin .jsst-modern-nav-group > summary{
+  width:100%;
+  height:46px;
+  min-height:46px;
+  padding:0 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  overflow:visible;
+  white-space:nowrap;
+  border-radius:12px;
+  line-height:1;
+  font-size:12px;
+  font-weight:900;
+}
+
+  #jsst-admin .jsst-modern-group-label{
+    display:inline-block;
+    min-width:0;
+    max-width:none;
+    overflow:visible;
+    text-overflow:clip;
+    white-space:nowrap;
+  }
+
+  #jsst-admin .jsst-modern-group-icon{
+    width:21px;
+    height:21px;
+    flex:0 0 21px;
+  }
+
+  #jsst-admin .jsst-modern-nav-group > summary i{
+    width:6px;
+    height:6px;
+    flex:0 0 6px;
+  }
+}
+
+/* Keep the same alignment on wider screens, but give the items more space. */
+@media (min-width:1360px){
+  #jsst-admin .jsst-modern-admin-nav{
+    max-width:1340px !important;
+  }
+  #jsst-admin .jsst-modern-nav-groups{
+    grid-template-columns:repeat(8,minmax(92px,1fr)) !important;
+    gap:9px !important;
+  }
+  #jsst-admin .jsst-modern-nav-group > summary{
+    font-size:12.5px !important;
+    padding:0 10px !important;
+  }
+}
+
+/* Tight desktop: maintain alignment but reduce details before text breaks. */
+@media (max-width:1120px) and (min-width:901px){
+  #jsst-admin .jsst-modern-admin-nav{
+  grid-template-columns:44px minmax(0,1fr) !important;
+  gap:8px !important;
+  min-height:64px !important;
+  padding:8px !important;
+}
+  #jsst-admin .jsst-modern-brand,
+  #jsst-admin .jsst-modern-brand-mark{
+    width:40px !important;
+    min-width:40px !important;
+    height:40px !important;
+    flex-basis:40px !important;
+  }
+  #jsst-admin .jsst-modern-brand-mark img{
+    width:31px !important;
+    height:31px !important;
+  }
+  #jsst-admin .jsst-modern-nav-groups{
+  grid-template-columns:repeat(8,minmax(70px,1fr)) !important;
+  gap:5px !important;
+}
+  #jsst-admin .jsst-modern-nav-group > summary{
+    height:40px !important;
+    min-height:40px !important;
+    padding:0 5px !important;
+    gap:4px !important;
+    font-size:10.5px !important;
+  }
+  #jsst-admin .jsst-modern-group-icon{
+    width:17px !important;
+    height:17px !important;
+    flex-basis:17px !important;
+  }
+  #jsst-admin .jsst-modern-nav-group > summary i{
+    width:5px !important;
+    height:5px !important;
+    flex-basis:5px !important;
+  }
+}
+
+@media (max-width:980px) and (min-width:901px){
+  #jsst-admin .jsst-modern-nav-groups{
+  grid-template-columns:repeat(8,minmax(42px,1fr)) !important;
+}
+  #jsst-admin .jsst-modern-group-label{
+    display:none !important;
+  }
+}
+
+/* New footer */
+#jsst-admin div#js-tk-copyright,
+#jsst-admin .jsst-admin-footer{
+  width:100%;
+  max-width:1280px;
+  float:none;
+  clear:both;
+  margin:22px auto 0 !important;
+  padding:0 12px 22px !important;
+  text-align:center;
+  box-sizing:border-box;
+  color:var(--jsst-muted, #64748b);
+  font-size:12px;
+  line-height:1.5;
+}
+
+#jsst-admin .jsst-dashboard-v2__footer.jsst-admin-footer{
+  padding:0 12px 22px;
+}
+
+#jsst-admin .jsst-admin-footer__inner{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px 14px;
+  min-height:42px;
+  padding:8px 14px;
+  border:1px solid #dbe7f3;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  box-shadow:0 12px 30px rgba(15,23,42,.06);
+}
+
+#jsst-admin .jsst-admin-footer__brand{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  color:var(--jsst-primary, #2563eb);
+  font-weight:950;
+  white-space:nowrap;
+}
+
+#jsst-admin .jsst-admin-footer__mark{
+  width:22px;
+  height:22px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  background:#eef5ff;
+  overflow:hidden;
+}
+
+#jsst-admin div#js-tk-copyright .jsst-admin-footer__mark img,
+#jsst-admin .jsst-admin-footer__mark img{
+  width:18px;
+  height:18px !important;
+  object-fit:contain;
+  display:block;
+}
+
+#jsst-admin .jsst-admin-footer__name{
+  color:var(--jsst-primary, #2563eb);
+  font-weight:950;
+}
+
+#jsst-admin .jsst-admin-footer__meta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:6px 10px;
+  color:var(--jsst-muted, #64748b);
+}
+
+#jsst-admin .jsst-admin-footer a{
+  color:#0f75dc;
+  font-weight:800;
+  text-decoration:none;
+}
+
+#jsst-admin .jsst-admin-footer a:hover{
+  text-decoration:underline;
+}
+
+@media (max-width:900px){
+  #jsst-admin div#js-tk-copyright,
+  #jsst-admin .jsst-admin-footer{
+    padding:0 10px 18px !important;
+    margin-top:18px !important;
+  }
+  #jsst-admin .jsst-admin-footer__inner{
+    width:100%;
+    border-radius:16px !important;
+    padding:10px 12px !important;
+  }
+  #jsst-admin .jsst-admin-footer__meta{
+    width:100%;
+  }
+}
+
+
+/* v44 Joomla Atum details reset
+   Joomla 6 Atum applies a global details rule:
+   details { margin: 0 0 2rem; padding: .5rem 1rem; ... }
+   The admin top menu uses <details> for dropdown groups, so that global rule
+   must be neutralized inside the JS Support Ticket menu. */
+#jsst-admin nav#jsst-modern-admin-nav details.jsst-modern-nav-group,
+#jsst-admin #jsst-modern-admin-nav details.jsst-modern-nav-group,
+#jsst-admin .jsst-modern-admin-nav details.jsst-modern-nav-group,
+#jsst-admin #jsst-modern-nav-groups details.jsst-modern-nav-group{
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  border-radius:0;
+  min-width:0;
+  width:100%;
+}
+
+#jsst-admin nav#jsst-modern-admin-nav details.jsst-modern-nav-group[open],
+#jsst-admin #jsst-modern-admin-nav details.jsst-modern-nav-group[open],
+#jsst-admin .jsst-modern-admin-nav details.jsst-modern-nav-group[open],
+#jsst-admin #jsst-modern-nav-groups details.jsst-modern-nav-group[open]{
+  margin:0;
+  padding:0;
+}
+
+#jsst-admin nav#jsst-modern-admin-nav details.jsst-modern-nav-group > summary,
+#jsst-admin #jsst-modern-admin-nav details.jsst-modern-nav-group > summary,
+#jsst-admin .jsst-modern-admin-nav details.jsst-modern-nav-group > summary,
+#jsst-admin #jsst-modern-nav-groups details.jsst-modern-nav-group > summary{
+  margin:0;
+  list-style:none;
+  box-sizing:border-box;
+}
+
+#jsst-admin nav#jsst-modern-admin-nav details.jsst-modern-nav-group > summary::-webkit-details-marker,
+#jsst-admin #jsst-modern-admin-nav details.jsst-modern-nav-group > summary::-webkit-details-marker,
+#jsst-admin .jsst-modern-admin-nav details.jsst-modern-nav-group > summary::-webkit-details-marker,
+#jsst-admin #jsst-modern-nav-groups details.jsst-modern-nav-group > summary::-webkit-details-marker{
+  display:none;
+}
+
+/* Keep the menu vertically centered after removing Atum's details margin. */
+@media (min-width:901px){
+  #jsst-admin #jsst-modern-nav-groups{
+    align-items:center;
+  }
+
+  #jsst-admin #jsst-modern-nav-groups details.jsst-modern-nav-group{
+    align-self:center;
+  }
+}
+
+/* JS Support Ticket 1.8.1 - remove duplicate decorative headline rule on modern screens. */
+#jsst-admin .jsst-admin-form div#js-tk-heading::before,
+#jsst-admin .jsst-management div#js-tk-heading::before,
+#jsst-admin .jsst-config-v2 div#js-tk-heading::before,
+#jsst-admin div#js-tk-cparea > div#js-tk-heading::before{
+  display:none;
+  content:none;
+  height:0;
+  background:transparent;
+}
+
+#jsst-admin .jsst-admin-form div#js-tk-heading,
+#jsst-admin .jsst-management div#js-tk-heading,
+#jsst-admin .jsst-config-v2 div#js-tk-heading,
+#jsst-admin div#js-tk-cparea > div#js-tk-heading{
+  border-top:0 !important;
+}
+
+
+/* JS Support Ticket 1.8.1 - v62 final header/config visual corrections.
+   Loaded after the base admin CSS, so these rules intentionally override older legacy styles. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen div#js-tk-cparea > div#js-tk-heading,
+#jsst-admin div#js-tk-admin-wrapper.jsst-admin-form-ticket-v21 div#js-tk-cparea > div#js-tk-heading,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 div#js-tk-cparea > div#js-tk-heading,
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-screen-v84 div#js-tk-cparea > div#js-tk-heading,
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-compose-v84 div#js-tk-cparea > div#js-tk-heading,
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-form-v84 div#js-tk-cparea > div#js-tk-heading,
+#jsst-admin div#js-tk-admin-wrapper.jsst-banlistlog-v84 div#js-tk-cparea > div#js-tk-heading{
+  border:1px solid #e4edf7 !important;
+  border-top:4px solid var(--jsst-sky, #0ea5e9) !important;
+  border-bottom:0;
+  border-image:none;
+  border-radius:24px 24px 0 0;
+  background:var(--jsst-card, #ffffff);
+  box-shadow:0 12px 30px rgba(15,23,42,.05) !important;
+  position:relative;
+  overflow:visible !important;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen div#js-tk-cparea > div#js-tk-heading::before,
+#jsst-admin div#js-tk-admin-wrapper.jsst-admin-form-ticket-v21 div#js-tk-cparea > div#js-tk-heading::before,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 div#js-tk-cparea > div#js-tk-heading::before,
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-screen-v84 div#js-tk-cparea > div#js-tk-heading::before,
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-compose-v84 div#js-tk-cparea > div#js-tk-heading::before,
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-form-v84 div#js-tk-cparea > div#js-tk-heading::before,
+#jsst-admin div#js-tk-admin-wrapper.jsst-banlistlog-v84 div#js-tk-cparea > div#js-tk-heading::before{
+  display:none !important;
+  content:none !important;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special form.jsstadmin-data-wrp{
+  padding:24px 28px 28px;
+  border:0 !important;
+  border-top:1px solid #e8eef6;
+  border-radius:0 0 24px 24px;
+  background:var(--jsst-card, #ffffff);
+  box-shadow:none;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs{
+  float:none;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  width:100%;
+  margin:0 0 22px;
+  padding:0 0 18px;
+  border:0 !important;
+  border-bottom:1px solid #e5eaf3 !important;
+  background:transparent;
+  box-shadow:none;
+  overflow:visible;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs span{
+  float:none;
+  display:inline-flex;
+  width:auto;
+  height:auto;
+  margin:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  overflow:visible;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs span::before,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs span::after,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs a::before,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs a::after{
+  display:none;
+  content:none;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs a,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs a.tab{
+  float:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:auto;
+  min-width:0;
+  min-height:36px;
+  margin:0;
+  padding:0 14px;
+  border:1px solid #dbeafe;
+  border-radius:999px;
+  background:#eff6ff;
+  color:var(--jsst-primary-dark, #1d4ed8);
+  box-shadow:none;
+  font-size:13px;
+  font-weight:800;
+  line-height:1;
+  text-decoration:none;
+  text-shadow:none;
+  white-space:nowrap;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs a.tab.selected,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs a.selected,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs span.selected a,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .idTabs span a.selected{
+  border-color:var(--jsst-primary, #2563eb);
+  background:var(--jsst-primary, #2563eb);
+  color:var(--jsst-card, #ffffff);
+  box-shadow:0 10px 22px rgba(37,99,235,.18);
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special legend{
+  float:none;
+  display:flex;
+  align-items:center;
+  width:100%;
+  margin:0 0 18px;
+  padding:0 0 12px;
+  border:0 !important;
+  border-bottom:1px solid #e5eaf3;
+  background:transparent;
+  color:var(--jsst-ink, #0f172a);
+  font-size:18px;
+  line-height:1.25;
+  font-weight:800;
+  text-align:left;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row{
+  float:none;
+  display:grid;
+  grid-template-columns:minmax(220px,32%) minmax(0,1fr);
+  gap:6px 22px;
+  align-items:start;
+  width:100%;
+  min-height:0;
+  margin:0 0 12px;
+  padding:16px 18px;
+  border:1px solid #e5eaf3;
+  border-radius:16px;
+  background:var(--jsst-card, #ffffff);
+  box-shadow:0 8px 20px rgba(15,23,42,.035);
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > [class*="js-col-"]{
+  float:none;
+  width:auto;
+  max-width:none;
+  min-width:0;
+  margin:0;
+  padding:0;
+  text-align:left;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-config-title,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-col-lg-4.js-config-title,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-col-md-4.js-config-title{
+  grid-column:1;
+  grid-row:1;
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-start;
+  min-height:42px;
+  padding:10px 0 0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:var(--jsst-ink, #0f172a);
+  font-size:13px;
+  line-height:1.35;
+  font-weight:800;
+  text-align:left;
+  text-wrap:wrap;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-config-value,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-col-lg-4.js-config-value,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-col-md-4.js-config-value,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-col-lg-8.js-config-value,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-col-md-8.js-config-value{
+  grid-column:2;
+  grid-row:1;
+  color:#334155;
+  font-size:13px;
+  line-height:1.5;
+  text-align:left;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-config-help,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-col-lg-4.js-config-help,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-col-md-4.js-config-help,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-config-value.js-config-help{
+  grid-column:1;
+  grid-row:2;
+  color:var(--jsst-muted, #64748b);
+  font-size:12px;
+  line-height:1.45;
+  text-align:left;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row small{
+  display:block;
+  width:100%;
+  max-width:100%;
+  margin:0;
+  color:var(--jsst-muted, #64748b);
+  font-size:12px;
+  line-height:1.45;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row small b{
+  display:block;
+  margin-top:5px;
+  padding:7px 9px;
+  border-radius:8px;
+  background:#f1f5f9;
+  color:var(--jsst-ink, #0f172a);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  font-size:11px;
+  font-weight:700;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-config-value input,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-config-value select,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-config-value textarea,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-configuration-value input,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-configuration-value select,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-configuration-value textarea{
+  width:100%;
+  max-width:100%;
+  min-height:42px;
+  padding:10px 13px;
+  border:1px solid #dbe3ef;
+  border-radius:12px;
+  background:var(--jsst-card, #ffffff);
+  color:var(--jsst-ink, #0f172a);
+  box-shadow:none;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row-mail{
+  float:none;
+  display:grid;
+  grid-template-columns:minmax(190px,260px) repeat(3,minmax(0,1fr));
+  gap:12px;
+  align-items:center;
+  width:100%;
+  margin:0 0 12px;
+  padding:14px 16px;
+  border:1px solid #e5eaf3;
+  border-radius:16px;
+  background:var(--jsst-card, #ffffff);
+  box-shadow:0 8px 20px rgba(15,23,42,.04);
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row-mail.bgandfontcolor{
+  background:var(--jsst-soft, #f8fafc);
+  box-shadow:none;
+  font-weight:800;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row-mail > [class*="js-col-"]{
+  float:none;
+  width:auto;
+  max-width:none;
+  min-width:0;
+  margin:0;
+  padding:0;
+  text-align:left;
+}
+@media (max-width:900px){
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row-mail{
+    grid-template-columns:1fr !important;
+  }
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-config-title,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-config-value,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > .js-config-help,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-special .js-ticket-configuration-row > [class*="js-col-"]{
+    grid-column:auto !important;
+    grid-row:auto;
+  }
+}
+
+/* JS Support Ticket v74 - keep one visible heading top accent after menu CSS loads. */
+#jsst-admin div#js-tk-cparea > div#js-tk-heading{
+  position:relative !important;
+  overflow:hidden !important;
+  border-top:0 !important;
+}
+#jsst-admin div#js-tk-cparea > div#js-tk-heading::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:4px;
+  display:block;
+  background:linear-gradient(90deg,var(--jsst-primary, #2563eb) 0%,var(--jsst-sky, #0ea5e9) 52%,#06b6d4 100%);
+  border-radius:24px 24px 0 0;
+  pointer-events:none;
+  z-index:1;
+}
+#jsst-admin div#js-tk-cparea > div#js-tk-heading > *{
+  position:relative !important;
+  z-index:2 !important;
+}
+
+/* =========================================================
+   Small phones (<=520px).
+   The mobile layout above stops adapting at 900px, so at 480px the quick
+   links stayed two-up with unwrappable labels and the page heading kept its
+   27px/24px sizing - both pushed past the viewport. Nothing here applies
+   above 520px.
+   ========================================================= */
+@media (max-width:520px){
+  #jsst-admin{
+    --jsst-shell-gutter:8px;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper,
+  #jsst-admin div#js-tk-admin-wrapper.menu-collasped-active{
+    padding:8px;
+  }
+
+  #jsst-admin .jsst-modern-admin-nav{
+    padding:8px;
+    border-radius:14px;
+  }
+
+  /* one per row: two 11px labels plus an icon do not fit side by side here */
+  #jsst-admin .jsst-modern-nav-quick{
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+
+  #jsst-admin .jsst-modern-quick-link{
+    min-width:0;
+    justify-content:flex-start;
+    padding:9px 12px;
+    text-align:start;
+  }
+
+  /* without this the flex item refuses to shrink and the label overflows */
+  #jsst-admin .jsst-modern-quick-link > span{
+    min-width:0;
+    overflow-wrap:anywhere;
+  }
+
+  #jsst-admin .jsst-modern-nav-group > summary{
+    min-width:0;
+    padding:9px 11px;
+  }
+
+  #jsst-admin .jsst-modern-group-label{
+    min-width:0;
+    overflow-wrap:anywhere;
+  }
+
+  #jsst-admin div#js-tk-cparea > div#js-tk-heading,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen #js-tk-heading{
+    min-height:0;
+    padding:18px 16px;
+    border-radius:16px 16px 0 0;
+  }
+
+  #jsst-admin div#js-tk-heading h1,
+  #jsst-admin div#js-tk-heading h4,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen #js-tk-heading h1,
+  #jsst-admin div#js-tk-heading .jsstadmin-head-text,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen #js-tk-heading .jsstadmin-head-text{
+    font-size:21px;
+    letter-spacing:-.02em;
+    overflow-wrap:anywhere;
+  }
+
+  /* nowrap + a long label is the other way this bar overflowed */
+  #jsst-admin div#js-tk-heading .tk-heading-addbutton,
+  #jsst-admin div#js-tk-heading a.tk-heading-addbutton{
+    padding:0 14px;
+    font-size:13px;
+    white-space:normal;
+    text-align:center;
+  }
+}

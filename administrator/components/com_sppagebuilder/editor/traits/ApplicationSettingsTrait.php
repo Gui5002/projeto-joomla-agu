@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -556,6 +556,13 @@ trait ApplicationSettingsTrait
 
 	private function removeTypography(array $ids)
 	{
+		$ids = array_map('intval', $ids);
+
+		if (empty($ids))
+		{
+			return false;
+		}
+
 		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
 
@@ -685,6 +692,13 @@ trait ApplicationSettingsTrait
 
 	private function removeColor(array $ids)
 	{
+		$ids = array_map('intval', $ids);
+
+		if (empty($ids))
+		{
+			return false;
+		}
+
 		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
 
@@ -703,6 +717,7 @@ trait ApplicationSettingsTrait
 			return false;
 		}
 	}
+
 
 	public function typographyInUse(){
 		$groupIndex = $this->getInput('group_index', -1, 'INT');

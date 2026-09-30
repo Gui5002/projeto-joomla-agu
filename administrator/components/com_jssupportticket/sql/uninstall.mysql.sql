@@ -12,3 +12,5 @@ DROP TABLE IF EXISTS `#__js_ticket_userfieldvalues`;
 DROP TABLE IF EXISTS `#__js_ticket_userfield_data`;
 DROP TABLE IF EXISTS `#__js_ticket_fieldsordering`;
 DROP TABLE IF EXISTS `#__js_ticket_erasedatarequests`;
+DROP TABLE IF EXISTS `#__js_ticket_error_logs`;
+DROP TABLE IF EXISTS `#__js_ticket_email_logs`;

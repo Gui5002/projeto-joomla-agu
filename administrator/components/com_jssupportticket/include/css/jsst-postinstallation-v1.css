@@ -1,0 +1,1109 @@
+/*
+ * JS Support Ticket — Postinstallation wizard (v1)
+ * ---------------------------------------------------------------------------
+ * Covers the four wizard screens only:
+ *   c=postinstallation & layout = stepone | steptwo | stepthree | settingcomplete
+ *
+ * NEW FILE. Nothing in any existing stylesheet is modified. Registered last in
+ * jssupportticket.php, after jsst-admin-qa-fixes.css, so it wins ties without
+ * needing !important.
+ *
+ * Every rule is scoped to `#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation`.
+ * `.post-installation` and the `post-installtion-*` classes are emitted by
+ * these four templates and by nothing else in the component (verified with a
+ * repo-wide grep over views/), so no other admin screen can be reached from
+ * here. Two IDs plus a class also puts these rules above the legacy
+ * jsticketadmin.css declarations they replace.
+ *
+ * Markup is untouched — this styles the existing legacy class names
+ * (.pic-config / .title / .field / .desc / .header-parts / .next-step / .back).
+ *
+ * Direction-neutral: logical properties and flex/grid flow throughout. The only
+ * direction-aware rule is the arrow-glyph flip at the bottom.
+ *
+ * Breakpoints match the rest of the admin: 1180 / 980 / 760 / 520.
+ */
+
+/* =========================================================================
+   1. Two-column shell: step rail + content
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation {
+  min-width: 0;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content-wrapper {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  float: none;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content-wrapper > * {
+  float: none;
+  width: auto;
+  min-width: 0;
+}
+
+/* =========================================================================
+   2. Step rail
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content-header {
+  box-sizing: border-box;
+  display: block;
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--jsst-border, #e5eaf2);
+  border-radius: var(--jsst-radius-lg, 18px);
+  background: var(--jsst-card, #fff);
+  box-shadow: var(--jsst-shadow-soft, 0 10px 26px rgba(15, 23, 42, .06));
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts {
+  display: block;
+  float: none;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  list-style: none;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts > .tab_icon {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--jsst-radius-md, 12px);
+  background: transparent;
+  color: var(--jsst-muted, #64748b);
+  text-decoration: none;
+  transition: background var(--jsst-transition, 150ms ease),
+              color var(--jsst-transition, 150ms ease),
+              border-color var(--jsst-transition, 150ms ease);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts > .tab_icon:hover,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts > .tab_icon:focus {
+  border-color: var(--jsst-border, #e5eaf2);
+  background: var(--jsst-soft, #f8fafc);
+  color: var(--jsst-ink, #0f172a);
+  text-decoration: none;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts > .tab_icon:focus-visible {
+  outline: 0;
+  box-shadow: var(--jsst-focus-ring, 0 0 0 3px rgba(37, 99, 235, .25));
+}
+
+/* the step glyph, in a circular chip */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .start {
+  box-sizing: border-box;
+  display: block;
+  width: 38px;
+  height: 38px;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--jsst-border, #e5eaf2);
+  border-radius: 50%;
+  background: var(--jsst-soft, #f8fafc);
+  object-fit: contain;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .text {
+  display: block;
+  min-width: 0;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active > .tab_icon {
+  border-color: #c7dbff;
+  background: var(--jsst-soft-accent, #eef4ff);
+  color: var(--jsst-primary, #2563eb);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active .start {
+  border-color: var(--jsst-primary, #2563eb);
+  background: #fff;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active .text {
+  font-weight: 800;
+}
+
+/* =========================================================================
+   3. Content column header
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content_wrapper_right {
+  box-sizing: border-box;
+  display: block;
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst-config-topheading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  float: none;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  margin: 0 0 14px;
+  padding: 0;
+  background: transparent;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .heading-post-ins {
+  float: none;
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst-configurations-heading {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--jsst-ink, #0f172a);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst-config-steps {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 14px;
+  border: 1px solid #c7dbff;
+  border-radius: var(--jsst-radius-pill, 999px);
+  background: var(--jsst-soft-accent, #eef4ff);
+  color: var(--jsst-primary, #2563eb);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   4. Content card
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content {
+  box-sizing: border-box;
+  display: block;
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 6px 24px 24px;
+  border: 1px solid var(--jsst-border, #e5eaf2);
+  border-radius: var(--jsst-radius-lg, 18px);
+  background: var(--jsst-card, #fff);
+  box-shadow: var(--jsst-shadow-soft, 0 10px 26px rgba(15, 23, 42, .06));
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content form {
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================================================
+   5. Setting rows
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  gap: 6px 20px;
+  align-items: start;
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 18px 0;
+  border: 0;
+  border-block-end: 1px solid var(--jsst-border, #e5eaf2);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config:last-of-type {
+  border-block-end: 0;
+  padding-block-end: 6px;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .title {
+  box-sizing: border-box;
+  display: block;
+  grid-column: 1;
+  grid-row: 1;
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 13px 0 0;
+  color: var(--jsst-ink, #0f172a);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  grid-column: 2;
+  grid-row: 1;
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  color: var(--jsst-ink, #0f172a);
+  font-size: 13px;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .desc {
+  box-sizing: border-box;
+  display: block;
+  grid-column: 2;
+  grid-row: 2;
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  /* the legacy rule indented this by ~221px to clear the floated label */
+  padding: 0;
+  color: var(--jsst-muted, #64748b);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .desc b {
+  color: var(--jsst-ink, #0f172a);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================================
+   6. Controls
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config .inputbox,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config input[type="text"],
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config input[type="number"],
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config input[type="email"],
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config select,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config textarea {
+  box-sizing: border-box;
+  float: none;
+  flex: 1 1 240px;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  margin: 0;
+  padding: 0 14px;
+  border: 1px solid var(--jsst-border-strong, #d7deea);
+  border-radius: var(--jsst-radius-md, 12px);
+  background: #fff;
+  color: var(--jsst-ink, #0f172a);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+  box-shadow: none;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config select {
+  float: none;
+  padding-inline-end: 34px;
+}
+
+/* textarea also carries .inputbox, and `.pic-config .inputbox` (4,2,0) beats
+   a bare `.pic-config textarea` (4,1,1) — classes outrank type selectors.
+   Qualifying the element with the class is what makes this row win. */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config textarea,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config textarea.inputbox {
+  flex: 1 1 100%;
+  min-height: 104px;
+  padding: 12px 14px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config .inputbox:hover,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config select:hover,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config textarea:hover {
+  border-color: #bcc8db;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config .inputbox:focus,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config input:focus,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config select:focus,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config textarea:focus {
+  outline: 0;
+  border-color: var(--jsst-primary, #2563eb);
+  box-shadow: var(--jsst-focus-ring, 0 0 0 3px rgba(37, 99, 235, .25));
+}
+
+/* Editors (stepthree uses Joomla's configured editor) always take the row */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > .tox,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > .tox-tinymce,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > .mce-tinymce,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > joomla-editor,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > joomla-editor-none,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > .editor,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > .js-editor-none,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > [class*="js-editor"],
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > [class*="editor-"] {
+  box-sizing: border-box;
+  flex: 1 1 100%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  border-radius: var(--jsst-radius-md, 12px);
+  overflow: hidden;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > .tox-tinymce,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field > .mce-tinymce {
+  border: 1px solid var(--jsst-border-strong, #d7deea);
+}
+
+/* =========================================================================
+   7. Wizard actions
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-button-part {
+  box-sizing: border-box;
+  clear: both;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  float: none;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 22px 0 2px;
+  border-block-start: 1px solid var(--jsst-border, #e5eaf2);
+}
+
+/* Back is second in the markup but reads first; `order` + an auto inline
+   margin flips it without touching the template, and mirrors under RTL. */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-button-part .back {
+  order: -1;
+  margin-inline-end: auto;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .back {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* legacy gave these calc(50% - 10px) / 100% widths for the old stacked bar */
+  float: none;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  min-height: 46px;
+  margin: 0;
+  padding: 0 22px;
+  border-radius: var(--jsst-radius-md, 12px);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--jsst-transition, 150ms ease),
+              border-color var(--jsst-transition, 150ms ease),
+              color var(--jsst-transition, 150ms ease);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step {
+  border: 1px solid var(--jsst-primary, #2563eb);
+  background: var(--jsst-primary, #2563eb);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, .20);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step:hover,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step:focus {
+  border-color: var(--jsst-primary-dark, #1d4ed8);
+  background: var(--jsst-primary-dark, #1d4ed8);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* stepone's Next carries .full-width, which stretched it across the card */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step.full-width {
+  width: auto;
+  max-width: none;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .back {
+  padding: 0 18px;
+  border: 1px solid var(--jsst-border-strong, #d7deea);
+  background: #fff;
+  color: var(--jsst-ink, #0f172a);
+  font-weight: 750;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .back:hover,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .back:focus {
+  border-color: var(--jsst-primary, #2563eb);
+  background: var(--jsst-soft, #f8fafc);
+  color: var(--jsst-primary, #2563eb);
+  text-decoration: none;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step:focus-visible,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .back:focus-visible {
+  outline: 0;
+  box-shadow: var(--jsst-focus-ring, 0 0 0 3px rgba(37, 99, 235, .25));
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step img,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .back img {
+  display: block;
+  width: 14px;
+  height: auto;
+  margin: 0;
+  flex: none;
+}
+
+/* =========================================================================
+   8. Final screen
+   ========================================================================= */
+
+/* These three were float:left at full width. A flex container establishes a
+   new formatting context, so it may not overlap a float — which squeezed
+   .pic-button-part below them to width:0 and parked it at the right edge. */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst_setting_complete_heading,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst_img_wrp,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst_text_below_img {
+  float: none;
+  clear: both;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst_setting_complete_heading {
+  width: auto;
+  margin: 14px 0 0;
+  padding: 0;
+  text-align: center;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .Jsst_heading {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--jsst-ink, #0f172a);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst_img_wrp {
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0 8px;
+  padding: 0;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst_img_wrp img {
+  display: block;
+  width: auto;
+  max-width: min(220px, 100%);
+  height: auto;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst_text_below_img {
+  max-width: 520px;
+  margin: 0 auto 4px;
+  padding: 0;
+  color: var(--jsst-muted, #64748b);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* the final screen has no "next", so its actions read better centred */
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .pic-button-part {
+  justify-content: center;
+}
+
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .pic-button-part .back {
+  margin-inline-end: 0;
+}
+
+/* =========================================================================
+   9. Responsive
+   ========================================================================= */
+
+@media (max-width: 1180px) {
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content-wrapper {
+    grid-template-columns: minmax(0, 228px) minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config {
+    grid-template-columns: minmax(0, 190px) minmax(0, 1fr);
+  }
+}
+
+/* rail becomes a scrollable strip above the content */
+@media (max-width: 980px) {
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content-wrapper {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts {
+    flex: 1 1 0;
+    min-width: 150px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts > .tab_icon {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 10px;
+    height: 100%;
+    padding: 9px 10px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .start {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .text {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 760px) {
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content {
+    padding: 4px 16px 18px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+    padding: 16px 0;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .title,
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .field,
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .desc {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-config > .title {
+    padding: 0;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .jsst-configurations-heading {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 520px) {
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content-header {
+    padding: 10px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts {
+    min-width: 132px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-button-part {
+    justify-content: stretch;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step,
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .back {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .pic-button-part .back {
+    margin-inline-end: 0;
+  }
+}
+
+/* =========================================================================
+   10. RTL
+   -------------------------------------------------------------------------
+   Everything above is logical, so the layout mirrors on its own. The arrow
+   PNGs are the one thing that cannot: they are baked bitmaps pointing at a
+   fixed side, so they get flipped.
+   ========================================================================= */
+
+html[dir="rtl"] #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step img,
+html[dir="rtl"] #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .back img,
+body.rtl #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .next-step img,
+body.rtl #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .back img {
+  transform: scaleX(-1);
+}
+
+/* =========================================================================
+   11. Wizard title bar
+   -------------------------------------------------------------------------
+   The shared partial (views/partials/wizardheader.php) is still float-based:
+   a float:left bar with a float:left title and a float:right close button.
+   Restyled here, inside the wizard scope only, so the shared partial and any
+   other screen that uses it are untouched.
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .jsst_heading {
+  flex: 1 1 auto;
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  color: var(--jsst-ink, #0f172a);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .close-button-bottom {
+  flex: none;
+  float: none;
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .close-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--jsst-border, #e5eaf2);
+  border-radius: 50%;
+  background: var(--jsst-card, #fff);
+  transition: background var(--jsst-transition, 150ms ease),
+              border-color var(--jsst-transition, 150ms ease);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .close-button:hover,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .close-button:focus {
+  border-color: var(--jsst-red, #ef4444);
+  background: #fef2f2;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .close-button img {
+  display: block;
+  width: 13px;
+  height: auto;
+}
+
+/* =========================================================================
+   12. Step rail, second pass — a real stepper
+   -------------------------------------------------------------------------
+   The first pass gave the rail a card and an active tint, but it still read
+   as a plain list: no step numbers, no connector, and — because the markup
+   only ever carries `active` — a step you had already completed looked
+   identical to one you had not reached yet.
+
+   Both are solved without touching the templates:
+   - numbers come from a CSS counter on the <ul>;
+   - "completed" is derived from the page's own wrapper class, since which
+     steps are behind you is implied by which layout you are on.
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content-header {
+  padding: 16px 14px;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img {
+  counter-reset: jsst-step;
+  gap: 4px;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts {
+  position: relative;
+  counter-increment: jsst-step;
+}
+
+/* the connector between one chip and the next */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 31px;
+  top: 52px;
+  bottom: -6px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--jsst-border, #e5eaf2);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts > .tab_icon {
+  position: relative;
+  z-index: 1;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 10px;
+}
+
+/* "STEP n" eyebrow above the step name */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .text::before {
+  content: "Step " counter(jsst-step);
+  display: block;
+  margin: 0 0 2px;
+  color: var(--jsst-muted, #64748b);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .text {
+  color: var(--jsst-ink, #0f172a);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .start {
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  background: #fff;
+}
+
+/* ---- upcoming (default) ---- */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts > .tab_icon {
+  opacity: .78;
+}
+
+/* ---- current ---- */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active > .tab_icon {
+  opacity: 1;
+  border-color: #c7dbff;
+  background: var(--jsst-soft-accent, #eef4ff);
+  box-shadow: inset 3px 0 0 0 var(--jsst-primary, #2563eb);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active .start {
+  border-color: var(--jsst-primary, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .14);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active .text::before {
+  color: var(--jsst-primary, #2563eb);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active .text {
+  color: var(--jsst-primary, #2563eb);
+  font-weight: 800;
+}
+
+/* ---- completed: implied by which layout is being rendered ---- */
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-steptwo #js-tk-cparea #jsst-main-wrapper.post-installation .first-part > .tab_icon,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .first-part > .tab_icon,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .second-part > .tab_icon,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .first-part > .tab_icon,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .second-part > .tab_icon,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .third-part > .tab_icon {
+  opacity: 1;
+}
+
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-steptwo #js-tk-cparea #jsst-main-wrapper.post-installation .first-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .first-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .second-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .first-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .second-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .third-part .start {
+  border-color: var(--jsst-green, #16a34a);
+  background: #f0fdf4;
+}
+
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-steptwo #js-tk-cparea #jsst-main-wrapper.post-installation .first-part .text::after,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .first-part .text::after,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .second-part .text::after,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .first-part .text::after,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .second-part .text::after,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .third-part .text::after {
+  content: "\2713";
+  margin-inline-start: 6px;
+  color: var(--jsst-green, #16a34a);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+/* the connector behind a finished step reads as filled */
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-steptwo #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts.first-part:not(:last-child)::before,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts.first-part:not(:last-child)::before,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts.second-part:not(:last-child)::before,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts.first-part:not(:last-child)::before,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts.second-part:not(:last-child)::before,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts.third-part:not(:last-child)::before {
+  background: var(--jsst-green, #16a34a);
+  opacity: .55;
+}
+
+/* horizontal strip: the vertical connector would cut across the labels */
+@media (max-width: 980px) {
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts:not(:last-child)::before {
+    display: none;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .start {
+    width: 34px;
+    height: 34px;
+    padding: 7px;
+  }
+}
+
+/* =========================================================================
+   13. Fixes from a rendered screenshot
+   -------------------------------------------------------------------------
+   Three things only visible on screen, not in computed geometry:
+
+   1. The step glyphs are WHITE PNGs. On the white chip introduced in §12 they
+      were invisible — the rail read as four empty rings. The chip now carries
+      a solid state colour so the white glyph reads against it.
+   2. #jsst-main-wrapper (bg.png) and .post-installtion-content-wrapper
+      (bg.jpg) both still paint legacy background textures. They used to sit
+      behind opaque legacy panels; once this design made those panels
+      transparent the texture showed through as a dark band around the cards.
+   3. .close-button-bottom carries `border-top: 2px solid #ef0000`, which drew
+      a red line above the close button.
+   ========================================================================= */
+
+/* --- 2. drop the legacy textures --- */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation,
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content-wrapper {
+  background-image: none;
+  background-color: transparent;
+}
+
+/* --- 3. the red rule above the close button --- */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .close-button-bottom {
+  border: 0;
+  background: transparent;
+}
+
+/* --- 1. solid state colour behind the white glyphs --- */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .start {
+  border-color: transparent;
+  background: #94a3b8;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active .start {
+  border-color: transparent;
+  background: var(--jsst-primary, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .18);
+}
+
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-steptwo #js-tk-cparea #jsst-main-wrapper.post-installation .first-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .first-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-stepthree #js-tk-cparea #jsst-main-wrapper.post-installation .second-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .first-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .second-part .start,
+#jsst-admin #js-tk-admin-wrapper.jsst-postinstallation-settingcomplete #js-tk-cparea #jsst-main-wrapper.post-installation .third-part .start {
+  border-color: transparent;
+  background: var(--jsst-green, #16a34a);
+}
+
+/* --- title bar, now that nothing sits behind it --- */
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion {
+  margin: 0 0 20px;
+  padding: 0 0 14px;
+  border-bottom: 1px solid var(--jsst-border, #e5eaf2);
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .jsst_heading {
+  font-size: 17px;
+}
+
+/* =========================================================================
+   14. Wizard title bar — legibility and spacing
+   -------------------------------------------------------------------------
+   `.jsst_heading` inherits `text-shadow: 0 0 2px #000` from the legacy sheet.
+   That was written for white text on the old dark title bar; on this light
+   bar it puts a black blur under near-black text, which reads as smudged
+   rather than sharp. Removed.
+
+   The bar also had no top padding, so the title sat flush against the admin
+   menu above it while the 38px close button set the row height — the text
+   looked pinned to the ceiling of an otherwise roomy bar.
+   ========================================================================= */
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion {
+  margin: 0 0 22px;
+  padding: 18px 4px 16px;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .jsst_heading {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: normal;
+  line-height: 1.35;
+  text-shadow: none;
+}
+
+#jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .js-admin-title-installtion .close-button {
+  flex: none;
+  width: 36px;
+  height: 36px;
+}
+
+/* =========================================================================
+   15. Step rail on phones — back to vertical
+   -------------------------------------------------------------------------
+   §9 turned the rail into a horizontal strip below 980px. That works in the
+   tablet band, where four items fit across, but on a phone they cannot:
+   4 x 132px min-width + gaps needs ~550px against ~390px available, so the
+   strip wrapped into a two-row, 232px-tall block of chunky cards — and the
+   connector was switched off, so it no longer read as a progress track.
+
+   Below 760px it goes back to the vertical stepper, which is the natural
+   mobile shape and reuses the desktop design at full width. These rules come
+   last in the file, so they win over the 980px block where both apply.
+   ========================================================================= */
+
+@media (max-width: 760px) {
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .post-installtion-content-header {
+    padding: 12px 12px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img {
+    display: grid;
+    gap: 4px;
+    overflow: visible;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts {
+    flex: none;
+    min-width: 0;
+  }
+
+  /* the connector is meaningful again once the steps are stacked */
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .update-header-img > .header-parts:not(:last-child)::before {
+    display: block;
+    inset-inline-start: 28px;
+    top: 48px;
+    bottom: -6px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts > .tab_icon {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 12px;
+    height: auto;
+    padding: 8px 10px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .start {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+  }
+
+  #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts .text {
+    font-size: 13px;
+  }
+}
+
+/* =========================================================================
+   16. RTL — the one thing that cannot mirror itself
+   -------------------------------------------------------------------------
+   The current step's accent bar is drawn with `box-shadow: inset 3px 0 0`.
+   box-shadow has no logical form, so that offset stays on the physical left
+   edge under RTL, where it should sit on the right (inline-start). Every
+   other rule in this file mirrors on its own via logical properties —
+   verified by measuring both directions.
+   ========================================================================= */
+
+html[dir="rtl"] #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active > .tab_icon,
+body.rtl #jsst-admin #js-tk-admin-wrapper #js-tk-cparea #jsst-main-wrapper.post-installation .header-parts.active > .tab_icon {
+  box-shadow: inset -3px 0 0 0 var(--jsst-primary, #2563eb);
+}

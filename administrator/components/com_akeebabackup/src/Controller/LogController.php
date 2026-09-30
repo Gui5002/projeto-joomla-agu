@@ -159,6 +159,22 @@ class LogController extends BaseController
 		echo "</pre>";
 	}
 
+	/**
+	 * Runs before any task of this controller.
+	 *
+	 * Applies the component's ACL privilege map and, optionally, switches the active backup profile.
+	 *
+	 * The profile switch is deliberately NOT protected by an anti-CSRF token, for the same reason the Backup page's
+	 * profile switch is not: the “View Log” links in the Manage Backups page (and administrator menu items pointing at
+	 * the Log page) carry a profile ID as a plain URL parameter, and a menu item cannot carry a dynamic token. We
+	 * accept the risk because the worst a forged request can achieve is changing which backup profile the victim's own
+	 * session has selected — the tasks of this controller only ever read log files, they never write anything, and the
+	 * ACL check above still gates access to the page.
+	 *
+	 * @param   string  $task  The task about to be executed, by reference.
+	 *
+	 * @return  void
+	 */
 	protected function onBeforeExecute(&$task)
 	{
 		$this->akeebaBackupACLCheck($this->getName(), $task);

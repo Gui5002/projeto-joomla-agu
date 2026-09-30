@@ -143,16 +143,25 @@ class JSSupportTicketRouter extends RouterView
         //echo '<br> count '.$count;
         //print_r($segments);
 
-        $site= $site= Factory::getApplication()->getMenu();
+        $site= Factory::getApplication()->getMenu();
         $item   = $site->getActive();
-        if(strstr($segments[0],'tk-')){
-            $result = $router->parseTask($segments[0]);
-            $vars['c'] = $result['controller'];
-            $vars['task'] = $result['task'];
+        $firstSegment = isset($segments[0]) ? (string) $segments[0] : '';
+        if($firstSegment !== '' && strpos($firstSegment, 'tk-') === 0){
+            $result = $router->parseTask($firstSegment);
+            if (is_array($result) && isset($result['controller'], $result['task'])) {
+                $vars['c'] = $result['controller'];
+                $vars['task'] = $result['task'];
+            } else {
+                $fallback = $router->parseTaskFallback($firstSegment);
+                $vars['c'] = $fallback['controller'];
+                $vars['task'] = $fallback['task'];
+            }
         }else{
-            $result = $router->parseLayout($segments[0]);
-            $vars['c'] = $result['controller'];
-            $vars['layout'] = $result['layout'];
+            $result = $router->parseLayout($firstSegment);
+            if (is_array($result) && isset($result['controller'], $result['layout'])) {
+                $vars['c'] = $result['controller'];
+                $vars['layout'] = $result['layout'];
+            }
 
         }
 
@@ -160,7 +169,7 @@ class JSSupportTicketRouter extends RouterView
         $i = 0;
         foreach ($segments AS $seg) {
             if ($i >= 1) {
-                //$array = getJSTicketPHPFunctionsClass()->jsticket_explode(":", $seg);
+                //$array = explode(":", $seg);
                 $array = explode("-", $seg);
                 $index = $array[0];
                 //unset the current index
@@ -347,9 +356,38 @@ class JSSupportTicketOldRouter {
             case "tk:exportusereraserequest-gdpr":$returnvalue["controller"] = "gdpr"; $returnvalue["task"] = "exportusereraserequest"; break;
             case "tk-logout-jssupportticket":$returnvalue["controller"] = "jssupportticket"; $returnvalue["task"] = "logout"; break;
             case "tk:logout-jssupportticket":$returnvalue["controller"] = "jssupportticket"; $returnvalue["task"] = "logout"; break;
+            case "tk-deleteticket":$returnvalue["controller"] = "ticket"; $returnvalue["task"] = "deleteticket"; break;
+            case "tk-addtickettag":$returnvalue["controller"] = "ticket"; $returnvalue["task"] = "addtickettag"; break;
+            case "tk-removetickettag":$returnvalue["controller"] = "ticket"; $returnvalue["task"] = "removetickettag"; break;
+            case "tk-addticketwatcher":$returnvalue["controller"] = "ticket"; $returnvalue["task"] = "addticketwatcher"; break;
+            case "tk-removeticketwatcher":$returnvalue["controller"] = "ticket"; $returnvalue["task"] = "removeticketwatcher"; break;
+            case "tk-applyticketsla":$returnvalue["controller"] = "ticket"; $returnvalue["task"] = "applyticketsla"; break;
+            case "tk-saveticketsavedview":$returnvalue["controller"] = "ticket"; $returnvalue["task"] = "saveticketsavedview"; break;
+            case "tk-applyticketsavedview":$returnvalue["controller"] = "ticket"; $returnvalue["task"] = "applyticketsavedview"; break;
         }
         if (isset($returnvalue))
             return $returnvalue;
+    }
+
+    function parseTaskFallback($value) {
+        $value = (string) $value;
+        if (strpos($value, 'tk-') === 0) {
+            $value = substr($value, 3);
+        }
+        $controller = 'ticket';
+        $task = trim($value);
+        if ($task === '') {
+            return array('controller' => $controller, 'task' => '');
+        }
+        $parts = explode('-', $task);
+        if (count($parts) > 1) {
+            $possibleController = array_pop($parts);
+            if ($possibleController !== '') {
+                $controller = $possibleController;
+            }
+            $task = implode('-', $parts);
+        }
+        return array('controller' => $controller, 'task' => $task);
     }
 
     function buildListingFor($value){
@@ -406,8 +444,8 @@ class JSSupportTicketOldRouter {
         return $id;
     }
     function clean($string) {
-//        $string = getJSTicketPHPFunctionsClass()->jsticket_strtolower($string);
-        $string = getJSTicketPHPFunctionsClass()->jsticket_strip_tags($string, "");
+//        $string = strtolower($string);
+        $string = strip_tags($string, "");
         //Strip any unwanted characters
         // $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
 

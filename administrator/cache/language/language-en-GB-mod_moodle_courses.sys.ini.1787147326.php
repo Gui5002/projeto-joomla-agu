@@ -1,0 +1,6 @@
+<?php
+defined('_JEXEC') or die;
+return array (
+  'MOD_MOODLE_COURSES' => 'Moodle Courses Showcase',
+  'MOD_MOODLE_COURSES_XML_DESCRIPTION' => 'Module to display courses fetched from Moodle REST API via access token.',
+);

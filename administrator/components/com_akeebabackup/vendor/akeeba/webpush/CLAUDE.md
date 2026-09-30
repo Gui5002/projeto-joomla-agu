@@ -8,46 +8,17 @@ Akeeba Web Push is a PHP library implementing the W3C Web Push Protocol for Joom
 
 **Derived from** Louis Lagrange's WebPush library, modified to use only Joomla-bundled dependencies.
 
-## Build & Dependencies
+The integration guide for consumers of this library lives in `docs/index.md`.
 
-- **PHP**: ^7.4 | ^8.0 (platform target: 7.4.999)
-- **Required extensions**: `ext-openssl`, `ext-json`
-- **Optional**: `ext-gmp` (better BigInteger performance)
-- **Install**: `composer install`
-- **No test suite, linter, or CI pipeline exists** in this repository.
+## Build
+
+**No test suite, linter, or CI pipeline exists** in this repository.
 
 ## Architecture
 
-### Namespace & Autoloading
+`src/ECC/` is a custom Elliptic Curve Cryptography implementation used for VAPID public key operations. It depends on `Brick\Math\BigInteger`, which is deliberately **not** declared in `composer.json` — it comes bundled with Joomla, so the library only works inside a Joomla application.
 
-PSR-4: `Akeeba\WebPush\` maps to `src/`.
-
-### Core Subsystems
-
-**`src/WebPush/`** — Core push notification engine:
-- `WebPush.php` — Main sender class. Queues notifications and flushes them in batches (default 1000) via HTTP POST to browser push services.
-- `VAPID.php` — VAPID key pair generation and JWT signing (ECDSA P-256).
-- `Encryption.php` — AES-128-GCM / AES-GCM payload encryption with random salt and padding.
-- `Subscription.php` / `SubscriptionInterface.php` — Browser subscription data (endpoint + p256dh + auth keys).
-- `Notification.php` — Internal notification wrapper.
-- `MessageSentReport.php` — Delivery result per notification.
-
-**`src/ECC/`** — Custom Elliptic Curve Cryptography implementation for VAPID public key operations. Uses `Brick\Math\BigInteger` (Joomla-bundled).
-
-**`src/Base64Url/`** — URL-safe Base64 encoding/decoding utility.
-
-### Joomla Integration Layer (Trait-Based)
-
-The library integrates into Joomla MVC via two traits:
-
-- **`WebPushControllerTrait`** — Adds `webpushsubscribe()` and `webpushunsubscribe()` endpoints to any Joomla controller. Handles CSRF validation and JSON responses. Hook: `onAfterWebPushSaveSubscription()`.
-- **`WebPushModelTrait`** — Adds `initialiseWebPush()`, `getVapidKeys()`, `sendNotification()`, and subscription CRUD to any Joomla model. Stores subscriptions as JSON in Joomla's `#__user_profiles` table (key: `{component}.webPushSubscription`). VAPID keys stored in component parameters.
-
-**`NotificationOptions.php`** — Fluent DSO with ArrayAccess for notification display options.
-
-### Data Flow
-
-Browser subscribes via Service Worker → Controller saves subscription to `#__user_profiles` → Later, model calls `sendNotification()` → WebPush encrypts payload with AES-GCM + VAPID JWT → HTTP POST to push service → Browser receives and displays notification.
+The Joomla MVC integration is trait-based: `WebPushControllerTrait` adds the subscribe/unsubscribe endpoints to a controller, `WebPushModelTrait` adds VAPID key management and notification sending to a model. Subscriptions are stored as JSON in Joomla's `#__user_profiles` table under the key `{component}.webPushSubscription`; VAPID keys are stored in the component's parameters.
 
 ### Cryptography
 

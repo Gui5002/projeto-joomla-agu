@@ -39,7 +39,6 @@ class TableTickets extends Table {
     var $update = null;
     var $lock = null;
     var $params = null;
-
     function __construct(&$db) {
         parent::__construct('#__js_ticket_tickets', 'id', $db);
     }

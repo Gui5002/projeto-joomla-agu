@@ -250,7 +250,7 @@ final class Init extends Part
 
 			if (isset($_SERVER['HTTP_USER_AGENT']))
 			{
-				Factory::getLog()->info("User agent         :" . $_SERVER['HTTP_USER_AGENT']);
+				Factory::getLog()->info("User agent         :" . self::sanitiseUserAgent($_SERVER['HTTP_USER_AGENT']));
 			}
 
 			Factory::getLog()->info("Safe mode          :" . ini_get("safe_mode"));
@@ -405,6 +405,22 @@ final class Init extends Part
 		}
 
 		$this->setState(self::STATE_POSTRUN);
+	}
+
+	/**
+	 * Sanitises the user agent string before it is written to the log.
+	 *
+	 * The user agent is attacker–controlled. Writing it verbatim lets anyone inject newlines, control characters, or
+	 * markup into the backup log. Only letters, digits, spaces, and the punctuation which occurs structurally in real
+	 * user agents (. _ - ( ) [ ] { } / ; , :) are kept; anything else is removed.
+	 *
+	 * @param   string  $userAgent  The raw user agent string
+	 *
+	 * @return  string  The sanitised user agent string
+	 */
+	private static function sanitiseUserAgent($userAgent): string
+	{
+		return preg_replace('/[^a-zA-Z0-9._\-\ ()\[\]{}\/;,:]/', '', (string) $userAgent);
 	}
 
 	/**

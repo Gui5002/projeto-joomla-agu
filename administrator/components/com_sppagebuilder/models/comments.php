@@ -66,7 +66,7 @@ class SppagebuilderModelComments extends ListModel
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string');
 		$this->setState('filter.published', $published);
 
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
@@ -139,7 +139,7 @@ class SppagebuilderModelComments extends ListModel
 
 		if ($status = $this->getState('filter.published')) {
 			if ($status != '*')
-				$query->where($db->quoteName('a.published') . ' = ' . $status);
+				$query->where($db->quoteName('a.published') . ' = ' . (int) $status);
 		} else {
 			$query->where($db->quoteName('a.published') . ' IN (0,1)');
 		}

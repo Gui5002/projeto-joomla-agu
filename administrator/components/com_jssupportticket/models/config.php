@@ -11,10 +11,10 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Factory;
 
 jimport('joomla.application.component.model');
 jimport('joomla.html.html');
-use Joomla\CMS\Factory;
 
 class JSSupportticketModelConfig extends JSSupportTicketModel {
 
@@ -22,7 +22,42 @@ class JSSupportticketModelConfig extends JSSupportTicketModel {
         parent::__construct();
     }
 
-    function getConfiguration() { // Layout Configurations
+    function makeDefaultTheme($id, $defaultvalue) {
+        if (is_numeric($id) == false)
+            return false;
+        if (is_numeric($defaultvalue) == false)
+            return false;
+        switch ($id) {
+            case '1':$theme = "black/css/jssupportticketblack.css";
+                break;
+            case '2':$theme = "pink/css/jssupportticketpink.css";
+                break;
+            case '3':$theme = "orange/css/jssupportticketorange.css";
+                break;
+            case '4':$theme = "golden/css/jssupportticketgolden.css";
+                break;
+            case '5':$theme = "blue/css/jssupportticketblue.css";
+                break;
+            case '6':$theme = "gray/css/jssupportticketgray.css";
+                break;
+            case '7':$theme = "green/css/jssupportticketgreen.css";
+                break;
+            case '8':$theme = "graywhite/css/jssupportticketgraywhite.css";
+                break;
+            case '9':$theme = "template/css/jssupporttickettemplate.css";
+                break;
+        }
+        $db = $this->getDBO();
+        $query = "update `#__js_ticket_config` as config SET config.configvalue = " . $db->quote($theme) . " WHERE config.configname = 'theme'";
+
+        $db->setQuery($query);
+        if (!$db->execute()) {
+            return false;
+        }
+        return true;
+    }
+
+    function getConfiguration() {
         $db = $this->getDbo();
         $query = "SELECT * FROM `#__js_ticket_config`";
         $db->setQuery($query);
@@ -32,8 +67,8 @@ class JSSupportticketModelConfig extends JSSupportTicketModel {
                 $config[$result->configname] = $result->configvalue;
             }
         }
-        $lists['priorities'] = $this->getJSModel('priority')->getPrioritiesForCombobx();
-        $lists['emails'] = $this->getJSModel('email')->getEmailForCombobox();
+        $lists['priorities'] = $this->getJSModel('priority')->getPriorities();
+        $lists['emails'] = $this->getJSModel('email')->getEmailList();
         $result_value[0] = $config;
         $result_value[1] = $lists;
         return $result_value;
@@ -92,7 +127,7 @@ class JSSupportticketModelConfig extends JSSupportTicketModel {
             }
             if (!$row->store()) {
                 $this->setError($row->getError());
-                $this->getJSModel('systemerrors')->updateSystemErrors($row->getError());
+                $this->getJSModel('systemerrors')->updateSystemErrors($row->getErrorMsg());
                 return false;
             }
         }
@@ -138,7 +173,7 @@ class JSSupportticketModelConfig extends JSSupportTicketModel {
             }
             if (!$row->store()) {
                 $this->setError($row->getError());
-                $this->getJSModel('systemerrors')->updateSystemErrors($row->getError());
+                $this->getJSModel('systemerrors')->updateSystemErrors($row->getErrorMsg());
                 return false;
             }
         }

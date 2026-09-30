@@ -11,10 +11,11 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
-jimport('joomla.application.component.model');
-jimport('joomla.html.html');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+
+jimport('joomla.application.component.model');
+jimport('joomla.html.html');
 
 class JSSupportticketModelPriority extends JSSupportTicketModel {
 
@@ -25,7 +26,7 @@ class JSSupportticketModelPriority extends JSSupportTicketModel {
     function storePriority($data) {
         $row = $this->getTable('priorities');
         $data = getJSTicketPHPFunctionsClass()->jsticket_sanitizeData($data);// Sanitize entire array to string
-                if (!$row->bind($data)) {
+        if (!$row->bind($data)) {
             $this->setError($row->getError());
             return SAVE_ERROR;
         }
@@ -125,7 +126,7 @@ class JSSupportticketModelPriority extends JSSupportTicketModel {
             if(is_numeric($id)){
                 if ($this->priorityCanDelete($id) == true) {
                     if (!$row->delete($id)) {
-                        $this->setError($row->getError());
+                        $this->setError($row->getErrorMsg());
                         return DELETE_ERROR;
                     }
                 } else
@@ -147,10 +148,9 @@ class JSSupportticketModelPriority extends JSSupportTicketModel {
         if (!is_numeric($id))
             return false;
         $db = $this->getDBO();
-        $query = "SELECT COUNT(id) +
-                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id)
-                    FROM `#__js_ticket_priorities` AS priority                    
-                    WHERE priority.id=" . $id . " AND isdefault = 1";
+        $query = "SELECT 
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = $id) + 
+                    (SELECT COUNT(id) FROM `#__js_ticket_priorities` WHERE id = $id AND isdefault = 1)";
         $db->setQuery($query);
         $total = $db->loadResult();
         if ($total == 0)
@@ -159,19 +159,39 @@ class JSSupportticketModelPriority extends JSSupportTicketModel {
             return false;
     }
 
-    function getPrioritiesForCombobx($title = null) {
+    function getPriorities() {
+        $priorities = array();
         $db = $this->getDbo();
-        $query = "SELECT id, priority FROM `#__js_ticket_priorities` WHERE status = 1 AND ispublic = 1 ORDER BY priority ASC";
+        $query = "SELECT * FROM `#__js_ticket_priorities`";
         $db->setQuery($query);
-        $rows = $db->loadObjectList();
-        
-        $priority = array();
-        if ($title)
-            $priority[] = array('value' => '', 'text' => $title);
-        foreach ($rows as $row) {
-            $priority[] = array('value' => $row->id, 'text' => Text::_($row->priority));
+        $results = $db->loadObjectList();
+        if ($results) {
+            $priorities[] = array('value' => null, 'text' => Text::_('Select priority'));
+            foreach ($results as $result) {
+                $priorities[] = array('value' => $result->id, 'text' => $result->priority);
+            }
         }
-        return $priority;
+        return $priorities;
+    }
+
+    function getPriority($title) {
+        $db = $this->getDbo();
+        $query = "SELECT id, priority FROM `#__js_ticket_priorities` WHERE id != 0 ORDER BY priority ASC";
+        try{
+            $db->setQuery($query);
+            $rows = $db->loadObjectList();
+            $priority = array();
+            if ($title)
+                $priority[] = array('value' => '', 'text' => $title);
+            foreach ($rows as $row) {
+                $priority[] = array('value' => $row->id, 'text' => Text::_($row->priority));
+            }
+            return $priority;
+        }
+        catch (RuntimeException $e){
+            return false;
+        }
+        
     }
 
     function getPriorityById($id) {
@@ -183,6 +203,14 @@ class JSSupportticketModelPriority extends JSSupportTicketModel {
         $priority = $db->loadObject();
         return $priority;
     }
+    function getDefaultPriorityID() {
+        $db = $this->getDbo();
+        $query = "SELECT id FROM `#__js_ticket_priorities` WHERE isdefault = 1";
+        $db->setQuery($query);
+        $priorityid = $db->loadResult();
+        return $priorityid;
+    }
+    
 }
 
 ?>

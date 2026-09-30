@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -21,7 +21,17 @@ defined('_JEXEC') or die('Restricted access');
 
 class SppagebuilderAddonAjax_contact extends SppagebuilderAddons
 {
-    public static $salt = '3a1q3ko70zwa2lxnui73qk3hm7g2xq6oe7bi0ydk0eulifabjb';
+    /**
+     * Sign a payload with the site's own secret so submissions cannot be forged offline.
+     * (Previously a hardcoded, product-wide salt shared by every install.)
+     *
+     * @param   string  $payload  The value to sign.
+     * @return  string            The HMAC signature.
+     */
+    protected static function getSignature($payload)
+    {
+        return hash_hmac('sha256', (string) $payload, (string) Factory::getConfig()->get('secret'));
+    }
 
     /**
      * The addon frontend render method.
@@ -184,13 +194,13 @@ class SppagebuilderAddonAjax_contact extends SppagebuilderAddons
         $hidden_json   = json_encode($hidden_value);
         $hidden_base64 = base64_encode($hidden_json);
 
-        $encrypted_salt_key = md5(self::$salt . $hidden_base64);
+        $encrypted_salt_key = self::getSignature($hidden_base64);
 
         $output .= '<input type="hidden" name="form_id" value="' . $hidden_base64 . ':' . $encrypted_salt_key . '" >';
         $output .= '<input type="hidden" name="addon_id" value="' . $this->addon->id . '">';
 
         if ($formcaptcha && $captcha_type == 'default') {
-            $output .= '<input type="hidden" name="captcha_answer" value="' . md5($captcha_answer) . '">';
+            // Answer intentionally not emitted; it is verified server-side from stored settings.
         } elseif ($formcaptcha && ($captcha_type == 'recaptcha' || $captcha_type == 'gcaptcha')) {
             PluginHelper::importPlugin('captcha', 'recaptcha');
 
@@ -295,9 +305,9 @@ class SppagebuilderAddonAjax_contact extends SppagebuilderAddons
             if ($input['name'] == 'form_id') {
                 $data               = $input['value'];
                 $hidden_data        = explode(':', $data);
-                $encrypted_salt_key = md5(self::$salt . $hidden_data[0]);
+                $encrypted_salt_key = self::getSignature($hidden_data[0]);
 
-                if ($encrypted_salt_key === $hidden_data[1]) {
+                if (isset($hidden_data[1]) && hash_equals($encrypted_salt_key, $hidden_data[1])) {
                     $decrypted_data                 = json_decode(base64_decode($hidden_data[0]));
                     $recipient                      = base64_decode($decrypted_data->recipient_email);
                     $from_email                     = base64_decode($decrypted_data->from_email);
@@ -425,10 +435,18 @@ class SppagebuilderAddonAjax_contact extends SppagebuilderAddons
         $output['gcaptchaId'] = '';
 
         // Match has addon id
-        if (self::verifyAddon($item_data->content ?? $item_data->text, $addon_id) == false) {
+        $captchaAddon = self::getAddonById($item_data->content ?? $item_data->text, $addon_id);
+
+        if ($captchaAddon === null) {
             $output['content'] = '<span class="sppb-text-danger">' . Text::_('COM_SPPAGEBUILDER_ADDON_AJAX_CONTACT_FAILED') . '</span>';
             return json_encode($output);
         }
+
+        // Read the captcha type from the stored addon, never from the request, so a form
+        // configured for reCAPTCHA cannot be downgraded to the simple question captcha.
+        $captcha_type = (isset($captchaAddon->settings->captcha_type) && $captchaAddon->settings->captcha_type)
+            ? $captchaAddon->settings->captcha_type
+            : 'default';
 
         if ($showcaptcha) {
             if ($captcha_type == 'recaptcha' || $captcha_type == 'recaptcha_invisible' || $captcha_type == 'gcaptcha' || $captcha_type == 'igcaptcha') {
@@ -446,18 +464,22 @@ class SppagebuilderAddonAjax_contact extends SppagebuilderAddons
                         $output['gcaptchaType'] = 'dynamic';
                     }
 
+                    // The captcha plugin's verdict is authoritative in every render context.
+                    // $view_type comes from the request, and the module branch that used to sit
+                    // here replaced this result with a non-empty test, so posting view_type=module
+                    // passed any token at all.
                     $res = Factory::getApplication()->triggerEvent('onCheckAnswer', [$gcaptcha]);
-                    // if module then verify gcaptcha
-                    if ($view_type == 'module') {
-                        $res = ($gcaptcha != null || strlen($gcaptcha) != 0) ? [true] : [false];
-                    }
+
                     if (empty($res[0])) {
                         $output['content'] = '<span class="sppb-text-danger">' . Text::_('COM_SPPAGEBUILDER_ADDON_AJAX_CONTACT_INVALID_CAPTCHA') . '</span>';
                         return json_encode($output);
                     }
                 }
             } else if ($captcha_type == 'default') {
-                if (md5($captcha_question) != $captcha_answer) {
+                // Read the expected answer from the stored addon, never from the request.
+                $expectedAnswer = isset($captchaAddon->settings->captcha_answer) ? (string) $captchaAddon->settings->captcha_answer : '';
+
+                if ($expectedAnswer === '' || trim((string) $captcha_question) !== trim($expectedAnswer)) {
                     $output['content'] = '<span class="sppb-text-danger">' . Text::_('COM_SPPAGEBUILDER_ADDON_AJAX_CONTACT_WRONG_CAPTCHA') . '</span>';
                     return json_encode($output);
                 }
@@ -699,28 +721,38 @@ class SppagebuilderAddonAjax_contact extends SppagebuilderAddons
         return $css;
     }
 
-    public static function verifyAddon($pageContent, $addonId)
+    /**
+     * Locate an ajax_contact addon by id within the stored page content and return its object.
+     * The stored content is the trusted source of the addon's settings (e.g. the captcha
+     * answer), so security-sensitive values must be read from here, never from the request.
+     *
+     * @param   string  $pageContent  The stored page/module content JSON.
+     * @param   mixed   $addonId      The addon id to find.
+     * @return  object|null           The addon object, or null if not found.
+     */
+    public static function getAddonById($pageContent, $addonId)
     {
-        $addonInfo   = false;
         $pageContent = json_decode($pageContent);
 
-        foreach ($pageContent as $key => $row) {
-            foreach ($row->columns as $key => $column) {
-                foreach ($column->addons as $key => $addon) {
+        if (empty($pageContent)) {
+            return null;
+        }
+
+        foreach ($pageContent as $row) {
+            foreach ($row->columns as $column) {
+                foreach ($column->addons as $addon) {
 
                     // if direct addon
                     if (($addon->id == $addonId) && ($addon->name == 'ajax_contact')) {
-                        return true;
-                        break;
+                        return $addon;
                     }
 
                     // if has inner array
                     if (isset($addon->columns) && count($addon->columns) && $addon->columns) {
-                        foreach ($addon->columns as $key => $inner_column) {
-                            foreach ($inner_column->addons as $key => $inner_addon) {
+                        foreach ($addon->columns as $inner_column) {
+                            foreach ($inner_column->addons as $inner_addon) {
                                 if (($inner_addon->id == $addonId) && ($inner_addon->name == 'ajax_contact')) {
-                                    return true;
-                                    break;
+                                    return $inner_addon;
                                 }
                             }
                         }
@@ -733,8 +765,7 @@ class SppagebuilderAddonAjax_contact extends SppagebuilderAddons
                             if (isset($inner_item->content) && is_array($inner_item->content) && ! empty($inner_item->content)) {
                                 foreach ($inner_item->content as $inner_addon) {
                                     if (($inner_addon->id == $addonId) && ($inner_addon->name == 'ajax_contact')) {
-                                        return true;
-                                        break;
+                                        return $inner_addon;
                                     }
                                 }
                             }
@@ -744,7 +775,7 @@ class SppagebuilderAddonAjax_contact extends SppagebuilderAddons
                 }
             }
         }
-        return false;
+        return null;
     }
 
     public static function getTemplate()

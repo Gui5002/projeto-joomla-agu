@@ -85,7 +85,7 @@
         "uom": "MB",
         "title": "COM_AKEEBABACKUP_CONFIG_SIZEQUOTA_VALUE_TITLE",
         "description": "COM_AKEEBABACKUP_CONFIG_SIZEQUOTA_VALUE_DESCRIPTION",
-        "showon": "akeeba.quota.size_quota:1"
+        "showon": "akeeba.quota.enable_size_quota:1"
     },
     "akeeba.quota.enable_count_quota": {
         "default": "1",

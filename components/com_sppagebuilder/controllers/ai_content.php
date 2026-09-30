@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -546,6 +546,28 @@ class SppagebuilderControllerAi_content extends FormController
 
     private function imageUrlToBase64($imageUrl)
     {
+        // Only fetch remote http(s) URLs. Reject file://, php://, etc. and any
+        // host that resolves into private/reserved space so this cannot be used
+        // to read local files (e.g. configuration.php) or reach internal services.
+        $scheme = strtolower((string) parse_url($imageUrl, PHP_URL_SCHEME));
+        $host   = (string) parse_url($imageUrl, PHP_URL_HOST);
+
+        if (!in_array($scheme, ['http', 'https'], true) || $host === '') {
+            $this->sendResponse([
+                'status' => false,
+                'message' => 'Only http/https image URLs are allowed.'
+            ], 400);
+        }
+
+        $ip = filter_var($host, FILTER_VALIDATE_IP) ? $host : gethostbyname($host);
+
+        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            $this->sendResponse([
+                'status' => false,
+                'message' => 'The image URL host is not allowed.'
+            ], 400);
+        }
+
         // Fetch the image from the URL
         $imageData = @file_get_contents($imageUrl);
 

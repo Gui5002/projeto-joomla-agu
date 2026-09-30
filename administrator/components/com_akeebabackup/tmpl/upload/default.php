@@ -16,6 +16,7 @@ use Joomla\CMS\Language\Text;
 	<input type="hidden" name="id" value="<?= (int) $this->id ?>" />
 	<input type="hidden" name="part" value="-1" />
 	<input type="hidden" name="frag" value="-1" />
+	<?= \Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
 </form>
 
 <div class="alert alert-info">

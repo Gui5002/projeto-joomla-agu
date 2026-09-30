@@ -1,0 +1,82 @@
+/*
+ * JS Support Ticket — Admin design tokens
+ *
+ * Single source of truth for color, spacing, radius, shadow and type
+ * tokens used across the administrator interface. Loaded first, before
+ * jsticketadmin.css, so it only sets fallback defaults at the #jsst-admin
+ * root — page-specific stylesheets (dashboard-v2, ticket-list-v2, etc.)
+ * still win inside their own more specific selectors and are unaffected.
+ *
+ * Values below reconcile custom properties that were previously declared
+ * with different values in different files (e.g. --jsst-blue was #0284c7
+ * in one file and #2563eb in another). Where files agreed, that value was
+ * kept as-is; where they diverged, the value used by the newest/most
+ * polished screens (dashboard-v2, ticket-list-v2) was chosen.
+ */
+
+#jsst-admin {
+  /* Brand & semantic colors */
+  --jsst-primary: #2563eb;
+  --jsst-primary-dark: #1d4ed8;
+  --jsst-sky: #0ea5e9;
+  --jsst-green: #16a34a;
+  --jsst-orange: #f97316;
+  --jsst-red: #ef4444;
+  --jsst-pink: #db2777;
+
+  /* Backward-compatible aliases used by older files */
+  --jsst-blue: var(--jsst-primary);
+  --jsst-cyan: var(--jsst-sky);
+
+  /* Neutrals */
+  --jsst-ink: #0f172a;
+  --jsst-text: var(--jsst-ink);
+  --jsst-muted: #64748b;
+  --jsst-bg: #f4f7fb;
+  --jsst-card: #ffffff;
+  --jsst-panel: var(--jsst-card);
+  --jsst-soft: #f8fafc;
+  --jsst-soft-accent: #eef4ff;
+  --jsst-border: #e5eaf2;
+  --jsst-border-strong: #d7deea;
+  --jsst-line: var(--jsst-border);
+
+  /* Elevation */
+  --jsst-shadow-soft: 0 10px 26px rgba(15, 23, 42, 0.06);
+  --jsst-shadow: 0 18px 46px rgba(15, 23, 42, 0.1);
+  --jsst-shadow-lg: 0 18px 55px rgba(15, 23, 42, 0.12);
+
+  /* Radius scale */
+  --jsst-radius-sm: 8px;
+  --jsst-radius-md: 12px;
+  --jsst-radius-lg: 18px;
+  --jsst-radius-xl: 24px;
+  --jsst-radius-pill: 999px;
+  --jsst-radius: var(--jsst-radius-lg);
+
+  /* Spacing scale (4px base) */
+  --jsst-space-1: 4px;
+  --jsst-space-2: 8px;
+  --jsst-space-3: 12px;
+  --jsst-space-4: 16px;
+  --jsst-space-5: 20px;
+  --jsst-space-6: 24px;
+  --jsst-space-7: 32px;
+  --jsst-space-8: 40px;
+
+  /* Typography */
+  --jsst-font-admin: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --jsst-fs-xs: 12px;
+  --jsst-fs-sm: 13px;
+  --jsst-fs-base: 14px;
+  --jsst-fs-md: 15px;
+  --jsst-fs-lg: 18px;
+  --jsst-fs-xl: 22px;
+  --jsst-fs-2xl: 28px;
+  --jsst-lh-base: 1.5;
+
+  /* Controls & interaction */
+  --jsst-control-height: 46px;
+  --jsst-focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  --jsst-transition: 150ms ease;
+}

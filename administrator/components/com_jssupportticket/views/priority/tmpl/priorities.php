@@ -11,10 +11,11 @@
  */
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
-
+$document = Factory::getDocument();
+$document->addStyleSheet('components/com_jssupportticket/include/css/jsst-admin-workspace-v2.css?v=61');
 ?>
 <script language=Javascript>
     function confirmdelete() {
@@ -25,44 +26,21 @@ use Joomla\CMS\HTML\HTMLHelper;
     }
 </script>
 
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-management jsst-management-priority jsst-screen jsst-screen-list">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-        <div id="jsstadmin-wrapper-top">
-            <div id="jsstadmin-wrapper-top-left">
-                <div id="jsstadmin-breadcrunbs">
-                    <ul>
-                        <li><a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel" title="Dashboard"><?php echo Text::_('Dashboard'); ?></a></li>
-                        <li><?php echo Text::_('Priorities'); ?></li>
-                    </ul>
-                </div>
-            </div>
-            <div id="jsstadmin-wrapper-top-right">
-                <div id="jsstadmin-config-btn">
-                    <a title="Configuration" href="index.php?option=com_jssupportticket&c=config&layout=config">
-                        <img alt="Configuration" src="components/com_jssupportticket/include/images/config.png">
-                    </a>
-                </div>
-                <div id="jsstadmin-vers-txt">
-                    <?php echo Text::_('Version').Text::_(' : '); ?>
-                    <span class="jsstadmin-ver">
-                        <?php $version = str_split($this->version);
-                        $version = implode('.', $version);
-                        echo $version; ?>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div id="js-tk-heading">
-            <h1 class="jsstadmin-head-text"><?php echo Text::_('Priorities'); ?></h1>
-            <?php $link = 'index.php?option='.$this->option.'&c=priority&task=addnewpriority&cid[]=""'; ?>
-            <a class="tk-heading-addbutton" href="<?php echo $link; ?>">
-                <img class="js-heading-addimage" src="components/com_jssupportticket/include/images/plus.png">
-                <?php echo Text::_('Add Priority'); ?>
-            </a>            
-        </div>
+        <?php
+$jsstPageTitle = 'Priorities';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label_raw' => Text::_('Priorities'), 'link' => null),
+);
+$jsstAddLink = 'index.php?option='.$this->option.'&c=priority&task=addnewpriority&cid[]=""';
+$jsstAddLabel = 'Add Priority';
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?>
         <form class="jsstadmin-data-wrp" action="index.php" method="post" name="adminForm" id="adminForm">
             <div id="js-tk-filter">
                 <div class="tk-search-value"><input type="text" placeholder="<?php echo Text::_('Title'); ?>" name="filter_priority" id="filter_priority" size="15" value="<?php if (isset($this->searchpriority)) echo $this->searchpriority; ?>" class="text_area"/></div>
@@ -133,10 +111,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         </form>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>
 <script type="text/javascript">
     var headertext = [],
     headers = document.querySelectorAll("#js-table th"),

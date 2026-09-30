@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<view title="JS Support Ticket">
+	<view title="User">
 		<message>
-			<![CDATA[JS Support Ticket Control Panel.]]>
+			<![CDATA[This is the User Area.]]>
 		</message>
 	</view>
 </metadata>

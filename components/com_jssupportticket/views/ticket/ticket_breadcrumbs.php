@@ -1,14 +1,14 @@
-<?php 
+<?php
 /**
- * @Copyright Copyright (C) 2015 ... Ahmad Bilal
+ * @Copyright Copyright (C) 2012 ... Ahmad Bilal
  * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
- * Company:     Buruj Solutions
- + Contact:    www.burujsolutions.com , info@burujsolutions.com
- * Created on:  May 22, 2015
-  ^
-  + Project:    JS Tickets
-  ^
- */
+ * Company:		Buruj Solutions
+ + Contact:		www.burujsolutions.com , info@burujsolutions.com
+ * Created on:	May 03, 2012
+ ^
+ + Project: 	JS Tickets
+ ^ 
+*/
 
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Language\Text;
@@ -20,21 +20,18 @@ use Joomla\CMS\Language\Text;
 		switch($layoutName){
 			case 'formticket':
 				if($id){ //edit
-					$pathway->addItem(Text::_('Add Ticket'), $commonpath."&c=ticket&layout=formticket&Itemid=".$itemid);
 					$pathway->addItem(Text::_('Edit Ticket'), '');
 				}else{ //new
-					$pathway->addItem(Text::_('Add Ticket'), '');
+					$pathway->addItem(Text::_('Create Ticket'), '');
 				}
-			break;
+				break;
 			case 'mytickets':
-				$pathway->addItem(Text::_('My Tickets'), $commonpath."&c=ticket&layout=mytickets&Itemid=".$itemid);
-			break;
+				$pathway->addItem(Text::_('My Tickets'), $commonpath."&c=ticket&layout=mytickets&Itemid=".$Itemid);
+				break;
 			case 'ticketdetail':
-				$pathway->addItem(Text::_('My Tickets'), $commonpath."&c=ticket&layout=mytickets&Itemid=".$itemid);
-				$pathway->addItem(Text::_('Ticket detail'), '');
+				$pathway->addItem(Text::_('My Tickets'), $commonpath."&c=ticket&layout=mytickets&Itemid=".$Itemid);
+				$pathway->addItem(Text::_('Ticket Detail'), '');
 			break;
 		}
-	}	
-
+	}
 ?>
-

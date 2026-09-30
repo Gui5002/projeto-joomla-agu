@@ -30,7 +30,9 @@ if (!AKEEBABACKUP_PRO)
 
 	<div class="card-body">
 		<div class="akeeba-cpanel-container d-flex flex-row flex-wrap align-items-stretch">
-			<?php if($this->permissions['configure']): ?>
+			<?php /* The Schedule page echoes the front-end/JSON API secrets, so it is only available to users who are
+			         allowed to edit the component's Options page (core.admin). */ ?>
+			<?php if($this->permissions['editoptions']): ?>
 				<a class="akeeba-cpanel-button text-center align-self-stretch btn btn-outline-primary border-0" style="width: 10em"
 				   href="index.php?option=com_akeebabackup&view=Schedule">
 					<div class="bg-primary text-white d-block text-center p-3 h2">

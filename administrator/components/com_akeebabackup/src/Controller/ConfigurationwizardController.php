@@ -46,6 +46,9 @@ class ConfigurationwizardController extends BaseController
 
 	public function ajax($cachable = false, $urlparams = [])
 	{
+		// Anti-CSRF protection. The token is sent by akeebabackup.System.doAjax() in the POST body.
+		$this->checkToken();
+
 		/** @var ConfigurationwizardModel $model */
 		$model = $this->getModel('Configurationwizard', 'Administrator');
 		$model->setState('act', $this->input->getCmd('act', ''));

@@ -21,14 +21,14 @@ use Joomla\CMS\Language\Text;
 			$layout='
 					<div class="js-ticket-error-message-wrapper js-ticket-box-shadow">
 					<div class="js-ticket-message-image-wrapper">
-						<img class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/no-record-icon.png"/>
+						<img alt="" aria-hidden="true" class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/no-record-icon.png"/>
 					</div>
 					<div class="js-ticket-messages-data-wrapper">
 						<span class="js-ticket-messages-main-text">
-					    	' . Text::_('Sorry') . '!
+					    	' . Text::_('No records found') . '
 						</span>
 						<span class="js-ticket-messages-block_text">
-					    	' . Text::_('No record found') . '...!
+					    	' . Text::_('Try changing the filters or check again later.') . '
 						</span>
 					</div>
 				</div>';
@@ -43,7 +43,7 @@ use Joomla\CMS\Language\Text;
 			$layout='
 					<div class="js-ticket-error-message-wrapper js-ticket-box-shadow">
 						<div class="js-ticket-message-image-wrapper">
-							<img class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/not-permission-icon.png"/>
+							<img alt="" aria-hidden="true" class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/not-permission-icon.png"/>
 						</div>
 						<div class="js-ticket-messages-data-wrapper">
 							<span class="js-ticket-messages-main-text">
@@ -62,11 +62,11 @@ use Joomla\CMS\Language\Text;
 			$layout='
 				<div class="js-ticket-error-message-wrapper js-ticket-box-shadow">
 					<div class="js-ticket-message-image-wrapper">
-						<img class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/not-permission-icon.png"/>
+						<img alt="" aria-hidden="true" class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/not-permission-icon.png"/>
 					</div>
 					<div class="js-ticket-messages-data-wrapper">
 						<span class="js-ticket-messages-main-text">
-					    	' . Text::_('Sorry') . '!
+					    	' . Text::_('No records found') . '!
 						</span>
 						<span class="js-ticket-messages-block_text">
 					    	' . Text::_('Ticket was created by Visitor, User is not allowed to view this Ticket') . '
@@ -77,29 +77,11 @@ use Joomla\CMS\Language\Text;
 			echo $layout;
 		}
 
-		public static function getNotStaffMember(){
-			$layout='
-				<div class="js-ticket-error-message-wrapper js-ticket-box-shadow">
-					<div class="js-ticket-message-image-wrapper">
-						<img class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/not-permission-icon.png"/>
-					</div>
-					<div class="js-ticket-messages-data-wrapper">
-						<span class="js-ticket-messages-main-text">
-					    	' . Text::_('Access Denied') . '!
-						</span>
-						<span class="js-ticket-messages-block_text">
-					    	' . Text::_('User are not allowed to access this page.') . '
-						</span>
-					</div>
-				</div>
-		';
-			echo $layout;
-		}
 		public static function getSystemOffline($title,$message){
 			$layout='
 				<div class="js-ticket-error-message-wrapper js-ticket-box-shadow">
 					<div class="js-ticket-message-image-wrapper">
-						<img class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/offline-icon.png"/>
+						<img alt="" aria-hidden="true" class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/offline-icon.png"/>
 					</div>
 					<div class="js-ticket-messages-data-wrapper">
 						<span class="js-ticket-messages-main-text">
@@ -114,40 +96,22 @@ use Joomla\CMS\Language\Text;
 			echo $layout;
 		}
 		
-		public static function getStaffDisable(){
-			$layout= '
-				<div class="js-ticket-error-message-wrapper js-ticket-box-shadow">
-					<div class="js-ticket-message-image-wrapper">
-						<img class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/not-permission-icon.png"/>
-					</div>
-					<div class="js-ticket-messages-data-wrapper">
-						<span class="js-ticket-messages-main-text">
-					    	' . Text::_('Access Denied') . '!
-						</span>
-						<span class="js-ticket-messages-block_text">
-					    	' . Text::_('Your account has been disabled, Please contact to the administrator.') . '
-						</span>
-					</div>
-				</div>
-		';
-			echo $layout;
-		}
 
 		public static function getFeedbackMessage($msg_type,$contect_text){
 			if($msg_type == 2){
     		$img_var = '3.png';
-    		$text_var_1 = Text::_('Sorry');
+    		$text_var_1 = Text::_('No records found');
     		$text_var_1 .= '!';
     		$text_var_2 = Text::_('You have already given the feedback for this ticket.');
     	}elseif($msg_type == 3){
     		$img_var = 'no-record-icon.png';
-    		$text_var_1 = Text::_('Sorry');
+    		$text_var_1 = Text::_('No records found');
     		$text_var_1 .= '!';
     		$text_var_2 = Text::_('Ticket not found');
     		$text_var_2 .= '...!';
     	}else{
-    		$img_var = 'not-permission-icondd.png';
-    		$text_var_1 = Text::_('Sorry');
+		$img_var = 'not-permission-icon.png';
+    		$text_var_1 = Text::_('No records found');
     		$text_var_1 .= '!';
     		$text_var_2 = Text::_('User is not allowed to view this page');
     	}
@@ -155,7 +119,7 @@ use Joomla\CMS\Language\Text;
 			$layout = '   
 					<div class="js-ticket-error-message-wrapper js-ticket-box-shadow">
 						<div class="js-ticket-message-image-wrapper">
-							<img class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/success.png"/>
+							<img alt="" aria-hidden="true" class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/success.png"/>
 						</div>
 						<div class="js-ticket-messages-data-wrapper">
 							<span class="js-ticket-messages-main-text">
@@ -167,10 +131,10 @@ use Joomla\CMS\Language\Text;
 						</div>
 					</div>';
     	}else{
-	        $layout .= '
+	        $layout = '
 					<div class="js-ticket-error-message-wrapper js-ticket-box-shadow">
 					<div class="js-ticket-message-image-wrapper">
-						<img class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/'.$img_var.'"/>
+						<img alt="" aria-hidden="true" class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/'.$img_var.'"/>
 					</div>
 					<div class="js-ticket-messages-data-wrapper">
 						<span class="js-ticket-messages-main-text">
@@ -198,7 +162,7 @@ use Joomla\CMS\Language\Text;
 */	        $layout = '
 	                <div class="js-ticket-error-message-wrapper js-ticket-box-shadow">
 						<div class="js-ticket-message-image-wrapper">
-							<img class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/not-login-icon.png"/>
+							<img alt="" aria-hidden="true" class="js-ticket-message-image" src="'.Uri::root().'components/com_jssupportticket/include/images/error/not-login-icon.png"/>
 						</div>
 						<div class="js-ticket-messages-data-wrapper">
 							<span class="js-ticket-messages-main-text">
@@ -208,12 +172,12 @@ use Joomla\CMS\Language\Text;
 						    	' . Text::_('To access the page, please login') . '
 							</span>
 							<span class="js-ticket-user-login-btn-wrp">';
-                    			$layout .= '<a class="js-ticket-login-btn" href="'.$finalurl.'" title="Login">' . Text::_('Login') . '</a>';
+                    			$layout .= '<a class="js-ticket-login-btn" href="'.$finalurl.'" title="Login">' . Text::_('Log In') . '</a>';
 
 		                        /*if($loginval == 2 && $loginlink != ""){
-		                            $layout .= '<a class="js-ticket-login-btn" href="'.$finalurl.'" title="Login">' . Text::_('Login') . '</a>';
+		                            $layout .= '<a class="js-ticket-login-btn" href="'.$finalurl.'" title="Login">' . Text::_('Log In') . '</a>';
 		                        }else{
-		                            $layout .= '<a class="js-ticket-login-btn" href="'.jssupportticket::makeUrl(array('jstmod'=>'jssupportticket', 'jstlay'=>'login', 'js_redirecturl'=>$redirect_url)).'" title="Login">' . Text::_('Login') . '</a>';
+		                            $layout .= '<a class="js-ticket-login-btn" href="'.jssupportticket::makeUrl(array('jstmod'=>'jssupportticket', 'jstlay'=>'login', 'js_redirecturl'=>$redirect_url)).'" title="Login">' . Text::_('Log In') . '</a>';
 		                        }*/
 		                        // $is_enable = get_option('users_can_register');/*check to make sure user registration is enabled*/
 	                         //    if ($is_enable) { 

@@ -327,6 +327,26 @@ abstract class Base
 	abstract public function escape($text, $extra = false);
 
 	/**
+	 * Render a float as an SQL numeric literal without losing precision.
+	 *
+	 * Casting a float to a string the ordinary way goes through PHP's `precision` ini setting — 14 significant digits
+	 * by default — but a double needs up to 17 to survive a round trip. The dump engine turns every fetched value into
+	 * an INSERT statement through escape(), so an ordinary cast silently truncates DOUBLE columns in the backup.
+	 *
+	 * var_export() instead honours `serialize_precision`, which defaults to -1: the shortest representation that
+	 * converts back to the exact same double. It is also locale-independent, unlike sprintf('%.17G') — which on the
+	 * PHP 7.4 we still support would emit a decimal comma under, say, a de_DE locale, corrupting the SQL.
+	 *
+	 * @param   float  $value  The float to render.
+	 *
+	 * @return  string  The float as a round-trip-safe numeric literal.
+	 */
+	protected function floatToSqlString($value)
+	{
+		return var_export((float) $value, true);
+	}
+
+	/**
 	 * An alias for query()
 	 *
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.

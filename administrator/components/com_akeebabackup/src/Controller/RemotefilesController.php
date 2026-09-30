@@ -183,6 +183,8 @@ class RemotefilesController extends BaseController
 	 */
 	public function dlfromremote()
 	{
+		$this->checkToken($this->input->getMethod());
+
 		$id   = $this->getAndCheckId();
 		$part = $this->input->get('part', 0, 'int');
 
@@ -290,6 +292,8 @@ class RemotefilesController extends BaseController
 	 */
 	public function delete()
 	{
+		$this->checkToken($this->input->getMethod());
+
 		// Get the parameters
 		$id   = $this->getAndCheckId();
 		$part = $this->input->get('part', -1, 'int');

@@ -11,11 +11,11 @@
 ^
 */
 defined('_JEXEC') or die('Restricted access');
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
 
 jimport('joomla.application.component.view');
 jimport('joomla.html.pagination');
-use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\CMS\Language\Text;
 
 class JSSupportticketViewJSSupportticket extends JSSupportTicketView {
 
@@ -31,9 +31,15 @@ class JSSupportticketViewJSSupportticket extends JSSupportTicketView {
             $this->latestdepartments = $latestdepartments;
         } elseif ($layoutName == 'aboutus') {
             ToolbarHelper::title(Text::_('About Us'));
+        } elseif ($layoutName == 'themes') {
+            ToolbarHelper::title(Text::_('Themes'));
+            $result = $this->getJSModel('jssupportticket')->getCurrentTheme();
+            $this->result = $result;
         
 	} elseif ($layoutName == 'translation') {
             ToolbarHelper::title(Text::_('Language Translations'));
+        } elseif ($layoutName == 'proversion') {
+            ToolbarHelper::title(Text::_('Pro Version'));
         }
         parent::display($tpl);
     }

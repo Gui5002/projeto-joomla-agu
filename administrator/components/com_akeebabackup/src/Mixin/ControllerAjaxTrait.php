@@ -18,6 +18,9 @@ trait ControllerAjaxTrait
 
 	public function ajax()
 	{
+		// Anti-CSRF protection. The token is sent by akeebabackup.System.doAjax() in the POST body.
+		$this->checkToken();
+
 		// Parse the JSON data and reset the action query param to the resulting array
 		$action_json = $this->input->get('action', '', 'raw');
 		$action      = json_decode($action_json, $this->decodeJsonAsArray);

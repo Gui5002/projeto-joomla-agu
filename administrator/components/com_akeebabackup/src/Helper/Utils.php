@@ -9,13 +9,45 @@ namespace Akeeba\Component\AkeebaBackup\Administrator\Helper;
 
 defined('_JEXEC') || die();
 
+use Akeeba\Engine\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filter\InputFilter;
 
 class Utils
 {
 	/**
+	 * Returns the absolute filesystem path to the log file of a backup run.
+	 *
+	 * The backup engine normally creates akeeba.<tag>.log.php files. On hosts which do not let us write to files with
+	 * a .php extension it falls back to akeeba.<tag>.php and, in older versions, to the web accessible akeeba.<tag>.log
+	 * file. This method returns whichever of them exists.
+	 *
+	 * @param   string|null  $tag  The backup run's tag
+	 *
+	 * @return  string|null  The absolute path to the log file. NULL if no log file exists.
+	 */
+	public static function getLogFilePath(?string $tag): ?string
+	{
+		foreach (Factory::getLog()->getAllLogFilenames($tag) as $logFile)
+		{
+			if (@is_file($logFile))
+			{
+				return $logFile;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Returns the relative path of directory $to to root path $from
+	 *
+	 * Both arguments are treated as directory paths. The presentation of the result follows two rules:
+	 *
+	 * - it starts with `./` when $to lies inside $from;
+	 * - it ends with `/` when $to is either an existing directory or was written with a trailing slash.
+	 *
+	 * Neither rule affects the number of `..` segments — see the comment on is_dir() below.
 	 *
 	 * @param   string  $from  Root directory
 	 * @param   string  $to    The directory whose path we want to find relative to $from
@@ -24,43 +56,60 @@ class Utils
 	 */
 	public static function getRelativePath(string $from, string $to): string
 	{
-		// some compatibility fixes for Windows paths
-		$from = is_dir($from) ? rtrim($from, '\/') . '/' : $from;
-		$to   = is_dir($to) ? rtrim($to, '\/') . '/' : $to;
+		// Some compatibility fixes for Windows paths
 		$from = str_replace('\\', '/', $from);
 		$to   = str_replace('\\', '/', $to);
 
-		$from    = explode('/', $from);
-		$to      = explode('/', $to);
-		$relPath = $to;
+		/**
+		 * The path arithmetic below must not depend on whether either path exists.
+		 *
+		 * The previous implementation counted the `..` segments it needed from a trailing slash which
+		 * was only ever appended when is_dir() returned true. Whenever is_dir() returned false the
+		 * count came out one short, and a directory which is merely a sibling of $from was reported as
+		 * being inside it — `./backups` rather than `../backups`, pointing the reader at a directory
+		 * which does not exist. Walking off the end of the $to array also raised "Undefined array key"
+		 * warnings.
+		 *
+		 * That is not the exotic case it looks like. is_dir() returns false both for a backup output
+		 * directory which has since been moved or deleted, and for one which exists but sits outside
+		 * open_basedir — the normal situation on shared hosting once the output directory has been
+		 * moved above the site root, which is exactly what we recommend people do.
+		 *
+		 * is_dir() is therefore consulted for presentation only, never for the arithmetic.
+		 */
+		$toWantsATrailingSlash = is_dir($to) || substr($to, -1) === '/';
 
-		foreach ($from as $depth => $dir)
+		$fromParts = explode('/', rtrim($from, '/'));
+		$toParts   = explode('/', rtrim($to, '/'));
+
+		// Discard the common ancestry of the two paths
+		while ($fromParts && $toParts && $fromParts[0] === $toParts[0])
 		{
-			// find first non-matching dir
-			if ($dir === $to[$depth])
-			{
-				// ignore this directory
-				array_shift($relPath);
-
-				continue;
-			}
-
-			// Get number of remaining dirs to $from
-			$remaining = count($from) - $depth;
-
-			if ($remaining > 1)
-			{
-				// add traversals up to first matching dir
-				$padLength = (count($relPath) + $remaining - 1) * -1;
-				$relPath   = array_pad($relPath, $padLength, '..');
-
-				break;
-			}
-
-			$relPath[0] = './' . $relPath[0];
+			array_shift($fromParts);
+			array_shift($toParts);
 		}
 
-		return implode('/', $relPath);
+		// The two paths describe the same directory
+		if (!$fromParts && !$toParts)
+		{
+			return '';
+		}
+
+		// One `..` for every directory we have to climb out of $from
+		$traversal = str_repeat('../', count($fromParts));
+
+		// $to is an ancestor of $from. The traversal is the whole answer, and it already ends in a slash.
+		if (!$toParts)
+		{
+			return $traversal;
+		}
+
+		$descent = implode('/', $toParts);
+
+		// $to lives inside $from. Expressed as ./something; the Manage view strips that prefix back off.
+		$relativePath = ($traversal === '') ? './' . $descent : $traversal . $descent;
+
+		return $toWantsATrailingSlash ? $relativePath . '/' : $relativePath;
 	}
 
 	/**

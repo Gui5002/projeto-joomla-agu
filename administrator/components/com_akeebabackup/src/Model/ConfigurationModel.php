@@ -106,7 +106,7 @@ class ConfigurationModel extends BaseModel
 			'username'    => $this->getState('user'),
 			'password'    => $this->getState('pass'),
 			'directory'   => $this->getState('initdir'),
-			'usessl'      => $this->getState('usessl'),
+			'ssl'         => $this->getState('usessl'),
 			'passive'     => $this->getState('passive'),
 			'passive_fix' => $this->getState('passive_mode_workaround'),
 		];
@@ -308,7 +308,7 @@ class ConfigurationModel extends BaseModel
 			'username'    => $this->getState('user'),
 			'password'    => $this->getState('pass'),
 			'directory'   => $this->getState('initdir'),
-			'usessl'      => $this->getState('usessl'),
+			'ssl'         => $this->getState('usessl'),
 			'passive'     => $this->getState('passive'),
 			'passive_fix' => $this->getState('passive_mode_workaround'),
 		];

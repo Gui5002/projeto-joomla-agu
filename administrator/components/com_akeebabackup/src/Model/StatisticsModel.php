@@ -675,6 +675,34 @@ ENDBODY;
 		// Call the parent method
 		parent::populateState($ordering, $direction);
 
+		/**
+		 * SECURITY: Joomla's ListModel::populateState() ingests the `filter` values as RAW strings. They are only
+		 * passed through the 'array' input filter, which validates the array structure but does NOT sanitise the
+		 * individual scalar values. Therefore EVERY filter value consumed in getListQuery() MUST be passed as a
+		 * bound, typed query parameter (->bind() / ->whereIn()) — never concatenated into the SQL — otherwise it
+		 * becomes a SQL injection and boolean-oracle vulnerability. As an additional layer of defence we normalise
+		 * the numeric filters to integers here (empty and non-numeric values are left untouched so getListQuery's
+		 * is_numeric() guards keep skipping them).
+		 *
+		 * We read and write $this->state directly instead of using getState() / setState(). BaseModel::getState()
+		 * calls populateState() when its __state_set flag is still false — and that flag is only raised *after*
+		 * populateState() returns. Calling getState() from in here would therefore recurse into this method until
+		 * PHP runs out of memory.
+		 */
+		$profile = $this->state->get('filter.profile');
+
+		if (is_numeric($profile))
+		{
+			$this->state->set('filter.profile', (int) $profile);
+		}
+
+		$frozen = $this->state->get('filter.frozen');
+
+		if (is_numeric($frozen))
+		{
+			$this->state->set('filter.frozen', (int) $frozen);
+		}
+
 		$app = JoomlaFactory::getApplication();
 
 		if ($app->isClient('site'))
@@ -699,6 +727,9 @@ ENDBODY;
 		$query = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 		            ->select('*')
 		            ->from($db->qn('#__akeebabackup_backups'));
+
+		// SECURITY: filter values arrive un-sanitised (see populateState). Every value below MUST be bound as a
+		// typed query parameter, never concatenated into the SQL.
 
 		// Description / ID search filter
 		$search = $this->getState('filter.search');

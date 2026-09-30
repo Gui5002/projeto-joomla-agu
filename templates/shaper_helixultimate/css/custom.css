@@ -1,287 +1,121 @@
-/* ============================================================
-   1. VISUAL DA BARRA DE PESQUISA (Pílula Azul - Topo)
-   ============================================================ */
-.busca-personalizada form,
-.busca-personalizada .mod-finder__search,
-.busca-personalizada .input-group {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: stretch !important;
-    width: 100% !important;
-    max-width: 800px !important; 
-    margin: 0 auto 30px auto !important; 
-    position: relative !important;
+/* ================= ESAGU BLOG LAYOUT ================= */
+.esagu-news-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 15px;
 }
 
-.busca-personalizada .awesomplete {
-    display: flex !important;
-    flex: 1 1 auto !important;
-    position: relative !important;
+/* Barra de Busca */
+.esagu-search-box {
+  display: flex !important;
+  max-width: 650px;
+  margin: 0 auto 35px auto;
+  border: 1.5px solid #1a355b;
+  border-radius: 50px;
+  overflow: hidden;
+  background: #ffffff;
 }
 
-.busca-personalizada input.js-finder-search-query,
-.busca-personalizada input.form-control {
-    flex: 1 1 auto !important;
-    width: 100% !important;
-    height: 48px !important;
-    padding: 0 20px !important;
-    border-radius: 25px 0 0 25px !important;
-    border: 2px solid #1a314c !important;
-    border-right: none !important;
-    background-color: #ffffff !important;
-    color: #333333 !important;
-    box-shadow: none !important;
-    outline: none !important;
-    margin: 0 !important;
+.esagu-search-box input {
+  flex: 1;
+  border: none !important;
+  outline: none !important;
+  padding: 10px 22px;
+  font-size: 15px;
+  background: transparent;
 }
 
-.busca-personalizada button.btn {
-    flex: 0 0 auto !important;
-    height: 48px !important;
-    padding: 0 24px !important;
-    margin: 0 !important;
-    border-radius: 0 25px 25px 0 !important;
-    border: 2px solid #1a314c !important;
-    background-color: #1a314c !important;
-    color: #ffffff !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    transition: background-color 0.2s ease, border-color 0.2s ease !important;
+.esagu-search-box button {
+  background: #1a355b !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 10px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.busca-personalizada button.btn:hover {
-    background-color: #112133 !important;
-    border-color: #112133 !important;
+/* Lista e Card Horizontal */
+.esagu-news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Caixa flutuante de sugestões (Awesomplete) */
-.busca-personalizada .awesomplete ul {
-    position: absolute !important;
-    top: 100% !important;
-    left: 0 !important;
-    width: 100% !important;
-    margin-top: 8px !important;
-    border-radius: 12px !important;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
-    border: 1px solid #eaeaea !important;
-    z-index: 99999 !important;
-    background: #ffffff !important;
-    list-style: none !important;
-    padding: 0 !important;
-    overflow: hidden !important;
+.esagu-card-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
-.busca-personalizada .awesomplete mark {
-    background-color: transparent !important;
-    color: #1a314c !important;
-    font-weight: 700 !important;
-    padding: 0 !important;
+/* Trava absoluta da imagem para impedir expansão */
+.esagu-card-media {
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+  height: 140px !important;
+  flex-shrink: 0 !important;
+  overflow: hidden;
+  background: #f8fafc;
 }
 
-.busca-personalizada .awesomplete ul li {
-    color: #444444 !important;
-    padding: 12px 20px !important;
-    font-size: 15px !important;
-    transition: all 0.2s ease;
-    border-bottom: 1px solid #f5f5f5 !important;
-    cursor: pointer !important;
-    margin: 0 !important;
+.esagu-card-media a,
+.esagu-card-media img {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 140px !important;
+  display: block;
+  object-fit: cover !important;
 }
 
-.busca-personalizada .awesomplete ul li:hover {
-    background-color: #f0f6ff !important;
-    color: #1a314c !important;
+/* Conteúdo de Texto */
+.esagu-card-content {
+  flex: 1;
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
 }
 
-/* ============================================================
-   2. PÁGINA DE BUSCA (Smart Search - Cartão Centralizado)
-   ============================================================ */
-div.com-finder {
-    max-width: 950px !important;
-    margin: 50px auto 70px auto !important;
-    padding: 60px 50px !important;
-    background-color: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 20px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
-    display: flex !important;
+.esagu-card-title {
+  margin: 0 0 10px 0 !important;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.esagu-card-title a {
+  color: #1a355b !important;
+  text-decoration: none;
+}
+
+.esagu-card-title a:hover {
+  color: #0b5ed7 !important;
+}
+
+.esagu-card-meta {
+  font-size: 0.85rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Responsivo para celular */
+@media (max-width: 767px) {
+  .esagu-card-row {
     flex-direction: column !important;
-    align-items: center !important;
-}
-
-div.com-finder #search-form {
+  }
+  .esagu-card-media {
     width: 100% !important;
-    max-width: 650px !important;
-    margin: 0 auto 15px auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-}
-
-div.com-finder fieldset.com-finder_search {
-    width: 100% !important;
-    margin: 0 auto !important;
-    padding: 0 !important;
-    border: none !important;
-    display: flex !important;
-    justify-content: center !important;
-}
-
-div.com-finder .form-inline {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-}
-
-div.com-finder label {
-    display: none !important;
-}
-
-div.com-finder #search-query-explained {
-    text-align: center !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-    font-size: 14px !important;
-    color: #64748b !important;
-    margin-bottom: 35px !important;
-    margin-top: 10px !important;
-    width: 100% !important;
-}
-
-div.com-finder #search-query-explained a {
-    color: #1a314c !important;
-    font-weight: 700 !important;
-    text-decoration: none !important;
-}
-
-div.com-finder #search-query-explained a:hover {
-    text-decoration: underline !important;
-}
-
-/* ============================================================
-   3. PÍLULA AZUL ESCURO NO CAMPO DE BUSCA INTERNA
-   ============================================================ */
-div.com-finder #search-form form,
-div.com-finder .form-inline,
-div.com-finder fieldset.com-finder_search,
-div.com-finder .input-group {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    max-width: 650px !important;
-    margin: 0 auto !important;
-    position: relative !important;
-    border: none !important;
-    padding: 0 !important;
-}
-
-div.com-finder .input-group input#q,
-div.com-finder .input-group input.form-control {
-    flex: 1 1 auto !important;
-    width: 100% !important;
-    height: 48px !important;
-    padding: 0 20px !important;
-    border-radius: 25px 0 0 25px !important;
-    border: 2px solid #1a314c !important;
-    border-right: none !important;
-    background-color: #ffffff !important;
-    color: #333333 !important;
-    box-shadow: none !important;
-    outline: none !important;
-    margin: 0 !important;
-}
-
-div.com-finder .input-group button.btn,
-div.com-finder .input-group .input-group-append button,
-div.com-finder .input-group button {
-    flex: 0 0 auto !important;
-    height: 48px !important;
-    padding: 0 24px !important;
-    margin: 0 !important;
-    border-radius: 0 25px 25px 0 !important;
-    border: 2px solid #1a314c !important;
-    background-color: #1a314c !important;
-    color: #ffffff !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    transition: background-color 0.2s ease, border-color 0.2s ease !important;
-    box-shadow: none !important;
-}
-
-div.com-finder .input-group button.btn:hover,
-div.com-finder .input-group button:hover {
-    background-color: #112133 !important;
-    border-color: #112133 !important;
-}
-
-/* ============================================================
-   4. ESTILIZAÇÃO DOS RESULTADOS DE BUSCA NO FORMATO DE CARTÕES
-   ============================================================ */
-div.com-finder #search-results > *,
-div.com-finder .com-finder-results > * {
-    background-color: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 16px !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-    position: relative !important;
-    margin-bottom: 24px !important;
-    padding: 24px !important;
-}
-
-div.com-finder #search-results > *:hover,
-div.com-finder .com-finder-results > *:hover {
-    transform: translateY(-4px) !important;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06) !important;
-}
-
-div.com-finder #search-results h3,
-div.com-finder #search-results h4,
-div.com-finder #search-results .result-title {
-    margin-top: 0 !important;
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    line-height: 1.35 !important;
-}
-
-div.com-finder #search-results h3 a,
-div.com-finder #search-results h4 a,
-div.com-finder #search-results .result-title a {
-    color: #1e293b !important;
-    text-decoration: none !important;
-}
-
-div.com-finder #search-results h3 a:hover,
-div.com-finder #search-results h4 a:hover,
-div.com-finder #search-results .result-title a:hover {
-    color: #1d5282 !important;
-}
-
-div.com-finder #search-results p {
-    color: #475569 !important;
-    font-size: 14px !important;
-    margin-top: 10px !important;
-    margin-bottom: 0 !important;
-}
-
-div.com-finder #search-results hr {
-    display: none !important;
-}
-
-div.com-finder .counter {
-    text-align: center !important;
-    margin-top: 30px !important;
-    font-weight: 600 !important;
-    color: #64748b !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: 180px !important;
+  }
 }

@@ -56,7 +56,7 @@ $this->getDocument()->addScriptOptions('akeebabackup.Manage.ShowHowToRestoreModa
 					<?= Text::_('COM_AKEEBABACKUP_BUADMIN_BTN_REMINDME') ?>
 				</button>
 
-				<a href="index.php?option=com_akeebabackup&view=Manage&task=hidemodal" class="btn btn-success">
+				<a href="index.php?option=com_akeebabackup&view=Manage&task=hidemodal&<?= \Joomla\CMS\Factory::getApplication()->getFormToken() ?>=1" class="btn btn-success">
 					<span class="fa fa-check-circle"></span>
 					<?= Text::_('COM_AKEEBABACKUP_BUADMIN_BTN_DONTSHOWTHISAGAIN') ?>
 				</a>

@@ -11,50 +11,96 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 
 jimport('joomla.application.component.model');
 jimport('joomla.html.html');
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Component\ComponentHelper;
 
 class JSSupportticketModelJSSupportticket extends JSSupportTicketModel{
     function __construct() {
         parent::__construct();
     }
 
+    function getTicketsSummaryForAdminModule($month_back = 1){
+        if(!is_numeric($month_back)){
+            $month_back = 1;
+        }
+
+        $db = Factory::getDbo();
+        $result = array();
+        $curdate = date('Y-m-d');
+        $fromdate = date('Y-m-d', getJSTicketPHPFunctionsClass()->jsticket_strtotime("now -".$month_back." month"));
+
+        $query = "SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE status = 0 AND (lastreply IS NULL OR lastreply < '1971-01-01') AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate);
+        $db->setQuery($query);
+        $openticket = $db->loadResult();
+
+        $query = "SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isanswered = 1 AND status != 4 AND status != 0 AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate);
+        $db->setQuery($query);
+        $answeredticket = $db->loadResult();
+
+        $query = "SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isoverdue = 1 AND status != 4 AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate);
+        $db->setQuery($query);
+        $overdueticket = $db->loadResult();
+
+        $query = "SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isanswered != 1 AND status != 4 AND (lastreply IS NOT NULL AND lastreply >= '1971-01-01') AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate);
+        $db->setQuery($query);
+        $pendingticket = $db->loadResult();
+
+        $result = array();
+        $result['new'] = $openticket;
+        $result['answered'] = $answeredticket;
+        $result['overdue'] = $overdueticket;
+        $result['pending'] = $pendingticket;
+
+        return $result;
+    }
+
+    function getLatestTicketsAdminModule(){
+        $db = Factory::getDbo();
+        $query = "SELECT ticket.id,ticket.ticketid,ticket.subject,ticket.name,ticket.created,priority.priority,priority.prioritycolour,ticket.status
+            FROM `#__js_ticket_tickets` AS ticket
+            JOIN `#__js_ticket_priorities` AS priority ON priority.id = ticket.priorityid
+            ORDER BY ticket.status ASC, ticket.created DESC LIMIT 0, 5";
+        $db->setQuery($query);
+        $result['tickets'] = $db->loadObjectList();
+        $result['date_format'] = $this->getJSModelForAdminMP('config')->getConfigurationByName('date_format');
+        return $result;
+    }
+
     function getControlPanelData(){
-      $curdate = date('Y-m-d');
-      $fromdate = date('Y-m-d', getJSTicketPHPFunctionsClass()->jsticket_strtotime("now -1 month"));
-      $db = Factory::getDbo();
-      $result = array();
-      // $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id AND status = 0 AND (lastreply = '0000-00-00 00:00:00' OR lastreply IS NULL) AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate)." ) AS totalticket
-      //             FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
-      // $db->setQuery($query);
-      // $openticket_pr = $db->loadObjectList();
-      // $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id AND isanswered = 1 AND status != 4 AND status != 0 AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate).") AS totalticket
-      //             FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
-      // $db->setQuery($query);
-      // $answeredticket_pr = $db->loadObjectList();
-      // $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id AND isanswered != 1 AND status != 4 AND (lastreply != '0000-00-00 00:00:00') AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate).") AS totalticket
-      //             FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
-      // $db->setQuery($query);
-      // $pendingticket_pr = $db->loadObjectList();
+    	$db = Factory::getDbo();
+    	$result = array();
+        $curdate = date('Y-m-d');
+        $fromdate = date('Y-m-d', getJSTicketPHPFunctionsClass()->jsticket_strtotime("now -1 month"));
 
-      //   $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id  AND status = 4 AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate).") AS totalticket
-      //               FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
-      //   $db->setQuery($query);
-      //   $closeticket_pr = $db->loadObjectList();
+        // $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id AND status = 0 AND (lastreply IS NULL OR lastreply < '1971-01-01') AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate)." ) AS totalticket
+        //             FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
+        // $db->setQuery($query);
+        // $openticket_pr = $db->loadObjectList();
+        // $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id AND isanswered = 1 AND status != 4 AND status != 0 AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate).") AS totalticket
+        //             FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
+        // $db->setQuery($query);
+        // $answeredticket_pr = $db->loadObjectList();
+        // $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id AND isoverdue = 1 AND status != 4 AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate).") AS totalticket
+        //             FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
+        // $db->setQuery($query);
+        // $overdueticket_pr = $db->loadObjectList();
+        // $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id  AND isanswered != 1 AND status != 4 AND (lastreply IS NOT NULL AND lastreply >= '1971-01-01') AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate).") AS totalticket
+        //             FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
+        // $db->setQuery($query);
+        // $pendingticket_pr = $db->loadObjectList();
 
-      //   $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id  AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate).") AS totalticket
-      //               FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
-      //   $db->setQuery($query);
-      //   $totalticket_pr = $db->loadObjectList();
-
+        // $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id  AND date(created) >= ".$db->quote($fromdate)." AND date(created) <= ".$db->quote($curdate).") AS totalticket
+        //             FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
+        // $db->setQuery($query);
+        // $totalticket_pr = $db->loadObjectList();
 
         $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets`
-                    WHERE priorityid = priority.id AND  status != 4 AND status != 5) AS totalticket
+                    WHERE priorityid = priority.id AND  status != 4 AND isanswered = 0 AND status != 5) AS totalticket
                     FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
         $db->setQuery($query);
         $openticket_pr = $db->loadObjectList();
@@ -69,15 +115,10 @@ class JSSupportticketModelJSSupportticket extends JSSupportTicketModel{
         $db->setQuery($query);
         $overdueticket_pr = $db->loadObjectList();
         $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets`
-                    WHERE priorityid = priority.id  AND isanswered != 1 AND status != 4 AND (lastreply != '0000-00-00 00:00:00') ) AS totalticket
+                    WHERE priorityid = priority.id  AND isanswered != 1 AND status != 4 AND (lastreply IS NOT NULL AND lastreply >= '1971-01-01') ) AS totalticket
                     FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
         $db->setQuery($query);
         $pendingticket_pr = $db->loadObjectList();
-
-          $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE priorityid = priority.id  AND status = 4 ) AS totalticket
-                      FROM `#__js_ticket_priorities` AS priority ORDER BY priority.priority";
-          $db->setQuery($query);
-          $closeticket_pr = $db->loadObjectList();
 
         $query = "SELECT priority.priority,(SELECT COUNT(id) FROM `#__js_ticket_tickets`
                     WHERE priorityid = priority.id ) AS totalticket
@@ -87,8 +128,8 @@ class JSSupportticketModelJSSupportticket extends JSSupportTicketModel{
 
 
         $result['stack_chart_horizontal']['title'] = "['".Text::_("Tickets")."',";
-        $result['stack_chart_horizontal']['data'] = "['".Text::_("Close")."',";
-        foreach($closeticket_pr AS $pr){
+        $result['stack_chart_horizontal']['data'] = "['".Text::_("Overdue")."',";
+        foreach($overdueticket_pr AS $pr){
             $result['stack_chart_horizontal']['title'] .= "'".Text::_($pr->priority)."',";
             $result['stack_chart_horizontal']['data'] .= $pr->totalticket.",";
         }
@@ -126,7 +167,7 @@ class JSSupportticketModelJSSupportticket extends JSSupportTicketModel{
         //end priority colors
 
         $result['ticket_total']['openticket'] = 0;
-        $result['ticket_total']['closeticket'] = 0;
+        $result['ticket_total']['overdueticket'] = 0;
         $result['ticket_total']['pendingticket'] = 0;
         $result['ticket_total']['answeredticket'] = 0;
         $result['ticket_total']['totalticket'] = 0;
@@ -134,7 +175,7 @@ class JSSupportticketModelJSSupportticket extends JSSupportTicketModel{
         $count = getJSTicketPHPFunctionsClass()->jsticket_count($openticket_pr);
         for($i = 0;$i < $count; $i++){
             $result['ticket_total']['openticket'] += $openticket_pr[$i]->totalticket;
-            $result['ticket_total']['closeticket'] += $closeticket_pr[$i]->totalticket;
+            $result['ticket_total']['overdueticket'] += $overdueticket_pr[$i]->totalticket;
             $result['ticket_total']['pendingticket'] += $pendingticket_pr[$i]->totalticket;
             $result['ticket_total']['answeredticket'] += $answeredticket_pr[$i]->totalticket;
             $result['ticket_total']['totalticket'] += $totalticket_pr[$i]->totalticket;
@@ -154,14 +195,338 @@ class JSSupportticketModelJSSupportticket extends JSSupportTicketModel{
         $result['today_ticket_chart']['title'] .= "]";
         $result['today_ticket_chart']['data'] .= "]";
 
-    $query = "SELECT ticket.id,ticket.ticketid,ticket.subject,ticket.name,ticket.created,priority.priority,priority.prioritycolour,ticket.status,department.departmentname
-            FROM `#__js_ticket_tickets` AS ticket
-          JOIN `#__js_ticket_priorities` AS priority ON priority.id = ticket.priorityid
-          LEFT JOIN `#__js_ticket_departments` AS department ON ticket.departmentid = department.id
-        ORDER BY ticket.status ASC, ticket.created DESC LIMIT 0, 5";
+        $query = "SELECT ticket.id,ticket.ticketid,ticket.subject,ticket.name,ticket.created,priority.priority,priority.prioritycolour,ticket.status
+        		FROM `#__js_ticket_tickets` AS ticket
+        		JOIN `#__js_ticket_priorities` AS priority ON priority.id = ticket.priorityid
+        		ORDER BY ticket.status ASC, ticket.created DESC LIMIT 0, 5";
         $db->setQuery($query);
         $result['tickets'] = $db->loadObjectList();
+
+        // Admin dashboard operational data.
+        // These lightweight summaries make the control panel useful even when the chart has very little data.
+        $query = "SELECT
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE status != 4 AND status != 5) AS active,
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE status = 4) AS closed,
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE (staffid IS NULL OR staffid = 0) AND status != 4 AND status != 5) AS unassigned,
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isanswered != 1 AND COALESCE(isoverdue, 0) != 1 AND status != 4 AND status != 5 AND lastreply IS NOT NULL AND lastreply >= '1971-01-01') AS pending,
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isoverdue = 1 AND status != 4 AND status != 5) AS overdue,
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE ticketviaemail = 1) AS viaemail,
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE mergestatus = 1) AS merged";
+        $db->setQuery($query);
+        $result['admin_snapshot'] = (array) $db->loadAssoc();
+
+        $query = "SELECT
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE DATE(created) = " . $db->quote($curdate) . ") AS new_today,
+                    (SELECT COUNT(id) FROM `#__js_ticket_replies` WHERE DATE(created) = " . $db->quote($curdate) . ") AS replies_today,
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE DATE(closed) = " . $db->quote($curdate) . ") AS closed_today,
+                    (SELECT COUNT(id) FROM `#__js_ticket_tickets` WHERE isoverdue = 1 AND status != 4 AND status != 5 AND DATE(created) = " . $db->quote($curdate) . ") AS overdue_today";
+        $db->setQuery($query);
+        $result['today_summary'] = (array) $db->loadAssoc();
+
+        $query = "SELECT
+                    (SELECT COUNT(id) FROM `#__js_ticket_departments`) AS departments,
+                    (SELECT COUNT(id) FROM `#__js_ticket_departments` WHERE status = 1) AS active_departments";
+        $db->setQuery($query);
+        $result['people_summary'] = (array) $db->loadAssoc();
+
+        $query = "SELECT IFNULL(department.departmentname, 'Unassigned') AS departmentname,
+                         COUNT(ticket.id) AS totalticket,
+                         SUM(CASE WHEN ticket.status != 4 AND ticket.status != 5 THEN 1 ELSE 0 END) AS active
+                    FROM `#__js_ticket_tickets` AS ticket
+                    LEFT JOIN `#__js_ticket_departments` AS department ON department.id = ticket.departmentid
+                    GROUP BY department.id, department.departmentname
+                    ORDER BY active DESC, totalticket DESC
+                    LIMIT 0, 5";
+        $db->setQuery($query);
+        $result['department_activity'] = $db->loadObjectList();
+
+        $query = "SELECT priority.priority, priority.prioritycolour,
+                         COUNT(ticket.id) AS totalticket,
+                         SUM(CASE WHEN ticket.status != 4 AND ticket.status != 5 THEN 1 ELSE 0 END) AS active
+                    FROM `#__js_ticket_priorities` AS priority
+                    LEFT JOIN `#__js_ticket_tickets` AS ticket ON ticket.priorityid = priority.id
+                    GROUP BY priority.id, priority.priority, priority.prioritycolour
+                    ORDER BY priority.priority";
+        $db->setQuery($query);
+        $result['priority_breakdown'] = $db->loadObjectList();
+
+        $query = "SELECT ticket.id, ticket.ticketid, ticket.subject, ticket.name, ticket.created, ticket.duedate, ticket.lastreply, ticket.status, ticket.isoverdue,
+                         priority.priority, priority.prioritycolour, department.departmentname
+                    FROM `#__js_ticket_tickets` AS ticket
+                    JOIN `#__js_ticket_priorities` AS priority ON priority.id = ticket.priorityid
+                    LEFT JOIN `#__js_ticket_departments` AS department ON department.id = ticket.departmentid
+                    WHERE ticket.status != 4 AND ticket.status != 5
+                    ORDER BY ticket.created ASC
+                    LIMIT 0, 5";
+        $db->setQuery($query);
+        $result['attention_tickets'] = $db->loadObjectList();
+
         return $result;
+    }
+    function storeTheme($data) {
+        $colors = $this->sanitizeThemeColors($data);
+        if ($colors === false) {
+            $this->setError(Text::_('Please enter valid hex colors. Example: #2563eb'));
+            $this->logThemeError('Theme validation failed while saving.', array('submitted_colors' => $this->redactThemeData($data)));
+            return false;
+        }
+
+        $contrastIssues = $this->getThemeContrastIssues($colors);
+        if (!empty($contrastIssues)) {
+            $this->setError(Text::_('Theme colors were not saved because some color pairs are not readable:') . ' ' . implode(' ', $contrastIssues));
+            $this->logThemeError('Theme readability validation failed while saving.', array(
+                'submitted_colors' => $colors,
+                'contrast_issues' => $contrastIssues,
+            ));
+            return false;
+        }
+
+        $filepath = $this->getThemeColorFilePath(true);
+        if (!$filepath) {
+            $this->setError(Text::_('Theme color file path could not be prepared.'));
+            $this->logThemeError('Theme color file path could not be prepared.', array('submitted_colors' => $colors));
+            return false;
+        }
+
+        $filestring = is_file($filepath) ? file_get_contents($filepath) : false;
+        if ($filestring === false || trim($filestring) === '') {
+            $filestring = $this->getDefaultColorFileString();
+        }
+
+        for ($i = 1; $i <= 7; $i++) {
+            $this->replaceString($filestring, $i, $colors);
+        }
+
+        if (file_put_contents($filepath, $filestring, LOCK_EX) !== false) {
+            return true;
+        }
+
+        $this->setError(Text::_('Unable to write theme color file. Please check file permissions.'));
+        $this->logThemeError('Unable to write theme color file.', array(
+            'path' => $filepath,
+            'submitted_colors' => $colors,
+            'is_writable' => is_writable($filepath),
+            'dir_writable' => is_dir(dirname($filepath)) ? is_writable(dirname($filepath)) : false,
+        ));
+        return false;
+    }
+
+    function sanitizeThemeColors($data) {
+        $defaults = $this->getDefaultThemeColors();
+        $colors = array();
+        for ($i = 1; $i <= 7; $i++) {
+            $key = 'color' . $i;
+            $value = isset($data[$key]) ? trim((string) $data[$key]) : $defaults[$key];
+            if ($value !== '' && $value[0] !== '#') {
+                $value = '#' . $value;
+            }
+            if (!preg_match('/^#[0-9a-fA-F]{6}$/', $value)) {
+                return false;
+            }
+            $colors[$key] = strtolower($value);
+        }
+        return $colors;
+    }
+
+    private function getThemeContrastIssues($colors) {
+        $issues = array();
+        $checks = array(
+            array('foreground' => 'color7', 'background' => 'color1', 'minimum' => 3.0, 'label' => Text::_('header and action text against top menu background')),
+            array('foreground' => 'color7', 'background' => 'color2', 'minimum' => 4.5, 'label' => Text::_('header and action text against dark section bars')),
+            array('foreground' => 'color2', 'background' => 'color3', 'minimum' => 3.0, 'label' => Text::_('heading color against content background')),
+            array('foreground' => 'color4', 'background' => 'color3', 'minimum' => 4.5, 'label' => Text::_('content text against content background')),
+        );
+
+        foreach ($checks as $check) {
+            $ratio = $this->getThemeContrastRatio($colors[$check['foreground']], $colors[$check['background']]);
+            if ($ratio < $check['minimum']) {
+                $issues[] = $check['label'] . ' (' . number_format($ratio, 2) . ':1, ' . Text::_('minimum') . ' ' . rtrim(rtrim(number_format($check['minimum'], 1), '0'), '.') . ':1).';
+            }
+        }
+
+        return $issues;
+    }
+
+    private function getThemeContrastRatio($foreground, $background) {
+        $first = $this->getThemeColorLuminance($foreground);
+        $second = $this->getThemeColorLuminance($background);
+        $light = max($first, $second);
+        $dark = min($first, $second);
+        return ($light + 0.05) / ($dark + 0.05);
+    }
+
+    private function getThemeColorLuminance($hex) {
+        $hex = ltrim((string) $hex, '#');
+        if (!preg_match('/^[0-9a-fA-F]{6}$/', $hex)) {
+            return 0;
+        }
+
+        $channels = array(
+            hexdec(substr($hex, 0, 2)) / 255,
+            hexdec(substr($hex, 2, 2)) / 255,
+            hexdec(substr($hex, 4, 2)) / 255,
+        );
+
+        foreach ($channels as $index => $channel) {
+            $channels[$index] = ($channel <= 0.03928) ? ($channel / 12.92) : pow(($channel + 0.055) / 1.055, 2.4);
+        }
+
+        return (0.2126 * $channels[0]) + (0.7152 * $channels[1]) + (0.0722 * $channels[2]);
+    }
+
+    function getDefaultThemeColors() {
+        return array(
+            'color1' => '#2563eb',
+            'color2' => '#1e293b',
+            'color3' => '#f8fafc',
+            'color4' => '#334155',
+            'color5' => '#dbe4ef',
+            'color6' => '#eff6ff',
+            'color7' => '#ffffff',
+        );
+    }
+
+    function getThemeColorFilePath($prepare = false) {
+        $paths = array(
+            JPATH_ROOT . '/components/com_jssupportticket/include/css/color.php',
+            JPATH_COMPONENT_ADMINISTRATOR . '/include/css/color.php',
+        );
+
+        foreach ($paths as $path) {
+            if (is_file($path)) {
+                return $path;
+            }
+        }
+
+        if ($prepare) {
+            $preferred = $paths[0];
+            $dir = dirname($preferred);
+            if (is_dir($dir) && is_writable($dir)) {
+                return $preferred;
+            }
+
+            $fallback = $paths[1];
+            $fallbackDir = dirname($fallback);
+            if (is_dir($fallbackDir) && is_writable($fallbackDir)) {
+                return $fallback;
+            }
+        }
+
+        return $paths[0];
+    }
+
+    function getDefaultColorFileString() {
+        $colors = $this->getDefaultThemeColors();
+        return "<?php\n"
+            . "defined('_JEXEC') or die('Restricted access');\n"
+            . '$color1 = "' . $colors['color1'] . '";' . "\n"
+            . '$color2 = "' . $colors['color2'] . '";' . "\n"
+            . '$color3 = "' . $colors['color3'] . '";' . "\n"
+            . '$color4 = "' . $colors['color4'] . '";' . "\n"
+            . '$color5 = "' . $colors['color5'] . '";' . "\n"
+            . '$color6 = "' . $colors['color6'] . '";' . "\n"
+            . '$color7 = "' . $colors['color7'] . '";' . "\n"
+            . "?>\n";
+    }
+
+    function replaceString(&$filestring, $colorNo, $data) {
+        $key = 'color' . $colorNo;
+        $value = isset($data[$key]) ? $data[$key] : $this->getDefaultThemeColors()[$key];
+        $replacement = '$color' . $colorNo . ' = "' . $value . '";';
+
+        if (preg_match('/\$color' . (int) $colorNo . '\s*=\s*[\"\'][^\"\']*[\"\']\s*;/', $filestring)) {
+            $filestring = preg_replace('/\$color' . (int) $colorNo . '\s*=\s*[\"\'][^\"\']*[\"\']\s*;/', $replacement, $filestring, 1);
+            return;
+        }
+
+        if (getJSTicketPHPFunctionsClass()->jsticket_strpos($filestring, '?>') !== false) {
+            $filestring = str_replace('?>', $replacement . "\n?>", $filestring);
+        } else {
+            $filestring .= "\n" . $replacement . "\n";
+        }
+    }
+
+    function getColorCode($filestring, $colorNo) {
+        if (!is_string($filestring) || $filestring === '') {
+            $defaults = $this->getDefaultThemeColors();
+            return $defaults['color' . $colorNo];
+        }
+
+        if (preg_match('/\$color' . (int) $colorNo . '\s*=\s*[\"\'](#[0-9a-fA-F]{6})[\"\']\s*;/', $filestring, $matches)) {
+            return strtolower($matches[1]);
+        }
+
+        $defaults = $this->getDefaultThemeColors();
+        return $defaults['color' . $colorNo];
+    }
+
+    function getCurrentTheme() {
+        $filepath = $this->getThemeColorFilePath(false);
+        $filestring = is_file($filepath) ? file_get_contents($filepath) : '';
+        $defaults = $this->getDefaultThemeColors();
+        $theme = array();
+        for ($i = 1; $i <= 7; $i++) {
+            $theme['color' . $i] = $this->getColorCode($filestring, $i);
+            if ($theme['color' . $i] === '') {
+                $theme['color' . $i] = $defaults['color' . $i];
+            }
+        }
+        $theme['color_file_path'] = $filepath;
+        $theme['color_file_exists'] = is_file($filepath) ? 1 : 0;
+        $theme['color_file_writable'] = is_file($filepath) ? (is_writable($filepath) ? 1 : 0) : (is_dir(dirname($filepath)) && is_writable(dirname($filepath)) ? 1 : 0);
+        $result[0] = $theme;
+        return $result;
+    }
+
+    private function redactThemeData($data) {
+        $clean = array();
+        for ($i = 1; $i <= 7; $i++) {
+            $key = 'color' . $i;
+            if (isset($data[$key])) {
+                $clean[$key] = (string) $data[$key];
+            }
+        }
+        return $clean;
+    }
+
+    private function logThemeError($message, $metadata = array()) {
+        try {
+            $this->getJSModel('systemerrors')->updateSystemErrors(array(
+                'severity' => 'error',
+                'source' => 'theme',
+                'context' => 'jssupportticket.storeTheme',
+                'message' => $message,
+                'type' => 'ThemeSaveError',
+                'metadata' => $metadata,
+            ));
+        } catch (Throwable $e) {
+        }
+    }
+
+    function isConnected(){
+
+        $connected = @fsockopen("www.google.com", 80);
+        if ($connected){
+            $is_conn = true; //action when connected
+            fclose($connected);
+        }else{
+            $is_conn = false; //action in connection failure
+        }
+        return $is_conn;
+    }
+
+    function stripslashesFull($input){// testing this function/.
+        if (is_array($input)) {
+            $input = array_map(array($this,'stripslashesFull'), $input);
+        } elseif (is_object($input)) {
+            $vars = get_object_vars($input);
+            foreach ($vars as $k=>$v) {
+                $input->{$k} = stripslashesFull($v);
+            }
+        } else {
+            $input = getJSTicketPHPFunctionsClass()->jsticket_stripslashes($input);
+        }
+        return $input;
     }
 
     function getUserTicketStatsForCP(){
@@ -171,8 +536,7 @@ class JSSupportticketModelJSSupportticket extends JSSupportTicketModel{
         if($user->getIsGuest())
             return false;
 
-        // $all_ticket = $user->checkUserPermission('All Tickets');
-        $allticket_query = "ticket.uid = ". $user->getId();
+        $allticket_query = "ticket.uid = ". (int) $user->getId();
 
 
         $result = array();
@@ -202,251 +566,15 @@ class JSSupportticketModelJSSupportticket extends JSSupportTicketModel{
         $result['closedticket'] = $db->loadResult();
 
         $query = "SELECT COUNT(ticket.id)
-                  FROM `#__js_ticket_tickets` AS ticket
-                  LEFT JOIN `#__js_ticket_departments` AS department ON ticket.departmentid = department.id
-                 JOIN `#__js_ticket_priorities` AS priority ON ticket.priorityid = priority.id
-                 WHERE $allticket_query";
-      $db->setQuery($query);
-      $result['allticket'] = $db->loadResult();
-      return $result;
-    }
-
-function getListTranslations() {
-
-        $result = array();
-        $result['error'] = false;
-
-        $path = JPATH_ADMINISTRATOR.'/language';
-
-        if( ! is_writeable($path)){
-            $result['error'] = Text::_('Dir is not writeable').' '.$path;
-
-        }else{
-
-            if($this->isConnected()){
-
-                $version = $this->getJSModel('config')->getConfigByFor('version');
-                if(!isset($version['versiontype'])){
-                    $version['versiontype'] = $this->getJSModel('config')->getConfigurationByName('versiontype');
-                }
-
-                $url = "https://www.joomsky.com/translations/api/1.0/index.php";
-                $post_data['product'] ='js-support-ticket-joomla';
-                $post_data['domain'] = Uri::root();
-                $post_data['producttype'] = $version['versiontype'];
-                $post_data['productcode'] = 'jssupportticket';
-                $post_data['productversion'] = $version['version'];
-                $post_data['JVERSION'] = JVERSION;
-                $post_data['method'] = 'getTranslations';
-
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-                $response = curl_exec($ch);
-                curl_close($ch);
-
-                $result['data'] = $response;
-            }else{
-                $result['error'] = Text::_('Unable to connect to server');
-            }
-        }
-
-        $result = json_encode($result);
+                FROM `#__js_ticket_tickets` AS ticket
+                LEFT JOIN `#__js_ticket_departments` AS department ON ticket.departmentid = department.id
+                JOIN `#__js_ticket_priorities` AS priority ON ticket.priorityid = priority.id
+                WHERE $allticket_query";
+        $db->setQuery($query);
+        $result['allticket'] = $db->loadResult();
 
         return $result;
     }
-
-    function makeLanguageCode($lang_name , $path){
-
-        if( getJSTicketPHPFunctionsClass()->jsticket_strpos($lang_name, '_') !== false ) {
-            $lang_name = getJSTicketPHPFunctionsClass()->jsticket_str_replace('_', '-', $lang_name);
-        }else{
-            if($lang_name == 'en'){
-                $lang_name = $lang_name.'-'.getJSTicketPHPFunctionsClass()->jsticket_strtoupper('gb');
-            }elseif($lang_name == 'sv'){
-                $lang_name = $lang_name.'-'.getJSTicketPHPFunctionsClass()->jsticket_strtoupper('se');
-            }elseif($lang_name == 'ar'){
-                $lang_folders = scandir($path);
-                $n = getJSTicketPHPFunctionsClass()->jsticket_count($lang_folders);
-                for ($i = 0; $i < $n; $i++) {
-                    if($lang_folders[$i] == 'ar-SA'){
-                        $lang_name = $lang_folders[$i];
-                        $i = $n;
-                    }elseif ($lang_folders[$i] == 'ar-EG'){
-                        $lang_name = $lang_folders[$i];
-                        $i = $n;
-                    }elseif ($lang_folders[$i] == 'ar-AA'){
-                        $lang_name = $lang_folders[$i];
-                        $i = $n;
-                    }
-                }
-            }else{
-                $lang_name = $lang_name.'-'.getJSTicketPHPFunctionsClass()->jsticket_strtoupper($lang_name);
-            }
-        }
-        return $lang_name;
-    }
-
-    function validateAndShowDownloadFileName( $lang_name ){
-
-        if($lang_name == '')
-            return '';
-        $result = array();
-        $path = JPATH_ADMINISTRATOR.'/language';
-
-        $final_name = $this->makeLanguageCode($lang_name , $path);
-
-        $result['error'] = false;
-        if(!file_exists($path)){
-            $result['error'] = Text::_('Dir not exist').': '.$path;
-        }elseif(!is_writeable($path)){
-            $result['error'] = Text::_('Dir is not writeable').': '.$path;
-        }else{
-            $result['input'] = '<input id="languagecode" class="text_area" type="text" value="'.$final_name.'" name="languagecode">';
-            $result['path'] = $path;
-        }
-        $result = json_encode($result);
-        return $result;
-    }
-
-    function getLanguageTranslation($lang_name , $language_code){
-
-        $result = array();
-        $result['error'] = false;
-        $path = JPATH_ADMINISTRATOR.'/language';
-
-        if($lang_name == '' || $language_code == ''){
-            $result['error'] = Text::_('Empty values are not allowed');
-            return json_encode($result);
-        }
-
-        $path = $path.'/'.$language_code;
-        $final_path = $path.'/'.$language_code.'.com_jssupportticket.ini';
-
-        if(!file_exists($path)){
-            $result['error'] = Text::_('Required language is not installed').': '.$language_code;
-            return json_encode($result);
-        }
-
-        if(!is_writeable($path)){
-            $result['error'] = Text::_('Dir is not writeable').': '.$path;
-            return json_encode($result);
-        }
-
-        if(!file_exists($final_path)){
-            touch($final_path);
-        }
-
-        if(!is_writeable($final_path)){
-            $result['error'] = Text::_('File is not writeable').': '.$final_path;
-        }else{
-
-            if($this->isConnected()){
-
-                $version = $this->getJSModel('config')->getConfigByFor('version');
-
-                $url = "https://www.joomsky.com/translations/api/1.0/index.php";
-                $post_data['product'] ='js-support-ticket-joomla';
-                $post_data['domain'] = Uri::root();
-                $post_data['producttype'] = $version['versiontype'];
-                $post_data['productcode'] = 'jssupportticket';
-                $post_data['productversion'] = $version['version'];
-                $post_data['JVERSION'] = JVERSION;
-                $post_data['translationcode'] = $lang_name;
-                $post_data['method'] = 'getTranslationFile';
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-                $response = curl_exec($ch);
-                curl_close($ch);
-                $array = json_decode($response, true);
-
-                $ret = $this->writeLanguageFile( $final_path , $array['file']);
-
-                if($ret != false){
-                    $url = "https://www.joomsky.com/translations/api/1.0/index.php";
-                    $post_data['product'] ='js-support-ticket-joomla';
-                    $post_data['domain'] = Uri::root();
-                    $post_data['producttype'] = $version['versiontype'];
-                    $post_data['productcode'] = 'jssupportticket';
-                    $post_data['productversion'] = $version['version'];
-                    $post_data['JVERSION'] = JVERSION;
-                    $post_data['folder'] = $array['foldername'];
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $url);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-                    $response = curl_exec($ch);
-                    curl_close($ch);
-                }
-                $result['data'] = Text::_('File Downloaded Successfully');
-            }else{
-                $result['error'] = Text::_('Unable to connect to server');
-            }
-        }
-
-        $result = json_encode($result);
-
-        return $result;
-
-    }
-
-    function writeLanguageFile( $path , $url ){
-        $result = file_put_contents($path, fopen($url, 'r'));
-        return $result;
-    }
-
-    function isConnected(){
-
-        $connected = @fsockopen("www.google.com", 80);
-        if ($connected){
-            $is_conn = true; //action when connected
-            fclose($connected);
-        }else{
-            $is_conn = false; //action in connection failure
-        }
-        return $is_conn;
-    }
-
-   function getArticleslistCombo(){
-      // For getting articles page list
-      $db = Factory::getDbo();
-      $query = $db->getQuery(true);
-      $query->select('*')
-           ->from($db->quoteName('#__content'));
-      $db->setQuery($query);
-      $rows = $db->loadObjectList();
-      $linktype = array(
-         '0' => array('value' => 0, 'text' => Text::_('Select Article Page')),
-      );
-      foreach($rows AS $row => $data){
-         $linktype[$row+1] = array('value' => $data->id , 'text' => Text::_($data->title));
-      }
-
-      return $linktype;
-   }
-
-    function stripslashesFull($input){// testing this function/.
-      if (is_array($input)) {
-          $input = array_map(array($this,'stripslashesFull'), $input);
-      } elseif (is_object($input)) {
-          $vars = get_object_vars($input);
-          foreach ($vars as $k=>$v) {
-              $input->{$k} = stripslashesFull($v);
-          }
-      } else {
-          $input = getJSTicketPHPFunctionsClass()->jsticket_stripslashes($input);
-      }
-      return $input;
-    } 
 
     function joomlaContentArticles(){
         $db = Factory::getDbo();
@@ -465,5 +593,4 @@ function getListTranslations() {
     }
 
 }
-
 ?>

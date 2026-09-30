@@ -2,7 +2,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -31,6 +31,8 @@ if (file_exists(JPATH_ROOT . '/administrator/components/com_sppagebuilder/vendor
 if (file_exists(JPATH_ROOT . '/administrator/components/com_sppagebuilder/dynamic-content/helper.php')) {
 	require_once JPATH_ROOT . '/administrator/components/com_sppagebuilder/dynamic-content/helper.php';
 }
+
+BuilderAutoload::loadAliases();
 
 // Initiate class to hold plugin events
 class plgSpsimpleportfolioSppagebuilder extends CMSPlugin

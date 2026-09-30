@@ -11,9 +11,9 @@
  */
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 $enableddisabled = array(
     array('value' => '1', 'text' => Text::_('Enabled')),
@@ -31,8 +31,8 @@ $hosttype = array(
     array('value' => '4', 'text' => Text::_('Other'))
 );
 $yesno = array(
-    array('value' => '1', 'text' => Text::_('JYes')),
-    array('value' => '2', 'text' => Text::_('JNo'))
+    array('value' => '1', 'text' => Text::_('JYES')),
+    array('value' => '2', 'text' => Text::_('JNO'))
 );
 $document = Factory::getDocument();
 
@@ -40,12 +40,12 @@ if (JVERSION < 3) {
     HTMLHelper::_('behavior.mootools');
     $document->addScript('components/com_jssupportticket/include/js/jquery.js');
 } else {
-    //HTMLHelper::_('behavior.framework');
     HTMLHelper::_('bootstrap.framework');
     HTMLHelper::_('jquery.framework');
 }
 $document->addScript('components/com_jssupportticket/include/js/jquery_idTabs.js');
 ?>
+
 <script>
     jQuery(document).ready(function () {
         jQuery("a#js-admin-ticketviaemail").click(function(e){
@@ -96,29 +96,36 @@ $document->addScript('components/com_jssupportticket/include/js/jquery_idTabs.js
     });
     function showhidehostname(value){
         if(value == 4){
-            jQuery("div#tve_hostname").show();
+            jQuery("div#tve-hostname-settings").show();
         }else{
-            jQuery("div#tve_hostname").hide();
+            jQuery("div#tve-hostname-settings").hide();
         }
     }
 </script>
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-screen-special">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-        <div id="js-tk-heading"><h4><img id="js-admin-responsive-menu-link" src="components/com_jssupportticket/include/images/c_p/left-icons/menu.png" /><?php echo Text::_('Ticket Via Email'); ?><img class="js-relative-image" src="components/com_jssupportticket/include/images/beta_icon.png" /></h4></div> 
-        <?php 
+        <?php
+$jsstPageTitle = 'Ticket Via Email';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label_raw' => Text::_('Ticket Via Email'), 'link' => null),
+);
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?>
+        <?php
 			$config = $this->getJSModel('config')->getConfigs();
 			$adminEmail = JSSupportTicketModel::getJSModel('email')->getEmailById($config['admin_email']);
 			$ticketviaemailaddress = $this->result[0]['tve_emailaddress'];
 			if($adminEmail == $ticketviaemailaddress){
         ?>
 			<div id="js-emailsame-error">
-				<?php echo Text::_('Admin email address and ticket via email (email address) cannot be same, your ticket via email will not be work.'); ?>
+				<?php echo Text::_('COM_JSSUPPORTTICKET_ADMIN_EMAIL_CONFLICTS_WITH_TICKET_EMAIL'); ?>
 			</div>
         <?php } ?>
-        <form method="post" action="index.php?option=com_jssupportticket&c=ticketviaemail&task=saveticketviaemail">
+        <form class="jsstadmin-data-wrp" method="post" action="index.php?option=com_jssupportticket&c=ticketviaemail&task=saveticketviaemail">
         <div class="js-col-xs-12 js-col-md-12 js-ticket-configuration-row">
             <div class="js-col-xs-12 js-col-md-3 js-ticket-configuration-title"><?php echo Text::_('Enabled') ?></div>
             <div class="js-col-xs-12 js-col-md-4 js-ticket-configuration-value"><?php echo HTMLHelper::_('select.genericList', $enableddisabled, 'tve_enabled', '', 'value', 'text',$this->result[0]['tve_enabled']); ?></div>
@@ -139,7 +146,7 @@ $document->addScript('components/com_jssupportticket/include/js/jquery_idTabs.js
             <div class="js-col-xs-12 js-col-md-4 js-ticket-configuration-value"><?php echo HTMLHelper::_('select.genericList', $hosttype, 'tve_hosttype', 'onchange=showhidehostname(this.value);', 'value', 'text',$this->result[0]['tve_hosttype']);?></div>
             <div class="js-col-xs-12 js-col-md-4"><small><?php echo Text::_('Select Your Email Service Provider'); ?></small></div>
         </div>
-        <div class="js-col-xs-12 js-col-md-12 js-ticket-configuration-row" id="tve_hostname">            
+        <div class="js-col-xs-12 js-col-md-12 js-ticket-configuration-row" id="tve-hostname-settings">            
             <div class="js-ticket-fullwidth">
                 <div class="js-col-xs-12 js-col-md-3 js-ticket-configuration-title"><?php echo Text::_('Host Name') ?></div>
                 <div class="js-col-xs-12 js-col-md-4 js-ticket-configuration-value"><input type="text" name="tve_hostname" id="tve_hostname" value="<?php echo $this->result[0]['tve_hostname']; ?>" /></div>
@@ -189,37 +196,37 @@ $document->addScript('components/com_jssupportticket/include/js/jquery_idTabs.js
                     <span><a  data-css="controlpanel" href="#url"><?php echo Text::_('URL'); ?></a></span> 
                 </div>
                 <div id="webcrown">
-                    <div id="cron_job">
+                    <div class="cron-job">
                         <span class="crown_text"><?php echo Text::_('Configuration of a backup job with webcron org'); ?></span>
-                        <div id="cron_job_detail_wrapper" class="<?php echo $array[$k];$k = 1 - $k; ?>">
+                        <div class="cron-job-detail-wrapper <?php echo $array[$k];$k = 1 - $k; ?>">
                             <span class="crown_text_left">
                                 <?php echo Text::_('Name of cron job'); ?>
                             </span>
                             <span class="crown_text_right"><?php echo Text::_('Log in to webcron org in the cron area click on'); ?></span>
                         </div>
-                        <div id="cron_job_detail_wrapper" class="<?php echo $array[$k];$k = 1 - $k; ?>">
+                        <div class="cron-job-detail-wrapper <?php echo $array[$k];$k = 1 - $k; ?>">
                             <span class="crown_text_left">
                                 <?php echo Text::_('Timeout'); ?>
                             </span>
                             <span class="crown_text_right"><?php echo Text::_('180 Sec If The Doesnot Complete Increase It Most Sites Will Work With A Setting Of 180 600'); ?></span>
                         </div>
-                        <div id="cron_job_detail_wrapper" class="<?php echo $array[$k];$k = 1 - $k; ?>">
+                        <div class="cron-job-detail-wrapper <?php echo $array[$k];$k = 1 - $k; ?>">
                             <span class="crown_text_left"><?php echo Text::_('URL you want to execute'); ?></span>
                             <span class="crown_text_right">
                                 <?php echo Uri::root().'index.php?option=com_jssupportticket&c=ticketviaemail&task=readEmails'; ?>
                             </span>
                         </div>
-                        <div id="cron_job_detail_wrapper" class="<?php echo $array[$k];$k = 1 - $k; ?>">
+                        <div class="cron-job-detail-wrapper <?php echo $array[$k];$k = 1 - $k; ?>">
                             <span class="crown_text_left"><?php echo Text::_('Login'); ?></span>
                             <span class="crown_text_right">
                                 <?php echo Text::_('Leave this blank'); ?>
                             </span>
                         </div>
-                        <div id="cron_job_detail_wrapper" class="<?php echo $array[$k];$k = 1 - $k; ?>">
+                        <div class="cron-job-detail-wrapper <?php echo $array[$k];$k = 1 - $k; ?>">
                             <span class="crown_text_left"><?php echo Text::_('Password'); ?></span>
                             <span class="crown_text_right"><?php echo Text::_('Leave this blank'); ?></span>
                         </div>
-                        <div id="cron_job_detail_wrapper" class="<?php echo $array[$k];$k = 1 - $k; ?>">
+                        <div class="cron-job-detail-wrapper <?php echo $array[$k];$k = 1 - $k; ?>">
                             <span class="crown_text_left">
                                 <?php echo Text::_('Execution time'); ?>
                             </span>
@@ -227,7 +234,7 @@ $document->addScript('components/com_jssupportticket/include/js/jquery_idTabs.js
                                 <?php echo Text::_('That the grid below the other options select when and how'); ?>
                             </span>
                         </div>
-                        <div id="cron_job_detail_wrapper" class="<?php echo $array[$k];$k = 1 - $k; ?>">
+                        <div class="cron-job-detail-wrapper <?php echo $array[$k];$k = 1 - $k; ?>">
                             <span class="crown_text_left"><?php echo Text::_('Alerts'); ?></span>
                             <span class="crown_text_right">
                             <?php echo Text::_('If You Have Already Set Up Alerts Methods In Webcron Org Interface We Recommend Choosing An Alert'); ?>
@@ -236,9 +243,9 @@ $document->addScript('components/com_jssupportticket/include/js/jquery_idTabs.js
                     </div>  
                 </div>
                 <div id="wget">
-                    <div id="cron_job">
+                    <div class="cron-job">
                         <span class="crown_text"><?php echo Text::_('Cron scheduling using wget'); ?></span>
-                        <div id="cron_job_detail_wrapper" class="even">
+                        <div class="cron-job-detail-wrapper even">
                             <span class="crown_text_right fullwidth">
                             <?php echo 'wget --max-redirect=10000 "' . Uri::root().'index.php?option=com_jssupportticket&c=ticketviaemail&task=readEmails" -O - 1>/dev/null 2>/dev/null '; ?>
                             </span>
@@ -246,9 +253,9 @@ $document->addScript('components/com_jssupportticket/include/js/jquery_idTabs.js
                     </div>  
                 </div>
                 <div id="curl">
-                    <div id="cron_job">
+                    <div class="cron-job">
                         <span class="crown_text"><?php echo Text::_('Cron scheduling using Curl'); ?></span>
-                        <div id="cron_job_detail_wrapper" class="even">
+                        <div class="cron-job-detail-wrapper even">
                             <span class="crown_text_right fullwidth">
                             <?php echo 'curl "' . Uri::root().'index.php?option=com_jssupportticket&c=ticketviaemail&task=readEmails"<br>' . Text::_('OR') . '<br>'; ?>
                             <?php echo 'curl -L --max-redirs 1000 -v "' . Uri::root().'index.php?option=com_jssupportticket&c=ticketviaemail&task=readEmails" 1>/dev/null 2>/dev/null '; ?>
@@ -257,11 +264,11 @@ $document->addScript('components/com_jssupportticket/include/js/jquery_idTabs.js
                     </div>  
                 </div>
                 <div id="phpscript">
-                    <div id="cron_job">
+                    <div class="cron-job">
                         <span class="crown_text">
                                 <?php echo Text::_('Custom PHP script to run the cron job'); ?>
                         </span>
-                        <div id="cron_job_detail_wrapper" class="even">
+                        <div class="cron-job-detail-wrapper even">
                             <span class="crown_text_right fullwidth">
                                 <?php
                                 echo '  $curl_handle=curl_init();<br>
@@ -282,25 +289,22 @@ $document->addScript('components/com_jssupportticket/include/js/jquery_idTabs.js
                     </div>  
                 </div>
                 <div id="url">
-                    <div id="cron_job">
+                    <div class="cron-job">
                         <span class="crown_text"><?php echo Text::_('URL for use with your won scripts and third party'); ?></span>
-                        <div id="cron_job_detail_wrapper" class="even">
+                        <div class="cron-job-detail-wrapper even">
                             <span class="crown_text_right fullwidth"><?php echo Uri::root().'index.php?option=com_jssupportticket&c=ticketviaemail&task=readEmails'; ?></span>
                         </div>
                     </div>  
                 </div>
-                <div id="cron_job">
-                    <span style="float:left;margin-right:4px;"><?php echo Text::_('Recommended run script hourly'); ?></span>
+                <div class="cron-job">
+                    <span class="jsst-cron-recommendation"><?php echo Text::_('Recommended run script hourly'); ?></span>
                 </div>  
             </div>
         </div>
         </form>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>
 <script type="text/javascript">
     showhidehostname(<?php echo $this->result[0]['tve_hosttype']; ?>);
 </script>

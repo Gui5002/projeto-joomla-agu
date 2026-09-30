@@ -11,10 +11,11 @@
 */
 
 defined ('_JEXEC') or die('Not Allowed');
-jimport('joomla.application.component.controller');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
+use Joomla\CMS\Router\Route;	
+
+jimport('joomla.application.component.controller');
 
 class JSSupportTicketControllergdpr extends JSSupportTicketController{
 
@@ -63,7 +64,7 @@ class JSSupportTicketControllergdpr extends JSSupportTicketController{
 	            print $return_value;
 	            exit;
 	        }else{
-	        	$msg = Text::_("No data found for export.");
+	        	$msg = Text::_("No data is available to export.");
 	        	$link = "index.php?option=com_jssupportticket&c=gdpr&layout=adderasedatarequest";
         		$this->setRedirect($link,$msg);
 	        }

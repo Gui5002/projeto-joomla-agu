@@ -180,7 +180,7 @@ final class LogFileQuotas extends AbstractFinalizer
 	}
 
 	/**
-	 * Resolves the log file path for a backup record, handling the transitional .log.php → .log fallback.
+	 * Resolves the log file path for a backup record, handling the transitional .log.php → .php → .log fallback.
 	 *
 	 * @param   array  $stat  The backup record fields
 	 *
@@ -189,21 +189,16 @@ final class LogFileQuotas extends AbstractFinalizer
 	 */
 	private function resolveLogPath(array $stat): ?string
 	{
-		$logDir      = dirname($stat['absolute_path']);
-		$logFilename = 'akeeba.' . $stat['tag'] . '.' . $stat['backupid'] . '.log.php';
-		$primaryPath = $logDir . '/' . $logFilename;
+		$logDir   = dirname($stat['absolute_path']);
+		$baseName = $logDir . '/akeeba.' . $stat['tag'] . '.' . $stat['backupid'];
 
-		if (@file_exists($primaryPath))
+		// Transitional period: the .log.php file may not exist but the .php or the .log file does
+		foreach (['.log.php', '.php', '.log'] as $suffix)
 		{
-			return $primaryPath;
-		}
-
-		// Transitional period: the .log.php file may not exist but the .log file does
-		$altPath = substr($primaryPath, 0, -4);
-
-		if (@file_exists($altPath))
-		{
-			return $altPath;
+			if (@file_exists($baseName . $suffix))
+			{
+				return $baseName . $suffix;
+			}
 		}
 
 		return null;

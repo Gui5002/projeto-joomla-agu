@@ -13,16 +13,13 @@ defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
-  
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Editor\Editor;
+
 $conf   = Factory::getConfig();
 $editor = Editor::getInstance($conf->get('editor'));
 HTMLHelper::_('behavior.formvalidator');
 $document = Factory::getDocument();
-$document->addStyleSheet(Uri::root() . 'administrator/components/com_jssupportticket/include/css/custom.boots.css');
-$document->addStyleSheet(Uri::root() . 'administrator/components/com_jssupportticket/include/css/jsticketadmin.css');
-use Joomla\CMS\Language\Text;
-
 ?>
 
 <script type="text/javascript">
@@ -52,37 +49,19 @@ use Joomla\CMS\Language\Text;
         return true;
     }
 </script>
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-screen-form">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-        <div id="jsstadmin-wrapper-top">
-            <div id="jsstadmin-wrapper-top-left">
-                <div id="jsstadmin-breadcrunbs">
-                    <ul>
-                        <li><a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel" title="Dashboard"><?php echo Text::_('Dashboard'); ?></a></li>
-                        <li><?php echo Text::_('Add Department'); ?></li>
-                    </ul>
-                </div>
-            </div>
-            <div id="jsstadmin-wrapper-top-right">
-                <div id="jsstadmin-config-btn">
-                    <a title="Configuration" href="index.php?option=com_jssupportticket&c=config&layout=config">
-                        <img alt="Configuration" src="components/com_jssupportticket/include/images/config.png">
-                    </a>
-                </div>
-                <div id="jsstadmin-vers-txt">
-                    <?php echo Text::_('Version').Text::_(' : '); ?>
-                    <span class="jsstadmin-ver">
-                        <?php $version = str_split($this->version);
-                        $version = implode('.', $version);
-                        echo $version; ?>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div id="js-tk-heading"><h1 class="jsstadmin-head-text"><?php echo Text::_('Add Department'); ?></h1></div>
+        <?php
+$jsstPageTitle = isset($this->department) ? 'Edit Department' : 'Add Department';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label_raw' => Text::_(isset($this->department) ? 'Edit Department' : 'Add Department'), 'link' => null),
+);
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?>
         <div id="jsstadmin-data-wrp" class="js-ticket-box-shadow">
         <form action="index.php" method="POST" enctype="multipart/form-data" name="adminForm" id="adminForm">
             <div class="js-form-wrapper">
@@ -94,18 +73,17 @@ use Joomla\CMS\Language\Text;
                 <div class="js-value"><?php echo $this->lists['emaillist'] ?></div>
             </div>
             <div class="js-form-wrapper">
-                <div class="js-title"><label for="sendemail"><?php echo Text::_('Receive Email'); ?></label></div>
+                <div class="js-title"><label for="sendemail-yes"><?php echo Text::_('Receive Email'); ?></label></div>
                 <div class="js-value-radio-btn"> 
                 <div class="jsst-formfield-status-radio-button-wrap">
-                <label><input type="radio" id="sendemail" <?php if(isset($this->department)){ if($this->department->sendemail == 1) echo "checked='true'"; }else{ echo "checked='true'"; } ?> name="sendemail" value="1"><?php echo Text::_('Yes'); ?></label></div>
+                <label><input type="radio" id="sendemail-yes" <?php if(isset($this->department)){ if($this->department->sendemail == 1) echo "checked='true'"; }else{ echo "checked='true'"; } ?> name="sendemail" value="1"><?php echo Text::_('JYES'); ?></label></div>
                 <div class="jsst-formfield-status-radio-button-wrap">
-                <label><input type="radio" id="sendemail" <?php if(isset($this->department) && $this->department->sendemail == 0){  echo "checked='true'"; } ?> name="sendemail" value="0"><?php echo Text::_('No'); ?></label></div>
+                <label><input type="radio" id="sendemail-no" <?php if(isset($this->department) && $this->department->sendemail == 0){  echo "checked='true'"; } ?> name="sendemail" value="0"><?php echo Text::_('JNO'); ?></label></div>
                 </div>
             </div>
             <div class="js-form-wrapper fullwidth">
                 <div class="js-title"><?php echo Text::_('Signature'); ?></div>
-                <div class="js-value"><?php 
-                if (isset($this->department->departmentsignature)) echo $editor->display('departmentsignature', $this->department->departmentsignature, '', '300', '60', '20', false); else echo $editor->display('departmentsignature', '', '', '300', '60', '20', false); ?> </div>
+                <div class="js-value"><?php  if (isset($this->department->departmentsignature)) echo $editor->display('departmentsignature', $this->department->departmentsignature, '', '300', '60', '20', false); else echo $editor->display('departmentsignature', '', '', '300', '60', '20', false); ?> </div>
             </div>
             <div class="js-form-wrapper">
                 <div class="js-title"><?php echo Text::_('Append Signature'); ?></div>
@@ -134,7 +112,4 @@ use Joomla\CMS\Language\Text;
         </div>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>

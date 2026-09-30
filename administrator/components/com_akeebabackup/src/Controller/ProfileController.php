@@ -9,6 +9,7 @@ namespace Akeeba\Component\AkeebaBackup\Administrator\Controller;
 
 defined('_JEXEC') || die;
 
+use Akeeba\Component\AkeebaBackup\Administrator\Mixin\ControllerCustomACLTrait;
 use Akeeba\Component\AkeebaBackup\Administrator\Mixin\ControllerEventsTrait;
 use Akeeba\Component\AkeebaBackup\Administrator\Model\ProfileModel;
 use Akeeba\Engine\Factory;
@@ -24,6 +25,7 @@ use RuntimeException;
 class ProfileController extends FormController
 {
 	use ControllerEventsTrait;
+	use ControllerCustomACLTrait;
 
 	protected $text_prefix = 'COM_AKEEBABACKUP_PROFILE';
 

@@ -596,7 +596,9 @@ class QueryBuilder
      */
     public function orderBy($column, $direction = 'ASC')
     {
-        $this->query->order($this->db->escape($this->quoteNameWithPrefix($column)) . ' ' . strtoupper($direction));
+        // Direction is interpolated raw — allow only ASC/DESC, never client text.
+        $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
+        $this->query->order($this->db->escape($this->quoteNameWithPrefix($column)) . ' ' . $direction);
 
         return $this;
     }
@@ -1218,6 +1220,11 @@ class QueryBuilder
         }
 
         // Handle where('name', 'like', '%value%')
+        // The operator is interpolated raw, so it must be a known SQL operator — never client text.
+        if (!in_array(strtoupper($operator), Operators::all(), true)) {
+            throw new RuntimeException(sprintf('Unsupported operator: %s', $operator));
+        }
+
         return $this->quoteNameWithPrefix($column) . ' ' . $operator . ' ' . $this->serialize($value);
     }
 

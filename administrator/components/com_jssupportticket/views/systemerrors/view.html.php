@@ -11,13 +11,13 @@
 */
  
 defined('_JEXEC') or die('Restricted access');
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Pagination\Pagination;
 
 jimport('joomla.application.component.view');
 jimport('joomla.html.pagination');
-use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Pagination\Pagination;
 
 class JSSupportticketViewSystemErrors extends JSSupportTicketView
 {

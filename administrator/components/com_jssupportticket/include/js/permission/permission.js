@@ -2,9 +2,7 @@
             var obj =jQuery('#'+sectionid);
             if (obj.is(":checked")) {        
                 jQuery('.'+sectionclass).each(function() { //loop through each checkbox
-                  if(!this.disabled){
                     this.checked = true;  //select all checkboxes with class "rolepermission"              
-                  }
                 });
             }else{
                 jQuery('.'+sectionclass).each(function() { //loop through each checkbox

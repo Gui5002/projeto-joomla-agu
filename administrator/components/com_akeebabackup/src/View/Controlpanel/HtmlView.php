@@ -236,9 +236,11 @@ class HtmlView extends BaseHtmlView
 		$this->countWarnings                   = count(Factory::getConfigurationChecks()->getDetailedStatus());
 		$user                                  = $app->getIdentity() ?? (new User());
 		$this->permissions                     = [
-			'configure' => $user->authorise('akeebabackup.configure', 'com_akeebabackup'),
-			'backup'    => $user->authorise('akeebabackup.backup', 'com_akeebabackup'),
-			'download'  => $user->authorise('akeebabackup.download', 'com_akeebabackup'),
+			'configure'   => $user->authorise('akeebabackup.configure', 'com_akeebabackup'),
+			'backup'      => $user->authorise('akeebabackup.backup', 'com_akeebabackup'),
+			'download'    => $user->authorise('akeebabackup.download', 'com_akeebabackup'),
+			// Matches the privilege required to edit the component's Options page; gates the Schedule view.
+			'editoptions' => $user->authorise('core.admin', 'com_akeebabackup'),
 		];
 		$this->isOutputDirectoryUnderSiteRoot  = $model->isOutputDirectoryUnderSiteRoot();
 		$this->hasOutputDirectorySecurityFiles = $model->hasOutputDirectorySecurityFiles();

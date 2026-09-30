@@ -14,13 +14,21 @@ use Joomla\CMS\Language\Text;
 
 ?>
 
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-jssupportticket-info">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
-    <div id="js-tk-cparea">    
+    <div id="js-tk-cparea">
     <div class="aboutus">
-        <div id="js-tk-heading"><h4><img id="js-admin-responsive-menu-link" src="components/com_jssupportticket/include/images/c_p/left-icons/menu.png" /><?php echo Text::_('About Us'); ?></h4></div>
+        <?php
+$jsstPageTitle = 'About Us';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label' => 'About Us', 'link' => null),
+);
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?>
+        <div id="jsstadmin-data-wrp" class="js-ticket-box-shadow">
         <div class="js-col-md-12 ">
             <span class="js-admin-component"><?php echo Text::_('Component Detail'); ?></span>
             <span class="js-admin-component-detail"><?php echo Text::_('Component for on-line ticket support system'); ?></span>
@@ -66,12 +74,10 @@ use Joomla\CMS\Language\Text;
                 <a href="https://www.joomsky.com/index.php/products/js-support-ticket-1/js-supprot-ticket-pro-wp" target="_blank">
                     <img src="components/com_jssupportticket/include/images/aboutus_page/tickets.jpg" />
                 </a>
-            </div>        
+            </div>
+        </div>
         </div>
     </div>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="http://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>

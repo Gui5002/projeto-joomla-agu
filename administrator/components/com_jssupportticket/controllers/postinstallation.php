@@ -11,10 +11,10 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
-
-jimport('joomla.application.component.controller');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+
+jimport('joomla.application.component.controller');
 
 class JSSupportticketControllerPostInstallation extends JSSupportTicketController {
 
@@ -30,8 +30,6 @@ class JSSupportticketControllerPostInstallation extends JSSupportTicketControlle
       $link = 'index.php?option=com_jssupportticket&c=postinstallation&layout=steptwo';
       if ($result == SAVED) {
         if ($callfrom == 2) {
-          $link = 'index.php?option=com_jssupportticket&c=postinstallation&layout=stepthree';
-        } elseif ($callfrom == 3) {
           $link = 'index.php?option=com_jssupportticket&c=postinstallation&layout=settingcomplete';
         } 
       }else{

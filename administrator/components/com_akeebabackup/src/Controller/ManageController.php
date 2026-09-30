@@ -324,6 +324,9 @@ class ManageController extends AdminController
 
 	public function hidemodal()
 	{
+		// Anti-CSRF protection. The token is appended to the "hide modal" link.
+		$this->checkToken('get');
+
 		/** @var StatisticsModel $model */
 		$model = $this->getModel('Statistics', 'Administrator');
 		$model->hideRestorationInstructionsModal(

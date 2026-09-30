@@ -1,0 +1,289 @@
+/*
+ * JS Support Ticket - Administrator dashboard modules
+ *
+ * Styles the two modules that render in the `cpanel` position of Joomla's own
+ * administrator dashboard (mod_jssupportticketstats,
+ * mod_jssupportticketlatesttickets).
+ *
+ * These modules sit OUTSIDE #jsst-admin, so none of the component's admin
+ * stylesheets reach them and none of their tokens resolve. Everything the
+ * modules need is therefore declared locally on .jsst-adm-module, and every
+ * selector below is scoped under that class so nothing here can reach Joomla's
+ * own dashboard chrome. The values mirror jsst-admin-tokens.css so the modules
+ * read as part of the same product.
+ *
+ * This replaces the previous approach, where both modules pulled the
+ * component's bootstrap.min.css into the whole administrator dashboard in order
+ * to borrow its grid - a global stylesheet load for two small cards.
+ */
+
+.jsst-adm-module {
+    --jsst-adm-primary: #2563eb;
+    --jsst-adm-ink: #0f172a;
+    --jsst-adm-muted: #64748b;
+    --jsst-adm-card: #ffffff;
+    --jsst-adm-soft: #f8fafc;
+    --jsst-adm-border: #e5eaf2;
+    --jsst-adm-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+    --jsst-adm-radius: 14px;
+
+    /* Status colors, shared by the ticket list and the stat cards. */
+    --jsst-adm-new: #dc2626;
+    --jsst-adm-waiting-staff: #ea580c;
+    --jsst-adm-progress: #d97706;
+    --jsst-adm-waiting-user: #16a34a;
+    --jsst-adm-closed: #2563eb;
+
+    box-sizing: border-box;
+    color: var(--jsst-adm-ink);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.jsst-adm-module *,
+.jsst-adm-module *::before,
+.jsst-adm-module *::after {
+    box-sizing: inherit;
+}
+
+/* --------------------------------------------------------------------------
+ * Stat cards (mod_jssupportticketstats)
+ * ----------------------------------------------------------------------- */
+
+.jsst-adm-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 15px;
+}
+
+.jsst-adm-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--jsst-adm-border);
+    border-radius: var(--jsst-adm-radius);
+    background: var(--jsst-adm-card);
+    box-shadow: var(--jsst-adm-shadow);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.jsst-adm-stat:hover,
+.jsst-adm-stat:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--jsst-adm-accent, var(--jsst-adm-primary));
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.1);
+    text-decoration: none;
+    color: inherit;
+}
+
+.jsst-adm-stat:focus-visible {
+    outline: 2px solid var(--jsst-adm-accent, var(--jsst-adm-primary));
+    outline-offset: 2px;
+}
+
+.jsst-adm-stat-icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--jsst-adm-accent, var(--jsst-adm-primary)) 12%, #ffffff);
+}
+
+.jsst-adm-stat-icon img {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* The copy block and its two lines are spans, so they need to be blocks. */
+.jsst-adm-stat-copy {
+    display: block;
+    min-width: 0;
+}
+
+.jsst-adm-stat-value {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--jsst-adm-accent, var(--jsst-adm-ink));
+}
+
+.jsst-adm-stat-label {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--jsst-adm-muted);
+}
+
+/* --------------------------------------------------------------------------
+ * Latest tickets table (mod_jssupportticketlatesttickets)
+ * ----------------------------------------------------------------------- */
+
+.jsst-adm-tickets {
+    border: 1px solid var(--jsst-adm-border);
+    border-radius: var(--jsst-adm-radius);
+    background: var(--jsst-adm-card);
+    box-shadow: var(--jsst-adm-shadow);
+    overflow: hidden;
+    margin: 15px;
+}
+
+.jsst-adm-tickets-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.jsst-adm-tickets-table th,
+.jsst-adm-tickets-table td {
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--jsst-adm-border);
+}
+
+.jsst-adm-tickets-table thead th {
+    background: var(--jsst-adm-soft);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--jsst-adm-muted);
+    white-space: nowrap;
+}
+
+.jsst-adm-tickets-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.jsst-adm-tickets-table tbody tr:hover td {
+    background: var(--jsst-adm-soft);
+}
+
+.jsst-adm-cell-subject {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jsst-adm-ticketid {
+    font-weight: 600;
+    color: var(--jsst-adm-primary);
+    text-decoration: none;
+}
+
+.jsst-adm-ticketid:hover,
+.jsst-adm-ticketid:focus-visible {
+    text-decoration: underline;
+}
+
+.jsst-adm-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    color: #ffffff;
+    background: var(--jsst-adm-muted);
+}
+
+.jsst-adm-status-0 { background: var(--jsst-adm-new); }
+.jsst-adm-status-1 { background: var(--jsst-adm-waiting-staff); }
+.jsst-adm-status-2 { background: var(--jsst-adm-progress); }
+.jsst-adm-status-3 { background: var(--jsst-adm-waiting-user); }
+.jsst-adm-status-4 { background: var(--jsst-adm-closed); }
+
+.jsst-adm-priority {
+    font-weight: 600;
+}
+
+.jsst-adm-date {
+    color: var(--jsst-adm-muted);
+    white-space: nowrap;
+}
+
+.jsst-adm-empty {
+    padding: 22px 16px;
+    text-align: center;
+    color: var(--jsst-adm-muted);
+}
+
+/* --------------------------------------------------------------------------
+ * Narrow dashboard columns: the table collapses to stacked rows with the
+ * column name shown inline, so nothing is lost when the cpanel position is
+ * only a few hundred pixels wide.
+ * ----------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+    .jsst-adm-tickets-table,
+    .jsst-adm-tickets-table tbody,
+    .jsst-adm-tickets-table tr,
+    .jsst-adm-tickets-table td {
+        display: block;
+        width: auto;
+    }
+
+    .jsst-adm-tickets-table thead {
+        display: none;
+    }
+
+    .jsst-adm-tickets-table tr {
+        padding: 10px 4px;
+        border-bottom: 1px solid var(--jsst-adm-border);
+    }
+
+    .jsst-adm-tickets-table tr:last-child {
+        border-bottom: 0;
+    }
+
+    .jsst-adm-tickets-table td {
+        display: flex;
+        gap: 10px;
+        align-items: baseline;
+        justify-content: space-between;
+        padding: 3px 12px;
+        border-bottom: 0;
+    }
+
+    .jsst-adm-tickets-table td::before {
+        content: attr(data-label);
+        flex: 0 0 auto;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--jsst-adm-muted);
+    }
+
+    .jsst-adm-cell-subject {
+        white-space: normal;
+        text-align: right;
+    }
+}
+
+/* Joomla's administrator templates set a dark scheme via [data-bs-theme]. */
+[data-bs-theme="dark"] .jsst-adm-module {
+    --jsst-adm-ink: #e2e8f0;
+    --jsst-adm-muted: #94a3b8;
+    --jsst-adm-card: #1e293b;
+    --jsst-adm-soft: #0f172a;
+    --jsst-adm-border: #334155;
+    --jsst-adm-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+}
+
+[data-bs-theme="dark"] .jsst-adm-stat-icon {
+    background: color-mix(in srgb, var(--jsst-adm-accent, var(--jsst-adm-primary)) 22%, #1e293b);
+}

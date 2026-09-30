@@ -292,6 +292,7 @@ return [
 	'Joomla\\Plugin\\Workflow\\Featuring\\' => [JPATH_PLUGINS . '\workflow/featuring/src'],
 	'Joomla\\Plugin\\Workflow\\Notification\\' => [JPATH_PLUGINS . '\workflow/notification/src'],
 	'Joomla\\Plugin\\Workflow\\Publishing\\' => [JPATH_PLUGINS . '\workflow/publishing/src'],
+	'MyCompany\\Module\\MoodleCourses\\Site\\' => [JPATH_SITE . '/modules/mod_moodle_courses/src'],
 	'RegularLabs\\Library\\' => [JPATH_LIBRARIES . '/regularlabs/src'],
 	'RegularLabs\\Plugin\\System\\RegularLabs\\' => [JPATH_PLUGINS . '\system/regularlabs/src'],
 	'SYW\\Library\\' => [JPATH_LIBRARIES . '/syw/src'],

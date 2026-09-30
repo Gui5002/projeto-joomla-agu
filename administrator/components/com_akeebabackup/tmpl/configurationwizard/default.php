@@ -84,7 +84,9 @@ $steps = ['flush', 'minexec', 'directory', 'dbopt', 'maxexec', 'splitsize']
                         <span class="fa fa-wrench"></span>
                         <?= Text::_('COM_AKEEBABACKUP_CONFIG') ?>
                     </a>
-					<?php if(AKEEBABACKUP_PRO): ?>
+					<?php /* The Schedule page echoes the front-end/JSON API secrets, so it is only available to users who
+					         are allowed to edit the component's Options page (core.admin). */ ?>
+					<?php if(AKEEBABACKUP_PRO && $this->getCurrentUser()->authorise('core.admin', 'com_akeebabackup')): ?>
                     <a
                             class="btn btn-outline-dark"
                             href="<?= $this->escape( Uri::base() )?>index.php?option=com_akeebabackup&view=Schedule">

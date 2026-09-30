@@ -12,6 +12,7 @@
  */
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
+    
 
 $db = Factory::getDbo();
 $query = "SHOW TABLES LIKE '".$db->getPrefix()."js_ticket_userfields'";
@@ -66,10 +67,6 @@ if($table){
             $db->setQuery($query);
             $db->execute();
         }
-        $query = "UPDATE `#__js_ticket_fieldsordering` SET size = 100 WHERE isuserfield = '1'";
-        $db->setQuery($query);
-        $db->execute();
-
         $query = "UPDATE `#__js_ticket_config` SET configvalue = '1151' WHERE configname = 'last_step_updater'";
         $db->setQuery($query);
         $db->execute();

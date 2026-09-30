@@ -11,10 +11,12 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 
 jimport('joomla.application.component.model');
 jimport('joomla.html.html');
-use Joomla\CMS\Factory;
 
 class JSSupportticketModelProinstaller extends JSSupportTicketModel {
 
@@ -24,20 +26,30 @@ class JSSupportticketModelProinstaller extends JSSupportTicketModel {
 
     function getServerValidate() {
         $result = array();
-        $array = getJSTicketPHPFunctionsClass()->jsticket_explode('.', phpversion());
-        $phpversion = $array[0] . '.' . $array[1];
-        $curlexist = function_exists('curl_version');
+        $phpversion = PHP_VERSION;
+
+        $curlexist = function_exists('curl_init') && function_exists('curl_version');
         $curlversion = '';
-		$gd_lib = 1;
+        $curlssl = 0;
+        if ($curlexist) {
+            $curlinfo = curl_version();
+            $curlversion = isset($curlinfo['version']) ? $curlinfo['version'] : '';
+            if (defined('CURL_VERSION_SSL') && isset($curlinfo['features']) && ($curlinfo['features'] & CURL_VERSION_SSL)) {
+                $curlssl = 1;
+            }
+        }
+
+
         $zip_lib = 0;
-        if (file_exists('components/com_jssupportticket/include/lib/pclzip.lib.php')) {
+        if (class_exists('\Joomla\CMS\Filesystem\Archive') || class_exists('ZipArchive') || function_exists('gzinflate') || file_exists('components/com_jssupportticket/include/lib/pclzip.lib.php')) {
             $zip_lib = 1;
         }
+
         $result = $this->getStepTwoValidate();
         $result['phpversion'] = $phpversion;
-        $result['curlexist'] = $curlexist;
+        $result['curlexist'] = $curlexist ? 1 : 0;
+        $result['curlssl'] = $curlssl;
         $result['curlversion'] = $curlversion;
-        $result['gdlib'] = $gd_lib;
         $result['ziplib'] = $zip_lib;
         return $result;
     }
@@ -106,20 +118,22 @@ class JSSupportticketModelProinstaller extends JSSupportTicketModel {
             $return['drop_table'] = 1;
         }
         if($return['tmp_dir'] >= 755){
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($ch, CURLOPT_URL, 'http://test.setup.joomsky.com/logo.png');
-            $fp = fopen('../tmp/logo.png', 'w+');
-            curl_setopt($ch, CURLOPT_FILE, $fp);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 0);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0); 
-            curl_exec ($ch);
-            curl_close ($ch);
-            fclose($fp);
             $return['file_downloaded'] = 0;
-            if(file_exists('../tmp/logo.png')){
-                $return['file_downloaded'] = 1;
+            if(function_exists('curl_init')){
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+                curl_setopt($ch, CURLOPT_URL, 'http://test.setup.joomsky.com/logo.png');
+                $fp = fopen('../tmp/logo.png', 'w+');
+                curl_setopt($ch, CURLOPT_FILE, $fp);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 0);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0);
+                curl_exec ($ch);
+                curl_close ($ch);
+                fclose($fp);
+                if(file_exists('../tmp/logo.png')){
+                    $return['file_downloaded'] = 1;
+                }
             }
         }else $return['file_downloaded'] = 0;
         return $return;
@@ -127,33 +141,65 @@ class JSSupportticketModelProinstaller extends JSSupportTicketModel {
 
     function getmyversionlist($data) {
         if(getJSTicketPHPFunctionsClass()->jsticket_trim($data['transactionkey']) == ''){
-            $response = '["0","Please insert product key"]';
-            return $response;
+            return '["0","Please insert product key"]';
         }
-        $post_data['transactionkey'] = $data['transactionkey'];
+        require_once JPATH_ADMINISTRATOR . '/components/com_jssupportticket/include/classes/proinstallclient.php';
         $_SESSION['transactionkey'] = $data['transactionkey'];
-        $post_data['serialnumber'] = $data['serialnumber'];
-        $post_data['domain'] = $data['domain'];
-        $post_data['producttype'] = $data['producttype'];
-        $post_data['productcode'] = $data['productcode'];
-        $post_data['productversion'] = $data['productversion'];
-        $post_data['JVERSION'] = $data['JVERSION'];
-        $post_data['count'] = $data['config_count'];
-        $post_data['installerversion'] = $data['installerversion'];
-        $ch = curl_init();
-        $url = "https://setup.joomsky.com/jssupportticketjm/pro/index.php";
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        if(curl_error($ch)) { 
-            $response = '["0","'.curl_error($ch).'"]';
-        }else{
-            $response = curl_exec($ch);
+        try {
+            $client = new JSSTProInstallClient();
+            $versions = $client->getVersions([
+                'transactionkey' => $data['transactionkey'],
+                'domain' => $data['domain'],
+                'producttype' => $data['producttype'],
+                'productcode' => $data['productcode'],
+                'productversion' => $data['productversion'],
+                'JVERSION' => $data['JVERSION'],
+                'count_config' => $data['config_count'],
+            ]);
+            $html = $this->buildVersionSelectHtml($data, $versions['versions'] ?? []);
+            return json_encode([true, '', $html]);
+        } catch (Throwable $e) {
+            return json_encode([false, $e->getMessage()]);
         }
-        curl_close($ch);
-        return $response;
+    }
+
+    private function buildVersionSelectHtml($data, $versions) {
+        $options = '<option value="">' . htmlspecialchars(Text::_('Choose Version'), ENT_QUOTES, 'UTF-8') . '</option>';
+        foreach ((array)$versions as $version) {
+            $version = (string)$version;
+            $options .= '<option value="' . htmlspecialchars($version, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($version, ENT_QUOTES, 'UTF-8') . '</option>';
+        }
+        $installnew = ((int)$data['config_count'] > 50) ? 0 : 1;
+        return '
+            <script>
+                function opendiv(){
+                    document.getElementById("jsjob_installer_waiting_div").style.display="block";
+                    document.getElementById("jsjob_installer_waiting_span").style.display="block";
+                    return true;
+                }
+            </script>
+            <form action="index.php" method="POST" name="adminForm" id="adminForm">
+                <div id="jsjob_installer_waiting_div" style="display:none;"></div>
+                <div class="js_wrapper">
+                    <span id="jsjob_installer_waiting_span" style="display:none;">Please wait, installation is in progress.</span>
+                    <span id="jsjob_installer_helptext">Please select the version you want to install.</span>
+                    <div id="jsjob_installer_formlabel"><label id="transactionkeymsg_after" for="productversioninstall">Select Version</label></div>
+                    <div id="jsjob_installer_forminput"><select id="productversioninstall" name="productversioninstall">' . $options . '</select></div>
+                    <div id="jsjob_installer_formsubmitbutton"><input type="submit" class="button" id="jsjob_instbutton_after" name="submit_app" onclick="return opendiv();" value="Continue" /></div>
+                    <input type="hidden" name="domain" value="' . htmlspecialchars($data['domain'], ENT_QUOTES, 'UTF-8') . '" />
+                    <input type="hidden" name="producttype" value="' . htmlspecialchars($data['producttype'], ENT_QUOTES, 'UTF-8') . '" />
+                    <input type="hidden" name="productcode" value="jssupportticket" />
+                    <input type="hidden" name="productversion" value="' . htmlspecialchars($data['productversion'], ENT_QUOTES, 'UTF-8') . '" />
+                    <input type="hidden" name="transactionkey" value="' . htmlspecialchars($data['transactionkey'], ENT_QUOTES, 'UTF-8') . '" />
+                    <input type="hidden" name="count_config" value="' . htmlspecialchars($data['config_count'], ENT_QUOTES, 'UTF-8') . '" />
+                    <input type="hidden" name="JVERSION" value="' . htmlspecialchars($data['JVERSION'], ENT_QUOTES, 'UTF-8') . '" />
+                    <input type="hidden" name="c" value="installer" />
+                    <input type="hidden" name="task" value="installationnext" />
+                    <input type="hidden" name="level" value="level2" />
+                    <input type="hidden" name="installnew" value="' . $installnew . '" />
+                    <input type="hidden" name="option" value="com_jssupportticket" />
+                </div>
+            </form>';
     }
 }
 ?>

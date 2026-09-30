@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -220,6 +220,14 @@ trait IconsTrait
                                 $font_path = 'font';
                                 $font_css = 'css/' . $fontFamily . '.css';
                             }
+                        }
+
+                        // $fontFamily comes from the uploaded package (config.json/selection.json)
+                        // and is used to build destination paths below. Keep it a bare directory
+                        // name so a crafted package cannot traverse out of the icons root.
+                        if ($fontFamily !== '' && !preg_match('/^[A-Za-z0-9_-]+$/', $fontFamily))
+                        {
+                            $fontFamily = '';
                         }
 
                         if ($fontFamily && $prefix && Folder::exists($extract_path . '/' . $font_path) && File::exists($extract_path . '/' . $font_css))

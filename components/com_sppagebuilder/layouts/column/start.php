@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -123,16 +123,16 @@ else
 if ($isAnimationEnabled)
 {
 
-	$custom_class .= ' sppb-wow ' . $options->animation;
+	$custom_class .= ' sppb-wow ' . preg_replace('/[^A-Za-z0-9_-]/', '', (string) $options->animation);
 
 	if (!empty($options->animationduration))
 	{
-		$data_attr .= ' data-sppb-wow-duration="' . $options->animationduration . 'ms"';
+		$data_attr .= ' data-sppb-wow-duration="' . (int) $options->animationduration . 'ms"';
 	}
 
 	if (!empty($options->animationdelay))
 	{
-		$data_attr .= ' data-sppb-wow-delay="' . $options->animationdelay . 'ms"';
+		$data_attr .= ' data-sppb-wow-delay="' . (int) $options->animationdelay . 'ms"';
 	}
 }
 

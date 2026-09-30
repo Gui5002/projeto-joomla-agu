@@ -3,13 +3,14 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Session\Session;
 
 //no direct access
 defined('_JEXEC') or die('Restricted access');
@@ -22,6 +23,15 @@ class SppagebuilderViewMedia extends HtmlView
 {
 	public function display($tpl = null)
 	{
+		if (!Session::checkToken('post'))
+		{
+			$app = Factory::getApplication();
+			$app->enqueueMessage(Text::_('JINVALID_TOKEN'), 'error');
+			$app->setHeader('status', 403, true);
+
+			return false;
+		}
+
 		$user = Factory::getUser();
 		$canEdit = $user->authorise('core.edit', 'com_sppagebuilder');
 		$canEditOwn = $user->authorise('core.edit.own', 'com_sppagebuilder');

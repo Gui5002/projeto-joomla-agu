@@ -1,3 +1,17 @@
+CREATE TABLE IF NOT EXISTS `#__js_ticket_activity_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) DEFAULT NULL,
+  `referenceid` int(11) DEFAULT NULL,
+  `level` int(2) DEFAULT NULL,
+  `eventfor` int(2) DEFAULT NULL,
+  `event` varchar(255) DEFAULT NULL,
+  `eventtype` varchar(255) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `messagetype` varchar(255) DEFAULT NULL,
+  `datetime` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=129 DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+
 CREATE TABLE IF NOT EXISTS `#__js_ticket_attachments` (
 	`id` int(11) NOT NULL AUTO_INCREMENT, 
 	`ticketid` int(11) DEFAULT NULL, 
@@ -15,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `#__js_ticket_config` (`configname` varchar(100) NOT 
 	`configfor` varchar(50) DEFAULT NULL, PRIMARY KEY (`configname`), FULLTEXT KEY `config_name` (`configname`), FULLTEXT KEY `config_for` (`configfor`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__js_ticket_config` VALUES 
-('version', '127', 'version'),
+('version', '129', 'version'),
 ('versiontype', 'free', 'version'),
 ('priority', '15', 'default'),
 ('ticket_per_email', '25', 'ticket'),
@@ -104,6 +118,7 @@ INSERT INTO `#__js_ticket_config` VALUES
 ('ticket_auto_close_indays', '5', 'default'),
 ('cplink_openticket_staff', '1', 'cplink'),
 ('ticket_reply_user_user', '1', 'email'),
+('ticket_reply_closed_ticket_user', '1', 'email'),
 ('ticket_lock_user', '1', 'email'),
 ('ticket_lock_staff', '1', 'email'),
 ('cplink_addrole_staff', '0', 'cplink'),
@@ -205,6 +220,18 @@ INSERT INTO `#__js_ticket_config` VALUES
 ('tickets_sorting', '1', 'default'),
 ('maximum_ticket_interval_time', '1', 'default');
 
+
+CREATE TABLE IF NOT EXISTS `#__js_ticket_department_message_premade` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `departmentid` varchar(45) DEFAULT NULL,
+  `isenabled` tinyint(1) DEFAULT NULL,
+  `title` varchar(125) DEFAULT NULL,
+  `answer` text DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `update` datetime DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE IF NOT EXISTS `#__js_ticket_departments` (
@@ -426,6 +453,19 @@ INSERT INTO `#__js_ticket_fieldsordering` (`id`, `field`, `fieldtitle`, `orderin
 (17, 'rating', 'Rating', '1', '0', '2', '1', '0', '0', '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL),
 (18, 'remarks', 'Remarks', '2', '10', '2', '1', '0', '0', '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '0', '0', '0');
 
+CREATE TABLE IF NOT EXISTS `#__js_ticket_help_topics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `isactive` tinyint(1) DEFAULT NULL,
+  `autoresponce` tinyint(1) DEFAULT NULL,
+  `departmentid` int(11) DEFAULT NULL,
+  `priorityid` int(11) DEFAULT NULL,
+  `topic` varchar(255) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `update` datetime DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `#__js_ticket_erasedatarequests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -435,3 +475,49 @@ CREATE TABLE IF NOT EXISTS `#__js_ticket_erasedatarequests` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- JS Support Ticket 1.6.0 feature foundation.
+-- Add-only, non-destructive migration for existing Joomla installations.
+
+
+CREATE TABLE IF NOT EXISTS `#__js_ticket_error_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) DEFAULT NULL,
+  `staffid` int(11) DEFAULT NULL,
+  `ticketid` int(11) DEFAULT NULL,
+  `source` varchar(100) DEFAULT NULL,
+  `context` varchar(255) DEFAULT NULL,
+  `severity` varchar(30) DEFAULT 'error',
+  `message` text DEFAULT NULL,
+  `technical_detail` longtext DEFAULT NULL,
+  `metadata` longtext DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  `created` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_ticket_created` (`ticketid`, `created`),
+  KEY `idx_severity_created` (`severity`, `created`),
+  KEY `idx_is_read` (`is_read`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `#__js_ticket_email_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) DEFAULT NULL,
+  `staffid` int(11) DEFAULT NULL,
+  `ticketid` int(11) DEFAULT NULL,
+  `recipient_email` varchar(255) DEFAULT NULL,
+  `sender_email` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `action` varchar(80) DEFAULT NULL,
+  `status` varchar(30) DEFAULT NULL,
+  `transport` varchar(30) DEFAULT NULL,
+  `error_message` text DEFAULT NULL,
+  `metadata` longtext DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_ticket_created` (`ticketid`, `created`),
+  KEY `idx_recipient_created` (`recipient_email`, `created`),
+  KEY `idx_status_created` (`status`, `created`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+

@@ -43,7 +43,7 @@ if (time() - $this->lastUpsellDismiss < 1296000) return;
 			</a>
 
 
-			<a href="<?= Route::_('index.php?option=com_akeebabackup&view=Controlpanel&task=dismissUpsell') ?>"
+			<a href="<?= Route::_('index.php?option=com_akeebabackup&view=Controlpanel&task=dismissUpsell&' . \Joomla\CMS\Factory::getApplication()->getFormToken() . '=1') ?>"
 			   class="btn btn-sm btn-outline-danger m-2">
 				<span class="fa fa-bell"></span>
 				<?= Text::_('COM_AKEEBABACKUP_CONTROLPANEL_BTN_HIDE') ?>

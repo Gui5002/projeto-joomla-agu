@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -29,12 +29,13 @@ if ($option !== 'com_sppagebuilder' || ($option === 'com_sppagebuilder' && $view
     $responsive_class .= (isset($addon->settings->hidden_xs) && filter_var($addon->settings->hidden_xs, FILTER_VALIDATE_BOOLEAN)) ? ' sppb-hidden-xs ' : '';
 }
 
-$global_section_z_index = (isset($addon->settings->global_section_z_index) && $addon->settings->global_section_z_index) ? $addon->settings->global_section_z_index : '';
-$global_addon_z_index = (isset($addon->settings->global_addon_z_index) && $addon->settings->global_addon_z_index) ? $addon->settings->global_addon_z_index : '';
+// These are structured (numeric/identifier) fields rendered into HTML attributes — sanitize so they cannot break out into script.
+$global_section_z_index = (isset($addon->settings->global_section_z_index) && $addon->settings->global_section_z_index) ? (int) $addon->settings->global_section_z_index : '';
+$global_addon_z_index = (isset($addon->settings->global_addon_z_index) && $addon->settings->global_addon_z_index) ? (int) $addon->settings->global_addon_z_index : '';
 $global_custom_position = (isset($addon->settings->global_custom_position) && $addon->settings->global_custom_position) ? $addon->settings->global_custom_position : '';
 $global_seclect_position = (isset($addon->settings->global_seclect_position) && $addon->settings->global_seclect_position) ? $addon->settings->global_seclect_position : '';
-$rowId = (isset($addon->settings->row_id) && $addon->settings->row_id) ? $addon->settings->row_id : '';
-$colId = (isset($addon->settings->column_id) && $addon->settings->column_id) ? $addon->settings->column_id : '';
+$rowId = (isset($addon->settings->row_id) && $addon->settings->row_id) ? preg_replace('/[^A-Za-z0-9_-]/', '', (string) $addon->settings->row_id) : '';
+$colId = (isset($addon->settings->column_id) && $addon->settings->column_id) ? preg_replace('/[^A-Za-z0-9_-]/', '', (string) $addon->settings->column_id) : '';
 
 // Image lazy loading
 $config = ComponentHelper::getParams('com_sppagebuilder');
@@ -57,16 +58,16 @@ if (isset($addon->settings->global_use_animation) && $addon->settings->global_us
 {
     if (isset($addon->settings->global_animation) && $addon->settings->global_animation)
     {
-        $custom_class .= ' sppb-wow ' . $addon->settings->global_animation . ' ';
+        $custom_class .= ' sppb-wow ' . preg_replace('/[^A-Za-z0-9_-]/', '', (string) $addon->settings->global_animation) . ' ';
 
         if (isset($addon->settings->global_animationduration) && $addon->settings->global_animationduration)
         {
-            $addon_attr .= ' data-sppb-wow-duration="' . $addon->settings->global_animationduration . 'ms" ';
+            $addon_attr .= ' data-sppb-wow-duration="' . (int) $addon->settings->global_animationduration . 'ms" ';
         }
 
         if (isset($addon->settings->global_animationdelay) && $addon->settings->global_animationdelay)
         {
-            $addon_attr .= 'data-sppb-wow-delay="' . $addon->settings->global_animationdelay . 'ms" ';
+            $addon_attr .= 'data-sppb-wow-delay="' . (int) $addon->settings->global_animationdelay . 'ms" ';
         }
     }
 }

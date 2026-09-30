@@ -34,6 +34,7 @@ use Joomla\CMS\Factory;
 	}
 	$mainfile = JPATH_COMPONENT_ADMINISTRATOR.'/views/jssupportticket/tmpl/controlpanel.php';
 	$contents = file_get_contents($mainfile);
+	//$contents = getJSTicketPHPFunctionsClass()->jsticket_str_replace('$path = JPATH_COMPONENT_ADMINISTRATOR."/include/updater/updater.php";require_once($path);', '', $contents);
 	$contents = getJSTicketPHPFunctionsClass()->jsticket_str_replace('$path = JPATH_COMPONENT_ADMINISTRATOR.\'/include/updater/updater.php\';require_once($path);', '', $contents);
 	file_put_contents($mainfile, $contents);
 

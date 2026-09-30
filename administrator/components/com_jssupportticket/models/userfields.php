@@ -11,11 +11,12 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 jimport('joomla.application.component.model');
 jimport('joomla.html.html');
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\HTML\HTMLHelper;
 
 class JSSupportticketModelUserFields extends JSSupportTicketModel {
 
@@ -239,7 +240,8 @@ class JSSupportticketModelUserFields extends JSSupportTicketModel {
                 $data['userfieldparams'] = $params;
             }
         }
-        if($data['isuserfield'] == "") $data['isuserfield'] = NULL;
+
+		if($data["isuserfield"] == "") $data["isuserfield"] = 0;
         $row = $this->getTable('fieldordering');
         if (!$row->bind($data)) {
             $this->setError($row->getError());
@@ -317,8 +319,8 @@ class JSSupportticketModelUserFields extends JSSupportTicketModel {
         $db = $this->getDBO();
 
         $yesno = array(
-            '0' => array('value' => '1', 'text' => Text::_('Yes')),
-            '1' => array('value' => '0', 'text' => Text::_('No')),);
+            '0' => array('value' => '1', 'text' => Text::_('JYES')),
+            '1' => array('value' => '0', 'text' => Text::_('JNO')),);
 
         $query = "SELECT * FROM `#__js_ticket_fieldsordering` WHERE id = $field";
         $db->setQuery($query);
@@ -434,9 +436,11 @@ class JSSupportticketModelUserFields extends JSSupportTicketModel {
         
         if($fieldfor == 1){//for deleting a ticket field
             $table = "tickets";
+        }else if($fieldfor == 2){
+            $table = "feedbacks";            
         }
         $query = ' SELECT
-                    ( SELECT COUNT(id) FROM `#__js_ticket_'.$table.'` WHERE
+                    ( SELECT COUNT(id) FROM `#__js_ticket_'.$table.'` WHERE 
                         params LIKE \'%"' . $fieldname . '":%\' 
                     )
                     AS total';

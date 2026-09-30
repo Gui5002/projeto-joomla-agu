@@ -1,7 +1,7 @@
 <?php
 /**
 * @title			Mx Awesome News
-* @version   		4.1.8
+* @version   		4.2.4
 * @copyright   		Copyright (C) 2020 mixwebtemplates.com, All rights reserved.
 * @license   		GNU General Public License version 3 or later.
 * @author url   	http://www.mixwebtemplates.com/
@@ -63,7 +63,6 @@ $document->addStyleDeclaration('#coolnews' . $modID . ' .img-slice-wrap {display
 @media only screen and ( max-width: 767px ) {#coolnews' . $modID . ' .img-slice-wrap {width:' . $ju_image_width_mobl . ';}}
 @media only screen and (max-width: 440px) {#coolnews' . $modID . ' .img-slice-wrap {width:' . $ju_image_width_mobp . ';}}');
 ?>
-
 <div id="coolnews<?php echo $modID; ?>" class="row">
 <?php foreach ($ga_items as $item) : ?>
 <div class="img-slice-wrap img-slice-wrap-two">

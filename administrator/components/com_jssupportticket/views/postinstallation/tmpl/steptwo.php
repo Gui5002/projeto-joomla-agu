@@ -10,39 +10,40 @@
   ^
  */
 defined('_JEXEC') or die('Restricted access');
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
+// Same value stepone.php uses. It was referenced further down for the
+// auto-close field but never defined here, so that input rendered size=""
+// and the read raised a notice on the wizard's second screen.
+$med_field_width = 25;
 
 $yesno = array(
     '0' => array('value' => '1',
-        'text' => Text::_('Yes')),
+        'text' => Text::_('JYES')),
     '1' => array('value' => '0',
-        'text' => Text::_('No')),);
+        'text' => Text::_('JNO')),);
 $ticketidsequence = array(
     '0' => array('value' => '1',
         'text' => Text::_('Random')),
     '1' => array('value' => '2',
         'text' => Text::_('Sequential')),);
 $owncaptchaoparend = array(
-    array('value' => '2', 'text' => Text::_('2')),
-    array('value' => '3', 'text' => Text::_('3'))
+    array('value' => '2', 'text' => '2'),
+    array('value' => '3', 'text' => '3')
 );
 ?>
 
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-postinstallation-steptwo">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
         <div id="jsst-main-wrapper" class="post-installation">
-            <div class="js-admin-title-installtion">
-                <span class="jsst_heading"><?php echo Text::_('JS Support Ticket Configurations'); ?></span>
-                <div class="close-button-bottom">
-                    <a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel" class="close-button">
-                        <img src="components/com_jssupportticket/include/images/postinstallation/close-icon.png" />
-                    </a>
-                </div>
-            </div>
+            <?php
+$jsstWizardTitle = 'JS Support Ticket Configurations';
+include_once('components/com_jssupportticket/views/partials/wizardheader.php');
+?>
             <div class="post-installtion-content-wrapper">
                 <div class="post-installtion-content-header">
                     <ul class="update-header-img step-1">
@@ -69,7 +70,7 @@ $owncaptchaoparend = array(
                 <div class="post-installtion-content_wrapper_right">
                     <div class="jsst-config-topheading">
                         <span class="heading-post-ins jsst-configurations-heading"><?php echo Text::_('Ticket Configurations');?></span>
-                        <span class="heading-post-ins jsst-config-steps"><?php echo Text::_('Step 2 of 3');?></span>
+                        <span class="heading-post-ins jsst-config-steps"><?php echo Text::_('Step 2 of 4');?></span>
                     </div>
                     <div class="post-installtion-content">
                         <form id="jssupportticket-form-ins" method="post" action="index.php">
@@ -124,9 +125,10 @@ $owncaptchaoparend = array(
                                     <?php echo Text::_('Back'); ?>
                                 </a>
                             </div>
+                            
                             <input type="hidden" name="task" value="save" />
                             <input type="hidden" name="c" value="postinstallation" />
-                            <input type="hidden" name="layout" value="steptwo" />
+                            <input type="hidden" name="layout" value="settingcomplete" />
                             <input type="hidden" name="step" value="3">
                             <input type="hidden" name="option" value="<?php echo $this->option; ?>" />
                             <?php echo HTMLHelper::_( 'form.token' ); ?>
@@ -137,7 +139,4 @@ $owncaptchaoparend = array(
         </div>        
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>

@@ -11,9 +11,9 @@
 */
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 ?>
 <div class="js-row js-null-margin">
@@ -22,11 +22,8 @@ HTMLHelper::_('behavior.formvalidator');
 if($this->config['offline'] != '1'){
     require_once JPATH_COMPONENT_SITE . '/views/header.php';
     $document = Factory::getDocument();
-    $document->addStyleSheet(Uri::root().'components/com_jssupportticket/include/css/inc.css/ticket-ticketstatus.css', 'text/css');
     $language = Factory::getLanguage();
-    $document->addStyleSheet(Uri::root().'components/com_jssupportticket/include/css/jssupportticketresponsive.css');
     if($language->isRTL()){
-        $document->addStyleSheet(Uri::root().'components/com_jssupportticket/include/css/jssupportticketdefaultrtl.css');
     } ?> 
 
     <script language="javascript">
@@ -34,19 +31,19 @@ if($this->config['offline'] != '1'){
             if (document.formvalidator.isValid(f)) {
                 f.check.value='<?php if((JVERSION == '1.5') || (JVERSION == '2.5')) echo JUtility::getToken(); else echo  Factory::getSession()->getFormToken(); ?>';
             }else{
-                alert("<?php echo Text::_('Some values are not acceptable please retry');?>");
+                alert("<?php echo Text::_('Some values are not valid. Please review the form and try again.');?>");
     			return false;
             }
     		return true;
         }
     </script>
-    <div id="jsst-wrapper-top">
-        <?php if($this->config['cur_location'] == 1){ ?>
+    <?php if($this->config['cur_location'] == 1){ ?>
+        <div id="jsst-wrapper-top">
             <div id="jsst-wrapper-top-left">
                 <div id="jsst-breadcrunbs">
                     <ul>
                         <li>
-                            <a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel&Itemid=<?php echo $this->Itemid; ?>" title="Dashboard">
+                            <a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel&Itemid=<?php echo $this->Itemid; ?>" title="<?php echo htmlspecialchars(Text::_('Dashboard'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <?php echo Text::_('Dashboard'); ?>
                             </a>
                         </li>
@@ -56,10 +53,10 @@ if($this->config['offline'] != '1'){
                     </ul>
                 </div>
             </div>
-        <?php } ?>
-    </div>
+        </div>
+    <?php } ?>
     <div class="js-ticket-checkstatus-wrp">
-        <form class="js-ticket-form" action="index.php" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data"  onSubmit="return myValidate(this);">
+        <form class="js-ticket-form form-validate" action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data"  onSubmit="return myValidate(this);">
             <div class="js-ticket-checkstatus-field-wrp">
                 <div class="js-ticket-field-title">
                     <label for="email">

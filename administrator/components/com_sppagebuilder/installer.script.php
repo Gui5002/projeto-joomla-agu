@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -100,6 +100,35 @@ class com_sppagebuilderInstallerScript
                 $status->modules[] = array('name' => $name, 'client' => $client, 'result' => $result);
             }
         }
+    }
+
+
+    public function preflight($type, $parent)
+    {
+        $joomlaVersion = defined('JVERSION') ? JVERSION : (new Version())->getShortVersion();
+        $phpVersion = PHP_VERSION;
+        
+        if (version_compare($phpVersion, '8.0', '<'))
+        {
+            Factory::getApplication()->enqueueMessage(
+                'This extension requires PHP 8.0 or later.',
+                'error'
+            );
+
+            return false;
+        }
+
+        if (version_compare($joomlaVersion, '4.0', '<'))
+        {
+            Factory::getApplication()->enqueueMessage(
+                'This extension requires Joomla 4.0 or later.',
+                'error'
+            );
+
+            return false;
+        }
+        
+        return true;
     }
 
 
@@ -322,8 +351,12 @@ class com_sppagebuilderInstallerScript
             return;
         }
 
-		$componentId = ComponentHelper::getComponent('com_sppagebuilder')->id;
+		$componentId = (int) ComponentHelper::getComponent('com_sppagebuilder')->id;
 
+		if (empty($componentId))
+		{
+			return false;
+		}
 
         $params->set('sppb_color_variables', $updatedColors);
 

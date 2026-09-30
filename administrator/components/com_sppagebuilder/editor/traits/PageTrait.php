@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -258,6 +258,7 @@ trait PageTrait
 		$type = $this->getInput('type', '', 'STRING');
 		$pageType = $this->getInput('page_type', 'page', 'STRING');
 		$collectionId = $this->getInput('collection_id', 0, 'INT');
+		$language = $this->getInput('language', '*', 'STRING');
 
 		$model = $this->getModel('Editor');
 		$data = [];
@@ -278,18 +279,51 @@ trait PageTrait
 		$extensionView = $pageType;
 		$viewId = $collectionId;
 
+		// New language variants of an EasyStore store page inherit the '*' (All)
+		// page's layout instead of starting blank, so translators begin from the
+		// existing design.
+		$initialContent = '[]';
+		$initialCss = '';
+
 		if (!empty($type))
 		{
+			// if (in_array($type, ['single', 'storefront', 'collection', 'quick_cart_modal'], true))
 			if (in_array($type, ['single', 'storefront', 'collection'], true))
 			{
 				$extension = 'com_easystore';
 				$extensionView = explode('-', $type)[0];
 
-				$title = ucwords(str_replace('-', ' ', $type));
+				$title = ucwords(str_replace(['-', '_'], ' ', $type));
 
-				if ($pageId = $this->isStorePageExist($extension, $extensionView))
+				// EasyStore store pages are multilingual: one row per (extension_view, language).
+				if ($pageId = $this->isStorePageExist($extension, $extensionView, $language))
 				{
 					$this->sendResponse(['id' => $pageId], 200);
+				}
+
+				if ($language !== '*')
+				{
+					$sourcePageId = $this->isStorePageExist($extension, $extensionView, '*');
+
+					if ($sourcePageId)
+					{
+						$db = Factory::getDbo();
+						$sourceQuery = $db->getQuery(true);
+						$sourceQuery->select($db->quoteName(['content', 'text', 'css']))
+							->from($db->quoteName('#__sppagebuilder'))
+							->where($db->quoteName('id') . ' = ' . (int) $sourcePageId);
+						$db->setQuery($sourceQuery);
+						$sourceRow = $db->loadObject();
+
+						if (!empty($sourceRow))
+						{
+							// Same "content is authoritative, text is stale after the first edit"
+							// rule as loading an existing page - the '*' source page's real state
+							// must be copied as-is, not whatever `text` was at its own creation time.
+							$initialContent = !is_null($sourceRow->content) ? $sourceRow->content : '[]';
+							$initialCss = !empty($sourceRow->css) ? $sourceRow->css : '';
+						}
+					}
 				}
 			}
 			elseif ($type === 'popup')
@@ -298,14 +332,49 @@ trait PageTrait
 				$extensionView = 'popup';
 			}
 		}
+		elseif (in_array($pageType, ['dynamic_content:index', 'dynamic_content:detail'], true) && !empty($collectionId))
+		{
+			// Dynamic Content index/detail pages are multilingual too: one row per
+			// (extension_view, collection_id, language), same as EasyStore store pages above.
+			if ($pageId = $this->isDynamicContentPageExist($pageType, $collectionId, $language))
+			{
+				$this->sendResponse(['id' => $pageId], 200);
+			}
+
+			if ($language !== '*')
+			{
+				$sourcePageId = $this->isDynamicContentPageExist($pageType, $collectionId, '*');
+
+				if ($sourcePageId)
+				{
+					$db = Factory::getDbo();
+					$sourceQuery = $db->getQuery(true);
+					$sourceQuery->select($db->quoteName(['content', 'text', 'css']))
+						->from($db->quoteName('#__sppagebuilder'))
+						->where($db->quoteName('id') . ' = ' . (int) $sourcePageId);
+					$db->setQuery($sourceQuery);
+					$sourceRow = $db->loadObject();
+
+					if (!empty($sourceRow))
+					{
+						// Same "content is authoritative, text is stale after the first edit"
+						// rule as loading an existing page - the '*' source page's real state
+						// must be copied as-is, not whatever `text` was at its own creation time.
+						$initialContent = !is_null($sourceRow->content) ? $sourceRow->content : '[]';
+						$initialCss = !empty($sourceRow->css) ? $sourceRow->css : '';
+					}
+				}
+			}
+		}
 
 		$data = [
 			'id' => 0,
 			'title' => $title,
-			'text' => '[]',
-			'css' => '',
+			'text' => $initialContent,
+			'content' => $initialContent,
+			'css' => $initialCss,
 			'catid' => 0,
-			'language' => '*',
+			'language' => $language,
 			'access' => 1,
 			'published' => 1,
 			'extension' => $extension,
@@ -331,7 +400,7 @@ trait PageTrait
 		$this->sendResponse($response, 201);
 	}
 
-	public function isStorePageExist($extension, $view)
+	public function isStorePageExist($extension, $view, $language = null)
 	{
 		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
@@ -339,6 +408,22 @@ trait PageTrait
 			->from($db->quoteName('#__sppagebuilder'))
 			->where($db->quoteName('extension') . ' = ' . $db->quote($extension))
 			->where($db->quoteName('extension_view') . ' = ' . $db->quote($view));
+
+		if (!is_null($language))
+		{
+			// Legacy rows created before language support have language = '' (the column's
+			// schema default), not '*' - treat them as the same "All" row so a lookup for
+			// '*' still finds them, instead of creating a second, blank '*' row alongside them.
+			if ($language === '*')
+			{
+				$query->where('(' . $db->quoteName('language') . ' = ' . $db->quote('*') . ' OR ' . $db->quoteName('language') . ' = ' . $db->quote('') . ')');
+			}
+			else
+			{
+				$query->where($db->quoteName('language') . ' = ' . $db->quote($language));
+			}
+		}
+
 		$db->setQuery($query);
 
 		try
@@ -351,6 +436,40 @@ trait PageTrait
 		}
 
 		return false;
+	}
+
+	public function isDynamicContentPageExist($extensionView, $collectionId, $language = null)
+	{
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('id')
+			->from($db->quoteName('#__sppagebuilder'))
+			->where($db->quoteName('extension') . ' = ' . $db->quote('com_sppagebuilder'))
+			->where($db->quoteName('extension_view') . ' = ' . $db->quote($extensionView))
+			->where($db->quoteName('view_id') . ' = ' . (int) $collectionId);
+
+		if (!is_null($language))
+		{
+			if ($language === '*')
+			{
+				$query->where('(' . $db->quoteName('language') . ' = ' . $db->quote('*') . ' OR ' . $db->quoteName('language') . ' = ' . $db->quote('') . ')');
+			}
+			else
+			{
+				$query->where($db->quoteName('language') . ' = ' . $db->quote($language));
+			}
+		}
+
+		$db->setQuery($query);
+
+		try
+		{
+			return $db->loadResult();
+		}
+		catch (Exception $error)
+		{
+			return false;
+		}
 	}
 
 	public function previewUrl()
@@ -383,5 +502,44 @@ trait PageTrait
 			$this->sendResponse(['message' => 'Invalid action'], 400);
 		}
 
+	}
+
+	public function deletePageHits()
+	{
+		$method = $this->getInputMethod();
+
+		if ($method !== 'PATCH') {
+			$this->sendResponse(['message' => 'Invalid request method'], 405);
+		}
+
+		$pageId = $this->getInput('id', 0, 'INT');
+
+		if (empty($pageId)) {
+			$this->sendResponse(['message' => 'Invalid page id'], 400);
+		}
+
+		$model = $this->getModel('Editor');
+
+		$pageCreator = $model->getPageCreator($pageId);
+
+		$user = Factory::getUser();
+		$canEdit = $user->authorise('core.edit', 'com_sppagebuilder');
+		$canEditOwn = $user->authorise('core.edit.own', 'com_sppagebuilder');
+
+		$canEditPage = $canEdit || ($canEditOwn && $user->id === $pageCreator);
+
+		if (!$canEditPage)
+		{
+			$this->sendResponse(['message' => Text::_('COM_SPPAGEBUILDER_EDITOR_INVALID_EDIT_ACCESS')], 403);
+		}
+
+		$response = (bool) $model->resetPageHits($pageId);
+
+		if (!$response)
+		{
+			$this->sendResponse(['status' => false, 'message' => 'Failed to reset page hits'], 500);
+		}
+
+		$this->sendResponse(['status' => true]);
 	}
 }

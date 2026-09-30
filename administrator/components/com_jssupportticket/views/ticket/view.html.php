@@ -11,12 +11,13 @@
 */
  
 defined('_JEXEC') or die('Restricted access');
-jimport('joomla.application.component.view');
-jimport('joomla.html.pagination');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Pagination\Pagination;
+
+jimport('joomla.application.component.view');
+jimport('joomla.html.pagination');
 
 class JSSupportticketViewTicket extends JSSupportTicketView
 {
@@ -59,8 +60,7 @@ class JSSupportticketViewTicket extends JSSupportTicketView
             if($listtype == 4) $text = Text::_('Close');
             if($listtype == 5) $text = Text::_('My Tickets');
             ToolbarHelper::title(Text::_('Tickets') . ' <small><small>[ ' . $text . ' ]</small></small>');
-            
-            $result = $this->getJSModel('ticket')->getAdminMyTickets($searchdepartmentid, $searchpriorityid, $searchsubject,$searchfrom,$searchfromemail,$searchticketid,$listtype,$sortby, $datestart, $dateend, $limitstart,$limit);
+            $result = $this->getJSModel('ticket')->getAdminMyTickets($searchdepartmentid, $searchpriorityid, $searchstaffmember,$searchsubject,$searchfrom,$searchfromemail,$searchticketid,$listtype,$sortby, $datestart, $dateend, $limitstart,$limit);
             $total = $result[1];
             $this->result = $result[0];
             $this->lists = $result[2];
@@ -71,6 +71,11 @@ class JSSupportticketViewTicket extends JSSupportTicketView
             $this->sortorder = $sortorder;
             $pagination = new Pagination($total, $limitstart, $limit);
             $this->pagination = $pagination;
+            try {
+                $this->savedViews = $this->getJSModel('featurefoundation')->getActiveSavedViewsForSelect();
+            } catch (Throwable $e) {
+                $this->savedViews = array();
+            }
         }elseif($layoutName == 'ticketdetails'){
             ToolbarHelper::title(Text::_('Ticket'));
             $ticketid = Factory::getApplication()->input->get('cid', array (0), '', 'array');
@@ -79,7 +84,7 @@ class JSSupportticketViewTicket extends JSSupportTicketView
             $user = JSSupportticketCurrentUser::getInstance();
             $isstaff = 0;
             $this->ticketdetail = $result[0];
-            $this->isAttachmentPublished = $result['publishedInfo'];
+            $this->isAttachmentPublished = $result['publishedInfo']->published;
             if(isset($result[1])) $this->ticketnotes = $result[1];
             if(isset($result[2])) $this->ticketreplies = $result[2];
             $this->lists = $result[3];
@@ -89,6 +94,11 @@ class JSSupportticketViewTicket extends JSSupportTicketView
             if(isset($result[8])) $this->fieldsordering = $result[8];
             $this->isstaff = $isstaff;
             if(isset($result[9])) $this->tickethistory = $result[9];
+            // Other tickets by the same user, shown in the right-hand sidebar.
+            // The model already builds this (result[13]) whenever the ticket
+            // belongs to a registered user; only this assignment was missing, so
+            // the panel's isset() guard was never satisfied and it never rendered.
+            if(isset($result[13])) $this->usertickets = $result[13];
         }elseif($layoutName == 'formticket'){
 			ToolbarHelper::save('saveticketsave','Submit Ticket');
 			ToolbarHelper::save2new('saveticketandnew');

@@ -2,7 +2,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -62,8 +62,10 @@ abstract class SppagebuilderHelperK2{
 			}
 			if (!in_array('', $catid)) {
 				$categories = self::getCategories( $catid, $include_subcategories );
-				$categories = array_merge($categories, $catid);
-				$query->where($db->quoteName('a.catid')." IN (" . implode( ',', $categories ) . ")");
+				$categories = array_filter(array_map('intval', array_merge($categories, $catid)));
+				if (!empty($categories)) {
+					$query->where($db->quoteName('a.catid')." IN (" . implode( ',', $categories ) . ")");
+				}
 			}
 		}
 
@@ -169,7 +171,7 @@ abstract class SppagebuilderHelperK2{
 			->where($db->quoteName('access')." IN (" . implode( ',', Factory::getUser()->getAuthorisedViewLevels() ) . ")")
 			->where($db->quoteName('language')." IN (" . $db->Quote(Factory::getLanguage()->getTag()).", ".$db->Quote('*') . ")")
 			//->where($db->quoteName('parent') . ' = ' . $db->quote($parent_id))
-			->where($db->quoteName('parent')." IN (" . implode( ',', $parent_id ) . ")")
+			->where($db->quoteName('parent')." IN (" . implode( ',', array_map('intval', (array) $parent_id) ) . ")")
 			->order($db->quoteName('ordering') . ' ASC');
 
 		$db->setQuery($query);

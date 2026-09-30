@@ -10,7 +10,6 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Filesystem\File;
 use JoomShaper\SPPageBuilder\DynamicContent\Controllers\CollectionImportExportController;
 use JoomShaper\SPPageBuilder\DynamicContent\Models\Page;
@@ -238,14 +237,7 @@ trait ExportTrait
 	private function exportWithMedia($localMediaSources, $pageData, $isSeoChecked)
 	{
 		$config = ApplicationHelper::getAppConfig();
-		$mediaSources = [];
 		$content = ApplicationHelper::preparePageData($pageData);
-
-		foreach ($localMediaSources as $source)
-		{
-			$sourcePath = Uri::root() . $source;
-			array_push($mediaSources, $sourcePath);
-		}
 
 		$seoSettings = [];
 
@@ -314,34 +306,35 @@ trait ExportTrait
 				'message' => 'Failed to create necessary directories',
 			], 500);
 		}
-
-		$options = new \Joomla\Registry\Registry;
-		$http = HttpFactory::getHttp($options);
 	
-		foreach ($mediaSources as $source)
+		foreach ($localMediaSources as $source)
 		{
-			$encodedBaseName = rawurlencode(basename($source));
-			$destination = $mediaTempDir . '/' . $encodedBaseName;
+			$fileName = basename($source);
+			$destination = $mediaTempDir . '/' . $fileName;
 
-			try {
-				$encodedUrl = dirname($source) . '/' . $encodedBaseName;
-				$response = $http->get($encodedUrl);
+			$sourceFile = JPATH_ROOT . '/' . ltrim($source, '/');
 
-				if ($response->code === 200) {
-					File::write($destination, $response->body);
-				} else {
-					$this->sendResponse([
-						'message' => 'Failed to copy media file: ' . $source,
-						'error' => 'HTTP response code: ' . $response->code
-					], 500);
+			try
+			{
+				if (!File::exists($sourceFile))
+				{
+					throw new Exception('Media file does not exist: ' . $sourceFile);
 				}
-			} catch (Exception $e) {
+
+				if (!File::copy($sourceFile, $destination))
+				{
+					throw new Exception('Unable to copy media file');
+				}
+			}
+			catch (Exception $e)
+			{
 				$this->sendResponse([
 					'message' => 'Failed to copy media file: ' . $source,
 					'error' => $e->getMessage()
 				], 500);
 			}
 		}
+
 	
 		$stringContent = json_encode($pageContent);
 		$fileName = $content->title . '_' . $this->generateRandomId() . '.json';

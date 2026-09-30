@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -301,14 +301,7 @@ class SppagebuilderController extends BaseController
 	private function exportWithMedia($localMediaSources, $pageData, $isSeoChecked)
 	{
 		$config = ApplicationHelper::getAppConfig();
-		$mediaSources = [];
 		$content = ApplicationHelper::preparePageData($pageData);
-	
-		foreach ($localMediaSources as $source)
-		{
-			$sourcePath = Uri::root() . $source;
-			array_push($mediaSources, $sourcePath);
-		}
 
 		$seoSettings = [];
 
@@ -360,28 +353,28 @@ class SppagebuilderController extends BaseController
 					'message' => 'Failed to create necessary directories',
 				], 500);
 		}
-
-		$options = new \Joomla\Registry\Registry;
-		$http = HttpFactory::getHttp($options);
 	
-		foreach ($mediaSources as $source)
+		foreach ($localMediaSources as $source)
 		{
-			$encodedBaseName = rawurlencode(basename($source));
-			$destination = $mediaTempDir . '/' . $encodedBaseName;
+			$fileName = basename($source);
+			$destination = $mediaTempDir . '/' . $fileName;
 
-			try {
-				$encodedUrl = dirname($source) . '/' . $encodedBaseName;
-				$response = $http->get($encodedUrl);
+			$sourceFile = JPATH_ROOT . '/' . ltrim($source, '/');
 
-				if ($response->code === 200) {
-					File::write($destination, $response->body);
-				} else {
-					$this->sendResponse([
-						'message' => 'Failed to copy media file: ' . $source,
-						'error' => 'HTTP response code: ' . $response->code
-					], 500);
+			try
+			{
+				if (!File::exists($sourceFile))
+				{
+					throw new Exception('Media file does not exist: ' . $sourceFile);
 				}
-			} catch (Exception $e) {
+
+				if (!File::copy($sourceFile, $destination))
+				{
+					throw new Exception('Unable to copy media file');
+				}
+			}
+			catch (Exception $e)
+			{
 				$this->sendResponse([
 					'message' => 'Failed to copy media file: ' . $source,
 					'error' => $e->getMessage()
@@ -390,7 +383,8 @@ class SppagebuilderController extends BaseController
 		}
 	
 		$stringContent = json_encode($pageContent);
-		$fileName = $content->title . '_' . $this->generateRandomId() . '.json';
+		// basename() so a crafted page title cannot traverse out of $parentDir.
+		$fileName = basename($content->title . '_' . $this->generateRandomId()) . '.json';
 		file_put_contents($parentDir . '/' . $fileName, $stringContent);
 	
 		rename($mediaTempDir, $parentDir . '/media');

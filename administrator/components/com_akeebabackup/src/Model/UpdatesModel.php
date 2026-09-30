@@ -236,7 +236,7 @@ class UpdatesModel extends BaseDatabaseModel
 		$query         = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 			->select('*')
 			->from($db->qn('#__update_sites'))
-			->where($db->qn('update_site_id') . ' IN (' . implode(', ', $updateSiteIDs) . ')');
+			->whereIn($db->qn('update_site_id'), $updateSiteIDs, ParameterType::INTEGER);
 
 		try
 		{
@@ -497,15 +497,18 @@ class UpdatesModel extends BaseDatabaseModel
 		{
 			$folder = $folder ?: 'system';
 
-			$query->where($db->qn('folder') . ' = ' . $db->q($folder));
+			$query->where($db->qn('folder') . ' = :folder')
+				->bind(':folder', $folder, ParameterType::STRING);
 		}
 
 		// Module? Use the folder to determine if it's site or admin module.
 		if ($type == 'module')
 		{
-			$folder = $folder ?: 'site';
+			$folder   = $folder ?: 'site';
+			$clientId = ($folder == 'site') ? 0 : 1;
 
-			$query->where($db->qn('client_id') . ' = ' . $db->q(($folder == 'site') ? 0 : 1));
+			$query->where($db->qn('client_id') . ' = :client_id')
+				->bind(':client_id', $clientId, ParameterType::INTEGER);
 		}
 
 		try

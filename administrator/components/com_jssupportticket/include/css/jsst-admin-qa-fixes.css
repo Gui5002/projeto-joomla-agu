@@ -1,0 +1,5921 @@
+/*
+ * JS Support Ticket — Admin QA fixes
+ * Resolution-safe, responsive and RTL-safe overrides loaded after legacy CSS.
+ * Scope is intentionally restricted to #jsst-admin.
+ */
+
+#jsst-admin,
+#jsst-admin *,
+#jsst-admin *::before,
+#jsst-admin *::after {
+  box-sizing: border-box;
+}
+
+#jsst-admin img,
+#jsst-admin svg,
+#jsst-admin video,
+#jsst-admin canvas {
+  max-width: 100%;
+}
+
+#jsst-admin input,
+#jsst-admin select,
+#jsst-admin textarea,
+#jsst-admin button {
+  max-width: 100%;
+}
+
+#jsst-admin .js-row,
+#jsst-admin [class*="js-col-"] {
+  min-width: 0;
+}
+
+#jsst-admin .jsstadmin-data-wrp,
+#jsst-admin form#adminForm,
+#jsst-admin #jsstadmin-data-wrp,
+#jsst-admin #js-tk-cparea,
+#jsst-admin #js-tk-admin-wrapper {
+  max-width: 100%;
+}
+
+/* Shared Joomla calendar field: keep the text input and trigger together. */
+#jsst-admin .field-calendar,
+#jsst-admin .field-calendar .input-group,
+#jsst-admin .js-calendar,
+#jsst-admin .js-ticket-calender,
+#jsst-admin .calendar-container {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin .field-calendar .input-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  width: 100%;
+  gap: 0;
+}
+
+#jsst-admin .field-calendar .input-group > input,
+#jsst-admin .field-calendar input[type="text"] {
+  width: 100%;
+  min-width: 0;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+/* :not(.js-btn) — Joomla renders the calendar *popup* inside .field-calendar,
+   and its three footer actions (Clear/Today/Close) are <button class="js-btn">.
+   Without this they inherit the trigger button's fixed 42px box. */
+#jsst-admin .field-calendar .input-group > button:not(.js-btn),
+#jsst-admin .field-calendar button:not(.js-btn) {
+  position: static;
+  width: 42px;
+  min-width: 42px;
+  height: auto;
+  min-height: 42px;
+  margin: 0;
+  border: 1px solid #dbe3ef;
+  border-inline-start: 0;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-start-end-radius: 11px;
+  border-end-end-radius: 11px;
+  background: var(--jsst-soft, #f8fafc);
+  color: #334155;
+  box-shadow: none;
+}
+
+/* Select-user modal: the old 3-fields-plus-buttons row was too wide around 984px. */
+#jsst-admin div#userpopup {
+  width: min(780px, calc(100vw - 32px));
+  max-height: min(86vh, 720px);
+  direction: inherit;
+}
+
+#jsst-admin div#userpopup .search-center-heading {
+  padding-inline: 20px 14px;
+}
+
+#jsst-admin div#userpopup .search-center > .js-col-md-12 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+  width: 100%;
+  padding: 16px;
+}
+
+#jsst-admin div#userpopup .js-search-value,
+#jsst-admin div#userpopup .js-search-value-button,
+#jsst-admin div#userpopup .js-button {
+  min-width: 0;
+  width: 100%;
+}
+
+#jsst-admin div#userpopup .js-search-value-button {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#jsst-admin div#userpopup .js-search-value-button .js-button {
+  width: auto;
+}
+
+#jsst-admin div#userpopup input.js-button-search,
+#jsst-admin div#userpopup input.js-button-reset {
+  min-width: 104px;
+  width: auto;
+}
+
+#jsst-admin div#userpopup #records {
+  max-height: calc(min(86vh, 720px) - 174px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+#jsst-admin div#userpopup #records-inner {
+  min-width: 560px;
+}
+
+#jsst-admin div#userpopup .search-center-heading span.close {
+  inset: auto;
+  margin-inline-start: auto;
+}
+
+/* Shared form pages and attachments. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-form form#adminForm,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-form .jsstadmin-data-wrp {
+  min-width: 0;
+  overflow: visible;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-form .js-form-wrapper {
+  min-width: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-form .js-title,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-form .js-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin .js-attachment-files,
+#jsst-admin .js-attachment-files {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+
+#jsst-admin .js-value-attachment-text {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid #dbe3ef;
+  border-radius:var(--jsst-radius-md, 12px);
+  background: var(--jsst-soft, #f8fafc);
+}
+
+#jsst-admin .js-value-attachment-text input[type="file"] {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin .js-attachment-remove {
+  position: relative;
+  inset: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fff1f2;
+  color: #be123c;
+  cursor: pointer;
+}
+
+#jsst-admin .js-attachment-remove::before,
+#jsst-admin .js-attachment-remove::after {
+/*  content: "";*/
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+#jsst-admin .js-attachment-remove::before { transform: rotate(45deg); }
+#jsst-admin .js-attachment-remove::after { transform: rotate(-45deg); }
+
+#jsst-admin .js-attachment-option {
+  width: 100%;
+  margin-top: 8px;
+  color: var(--jsst-muted, #64748b);
+  line-height: 1.55;
+}
+
+#jsst-admin .download_attachments {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 11px;
+  background: var(--jsst-soft, #f8fafc);
+  overflow-wrap: anywhere;
+}
+
+/* Configuration: help text belongs under its control, not in a narrow side column. */
+#jsst-admin .js-ticket-configuration-row {
+  display: grid;
+  grid-template-columns: minmax(180px, .8fr) minmax(0, 1.7fr);
+  align-items: start;
+  gap: 8px 18px;
+  width: 100%;
+  padding: 14px 16px;
+}
+
+#jsst-admin .js-ticket-configuration-row > .js-config-title {
+  grid-column: 1;
+  width: auto;
+  padding: 10px 0;
+}
+
+#jsst-admin .js-ticket-configuration-row > .js-config-value,
+#jsst-admin .js-ticket-configuration-row > [class*="js-col-"]:not(.js-config-title):not(.js-config-help) {
+  grid-column: 2;
+  width: 100%;
+  padding: 0;
+}
+
+#jsst-admin .js-ticket-configuration-row > .js-config-help,
+#jsst-admin .js-ticket-configuration-row > [class*="js-col-"] small {
+  min-width: 0;
+}
+
+#jsst-admin .js-ticket-configuration-row > .js-config-help {
+  grid-column: 2 !important;
+  width: 100% !important;
+  margin: -2px 0 0;
+  padding: 0;
+  color: var(--jsst-muted, #64748b) !important;
+}
+
+#jsst-admin .js-ticket-configuration-row > [class*="js-col-"]:not(.js-config-title):not(.js-config-value):not(.js-config-help) {
+  grid-column: 2;
+  width: 100%;
+  padding: 0;
+  color: var(--jsst-muted, #64748b);
+}
+
+#jsst-admin .js-ticket-configuration-row input,
+#jsst-admin .js-ticket-configuration-row select,
+#jsst-admin .js-ticket-configuration-row textarea {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Ticket list and filters. */
+#jsst-admin .jsst-ticket-list-v2,
+#jsst-admin .jsst-ticket-filter-card,
+#jsst-admin .jsst-ticket-list-card,
+#jsst-admin .jsst-ticket-item,
+#jsst-admin .jsst-ticket-item-main,
+#jsst-admin .jsst-ticket-meta-grid,
+#jsst-admin .jsst-ticket-custom-fields,
+#jsst-admin .jsst-ticket-actions {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin .jsst-ticket-filter-grid,
+#jsst-admin .jsst-ticket-filter-advanced {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+#jsst-admin .jsst-ticket-filter-field,
+#jsst-admin .jsst-ticket-custom-filter,
+#jsst-admin .jsst-ticket-filter-field > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin .jsst-ticket-filter-field .field-calendar,
+#jsst-admin .jsst-ticket-filter-field .input-group {
+  width: 100% !important;
+}
+
+#jsst-admin .jsst-ticket-custom-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px 14px;
+}
+
+#jsst-admin .jsst-ticket-custom-fields > * {
+  min-width: 0 !important;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin .jsst-ticket-item {
+  overflow: hidden;
+}
+
+#jsst-admin .jsst-ticket-actions {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-end !important;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  position: static;
+}
+
+#jsst-admin .jsst-ticket-actions > * {
+  position: static;
+  margin: 0;
+}
+
+/* Ticket detail: content-safe grids, readable threads and compact side badges. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 form#adminForm.jsstadmin-data-wrp {
+  min-width: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 300px);
+  gap: 18px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-left,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tk-message,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-ticket-thread-data,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .note-msg {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 div.js-ticket-threads {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  width: 100%;
+  padding: 14px;
+  text-align: start;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tk-pic,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tk-pic img {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  max-width: 44px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-ticket-thread-person,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-ticket-thread-note,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .note-msg {
+  display: block;
+  width: 100%;
+  margin: 0 0 6px;
+  text-align: start;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-ticket-thread-cnt-btm {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  text-align: start;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .ticket-edit-time-button {
+  width: auto;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-detal-alinks img,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-ticket-thread-add-btn-link img,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .ticket-edit-reply-button img,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .ticket-edit-time-button img {
+  width: 19px;
+  height: 19px;
+  max-width: 19px;
+  max-height: 19px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js_ticketattachment {
+/*  justify-content: space-between;*/
+  flex-wrap: wrap;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js_ticketattachment a.button {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 34px;
+  margin: 0;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--jsst-primary, #2563eb);
+  color: #fff;
+  text-decoration: none;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right .js-ticket-field-title,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right .js-ticket-field-value,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .jsst-ticket-feature-kv span,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .jsst-ticket-feature-kv strong {
+  word-break: normal;
+  overflow-wrap: anywhere;
+  text-align: start !important;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-user-tkts .js-tkt-det-status {
+  display: inline-flex;
+  width: auto;
+  min-width: 0;
+  min-height: 26px;
+  margin: 0 0 0 6px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  font-size: 10px;
+  line-height: 1;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-user-tkts .js-tkt-det-user {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 15px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-user-tkts .js-tkt-det-user-image,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-user-tkts .js-tkt-det-user-image img {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  max-width: 36px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+}
+
+/* Ticket popups: keep footer buttons visible and editors contained. */
+#jsst-admin #js-private-crendentials-popup,
+#jsst-admin #userpopupforintnote,
+#jsst-admin #userpopupforchangedepartment,
+#jsst-admin #userpopupforassignstaff,
+#jsst-admin #userpopupformerge,
+#jsst-admin #userpopupforchangepriority {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(760px, calc(100vw - 28px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  z-index: 99990;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 28px 80px rgba(15, 23, 42, .28);
+}
+
+#jsst-admin #js-private-crendentials-popup .js-ticket-priorty-fields-wrp,
+#jsst-admin #userpopupforintnote .js-ticket-priorty-fields-wrp,
+#jsst-admin #userpopupforchangedepartment .js-ticket-priorty-fields-wrp,
+#jsst-admin #userpopupforassignstaff .js-ticket-priorty-fields-wrp,
+#jsst-admin #userpopupformerge .js-ticket-priorty-fields-wrp {
+  width: 100%;
+  max-height: none;
+  overflow: visible;
+  padding: 16px;
+}
+
+#jsst-admin #js-private-crendentials-popup .js-ticket-priorty-btn-wrp,
+#jsst-admin #userpopupforintnote .js-ticket-priorty-btn-wrp,
+#jsst-admin #userpopupforchangedepartment .js-ticket-priorty-btn-wrp,
+#jsst-admin #userpopupforassignstaff .js-ticket-priorty-btn-wrp,
+#jsst-admin #userpopupformerge .js-ticket-priorty-btn-wrp,
+#jsst-admin #userpopupforchangepriority .js-ticket-priorty-btn-wrp {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 12px 16px;
+  border-top: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(8px);
+  z-index: 2;
+}
+
+#jsst-admin #userpopupforintnote iframe,
+#jsst-admin #userpopupforintnote textarea,
+#jsst-admin #userpopupforchangedepartment iframe,
+#jsst-admin #userpopupforchangedepartment textarea {
+  width: 100%;
+  max-width: 100%;
+  min-height: 220px;
+}
+
+/* Reports: controls remain separate and wrap before they collide. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .js-tk-filter {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .tk-search-value,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .tk-search-button,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #username-div {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .tk-search-value:has(a.jsst-userpopup-trigger) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #username-text {
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 a.jsst-userpopup-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  width: auto;
+  margin: 0;
+  padding: 0 14px;
+  border-radius: 11px;
+  background: var(--jsst-ink);
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .tk-search-button {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .js-form-search,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .js-form-reset {
+  width: auto;
+  min-width: 96px;
+  margin: 0;
+}
+
+/* Action groups such as GDPR/erase requests must not overlap. */
+#jsst-admin .jsst-action-btn-wrp,
+#jsst-admin .jsst-actions,
+#jsst-admin .js-action-wrp,
+#jsst-admin td.action,
+#jsst-admin td.actions {
+  white-space: normal;
+}
+
+#jsst-admin .jsst-action-btn-wrp,
+#jsst-admin .jsst-actions,
+#jsst-admin .js-action-wrp {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+#jsst-admin .jsst-action-btn-wrp > *,
+#jsst-admin .jsst-actions > *,
+#jsst-admin .js-action-wrp > * {
+  position: static;
+  margin: 0;
+}
+
+/* Missing/empty-state image fallback sizing. */
+#jsst-admin #js-imgfor-message,
+#jsst-admin .js-imgfor-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+}
+
+#jsst-admin #js-imgfor-message img,
+#jsst-admin .js-imgfor-message img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+/* Medium component width — stack early enough for Firefox/Joomla sidebars. */
+@media (max-width: 1180px) {
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-left,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right .js-tkt-det-cnt,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .jsst-ticket-feature-sidecard {
+    width: 100%;
+    margin: 0;
+  }
+
+  #jsst-admin .jsst-ticket-filter-grid,
+  #jsst-admin .jsst-ticket-filter-advanced {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #jsst-admin .jsst-ticket-item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #jsst-admin .jsst-ticket-actions {
+    justify-content: flex-start;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .js-tk-filter {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  #jsst-admin div#userpopup {
+    top: 10px;
+    left: 10px;
+    transform: none;
+    width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
+    border-radius: 14px;
+  }
+
+  #jsst-admin div#userpopup .js-search-value-button {
+    grid-column: 1;
+  }
+
+  #jsst-admin div#userpopup .js-search-value-button .js-button,
+  #jsst-admin div#userpopup input.js-button-search,
+  #jsst-admin div#userpopup input.js-button-reset {
+    width: 100%;
+  }
+
+  #jsst-admin div#userpopup #records {
+    max-height: calc(100vh - 286px);
+    padding-inline: 10px;
+  }
+
+  #jsst-admin div#userpopup #records-inner {
+    min-width: 520px;
+  }
+
+  #jsst-admin .js-ticket-configuration-row {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  #jsst-admin .js-ticket-configuration-row > .js-config-title,
+  #jsst-admin .js-ticket-configuration-row > .js-config-value,
+  #jsst-admin .js-ticket-configuration-row > .js-config-help,
+  #jsst-admin .js-ticket-configuration-row > [class*="js-col-"] {
+    grid-column: 1;
+    width: 100%;
+  }
+
+  #jsst-admin .js-ticket-configuration-row > .js-config-title {
+    padding: 0;
+  }
+
+  #jsst-admin .jsst-ticket-filter-grid,
+  #jsst-admin .jsst-ticket-filter-advanced,
+  #jsst-admin .jsst-ticket-custom-fields,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .js-tk-filter {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin .jsst-ticket-filter-actions,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .tk-search-button {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #jsst-admin .jsst-ticket-filter-actions button,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 .tk-search-button button {
+    width: 100%;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 form#adminForm.jsstadmin-data-wrp {
+    padding: 10px;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 div.js-ticket-threads {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 9px;
+    padding: 11px;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tk-pic,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tk-pic img {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    max-width: 38px;
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-actn-btn-wrp {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin #js-private-crendentials-popup,
+  #jsst-admin #userpopupforintnote,
+  #jsst-admin #userpopupforchangedepartment,
+  #jsst-admin #userpopupforassignstaff,
+  #jsst-admin #userpopupformerge,
+  #jsst-admin #userpopupforchangepriority {
+    top: 10px;
+    left: 10px;
+    transform: none;
+    width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
+    border-radius: 14px;
+  }
+}
+
+/* RTL: use logical alignment while preserving compact action order. */
+html[dir="rtl"] #jsst-admin,
+body.rtl #jsst-admin,
+#jsst-admin[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="rtl"] #jsst-admin .js-ticket-thread-data,
+html[dir="rtl"] #jsst-admin .note-msg,
+html[dir="rtl"] #jsst-admin .js-ticket-thread-cnt-btm,
+html[dir="rtl"] #jsst-admin .js-ticket-field-title,
+html[dir="rtl"] #jsst-admin .js-ticket-field-value,
+html[dir="rtl"] #jsst-admin .js-config-title,
+html[dir="rtl"] #jsst-admin .js-config-help,
+body.rtl #jsst-admin .js-ticket-thread-data,
+body.rtl #jsst-admin .note-msg,
+body.rtl #jsst-admin .js-ticket-thread-cnt-btm {
+  text-align: start;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopup,
+body.rtl #jsst-admin div#userpopup,
+html[dir="rtl"] #jsst-admin #js-private-crendentials-popup,
+body.rtl #jsst-admin #js-private-crendentials-popup {
+  direction: rtl;
+}
+
+html[dir="rtl"] #jsst-admin .jsst-ticket-actions,
+html[dir="rtl"] #jsst-admin .jsst-ticket-filter-actions,
+html[dir="rtl"] #jsst-admin .js-search-value-button,
+body.rtl #jsst-admin .jsst-ticket-actions,
+body.rtl #jsst-admin .jsst-ticket-filter-actions,
+body.rtl #jsst-admin .js-search-value-button {
+  justify-content: flex-start;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-user-tkts .js-tkt-det-status,
+body.rtl #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-user-tkts .js-tkt-det-status {
+  margin: 0 6px 0 0;
+}
+
+/* Legacy empty/message cards must never keep the old fixed 650px width. */
+#jsst-admin div#js-messagelayout-wrapper div#js-messages-layout {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 18px;
+  width: min(100%, 720px);
+  max-width: 100%;
+  padding: 20px;
+  border: 1px solid #dbe7f3;
+  border-radius:var(--jsst-radius-lg, 18px);
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(15, 23, 42, .08);
+}
+
+#jsst-admin div#js-messages-layout div#js-imgfor-message,
+#jsst-admin div#js-messages-layout div#js-datafor-message {
+  float: none;
+  width: 100%;
+  min-width: 0;
+  text-align: start;
+}
+
+#jsst-admin div#js-messages-layout div#js-datafor-message div.js-message-title,
+#jsst-admin div#js-messages-layout div#js-datafor-message div.js-message-detail,
+#jsst-admin div#js-messages-layout div#js-datafor-message div.js-message-button {
+  float: none;
+  width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Generic legacy data tables remain usable at every component width. */
+#jsst-admin .table-responsive,
+#jsst-admin .js-table-responsive,
+#jsst-admin .js-ticket-table-wrp,
+#jsst-admin .jsst-table-wrap,
+#jsst-admin #records-inner {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#jsst-admin table#js-table,
+#jsst-admin table.adminlist,
+#jsst-admin table.table {
+  max-width: 100%;
+}
+
+/* Private credential form generated through AJAX. */
+#jsst-admin #js-private-crendentials-head {
+  float: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 15px 18px;
+  background: linear-gradient(135deg, var(--jsst-primary, #2563eb), #06a6cf);
+}
+
+#jsst-admin #js-private-crendentials-head .js-title,
+#jsst-admin #js-private-crendentials-head .js-image {
+  float: none;
+  margin: 0;
+  color: #FFF;
+}
+
+#jsst-admin .private-crendentials-add-new-popup,
+#jsst-admin .private-crendentials-form-popup,
+#jsst-admin .private-crendentials-detail-popup,
+#jsst-admin .js-ticket-usercredentails-form-wrap,
+#jsst-admin .js-ticket-edit-form-wrp {
+  float: none;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .private-crendentials-add-new-popup {
+  padding: 16px;
+}
+
+#jsst-admin .private-crendentials-add-new-popup div.js-ticket-edit-form-wrp {
+  border: 0;
+}
+
+#jsst-admin .js-ticket-edit-form-wrp {
+  padding: 18px;
+}
+
+#jsst-admin .js-ticket-edit-field-title,
+#jsst-admin .js-ticket-edit-field-wrp {
+  float: none;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .js-ticket-edit-field-title {
+  margin: 0 0 7px;
+  color: #334155;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+  text-align: start;
+}
+
+#jsst-admin .js-ticket-edit-field-wrp {
+  margin: 0 0 14px;
+}
+
+#jsst-admin .js-ticket-edit-field-wrp input,
+#jsst-admin .js-ticket-edit-field-wrp textarea,
+#jsst-admin .js-ticket-edit-field-wrp iframe,
+#jsst-admin .js-ticket-edit-field-wrp .tox,
+#jsst-admin .js-ticket-edit-field-wrp .mce-tinymce {
+  width: 100% !important;
+  max-width: 100% !important;
+  border-radius: 11px;
+}
+
+#jsst-admin .private-crendentials-add-new-popup .js-ticket-priorty-cancel,
+#jsst-admin .js-ticket-priorty-btn-wrp .js-ticket-priorty-save,
+#jsst-admin .js-ticket-priorty-btn-wrp .js-ticket-priorty-cancel {
+  width: auto;
+  min-width: 118px;
+  min-height: 42px;
+  margin: 0;
+  padding: 9px 16px;
+  border-radius: 10px;
+}
+
+/* Modern navigation and shell use logical placement in RTL. */
+html[dir="rtl"] #jsst-admin div#js-tk-admin-wrapper,
+html[dir="rtl"] #jsst-admin div#js-tk-admin-wrapper.menu-collasped-active,
+body.rtl #jsst-admin div#js-tk-admin-wrapper,
+body.rtl #jsst-admin div#js-tk-admin-wrapper.menu-collasped-active {
+  direction: rtl;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-cparea,
+html[dir="rtl"] #jsst-admin div.menu-collasped-active div#js-tk-cparea,
+body.rtl #jsst-admin div#js-tk-cparea,
+body.rtl #jsst-admin div.menu-collasped-active div#js-tk-cparea {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+html[dir="rtl"] #jsst-admin .jsst-modern-admin-nav,
+html[dir="rtl"] #jsst-admin .jsst-modern-nav-head,
+html[dir="rtl"] #jsst-admin .jsst-modern-nav-groups,
+body.rtl #jsst-admin .jsst-modern-admin-nav,
+body.rtl #jsst-admin .jsst-modern-nav-head,
+body.rtl #jsst-admin .jsst-modern-nav-groups {
+  direction: rtl;
+}
+/* ---- Migrated from jsticketadminrtl.css (file removed at the user's request) ----
+   RTL-only overrides, previously loaded separately (and only) when
+   $language->isRTL(). Merged here under the same html[dir="rtl"]/body.rtl
+   gating this file already uses above, so they still only apply in RTL -
+   currently inert on this install regardless (no RTL language pack).
+   No !important added beyond what each declaration already had (7 total,
+   already confirmed exhausted/load-bearing per roadmap item 34) - matches
+   this codebase's existing, extensively-verified !important-minimization
+   approach rather than force-adding new weight.
+   A live-vs-dead audit found 3 of ~111 rules genuinely dead:
+   #departmenttranfer, .js-relative-image, #js-admin-responsive-menu-link -
+   all target elements/classes that no longer exist anywhere in current
+   templates (same tokens item 52's jsticketadmin.css audit also found
+   dead - consistent, since an RTL override for a rule that matches nothing
+   can't match anything either). Dropped those 3; everything else
+   reproduced verbatim, preserving the original media-query nesting. */
+
+html[dir="rtl"] #jsst-admin div.js-tk-pagination select#limit,
+body.rtl #jsst-admin div.js-tk-pagination select#limit {
+  background-position: calc(100% - 40px);
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-leftmenu,
+body.rtl #jsst-admin div#js-tk-leftmenu {
+  right:0px;
+  box-shadow: -4px 4px 4px 0px rgba(0,0,0,0.2);
+}
+
+html[dir="rtl"] #jsst-admin div#js_ddl span#js_combo #translations,
+body.rtl #jsst-admin div#js_ddl span#js_combo #translations {
+  background-position: calc(100% - 95%);
+}
+
+html[dir="rtl"] #jsst-admin a.js-admin-report-wrapper div.js-admin-department-report-type-wrapper,
+body.rtl #jsst-admin a.js-admin-report-wrapper div.js-admin-department-report-type-wrapper {
+  background: url(../images/report/userbox-rtl.png) no-repeat 30px 30px #ebd0d0;
+}
+
+html[dir="rtl"] #jsst-admin form.jsstadmin-data-wrp div#js-tk-filter div.tk-search-value select,
+body.rtl #jsst-admin form.jsstadmin-data-wrp div#js-tk-filter div.tk-search-value select {
+  background-position: calc(100% - 200px);
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-cparea div.js-value select.inputbox,
+body.rtl #jsst-admin div#js-tk-cparea div.js-value select.inputbox {
+  background-position: calc(100% - 95%) !important;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-cparea .jsst-formfield-status-radio-button-wrap,
+body.rtl #jsst-admin div#js-tk-cparea .jsst-formfield-status-radio-button-wrap {
+  margin-left: 8px;
+}
+
+html[dir="rtl"] #jsst-admin form#adminForm div.js-form-wrapper #userpopup,
+body.rtl #jsst-admin form#adminForm div.js-form-wrapper #userpopup {
+  position: absolute;
+  top: 0;
+}
+
+html[dir="rtl"] #jsst-admin select.inputbox,
+body.rtl #jsst-admin select.inputbox {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-cparea div.js-title label,
+body.rtl #jsst-admin div#js-tk-cparea div.js-title label {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-filter div.tk-search-value button,
+body.rtl #jsst-admin div#js-tk-filter div.tk-search-value button {
+  margin-left: 1px;
+  margin-right: -4px;
+  border-left:1px solid #ebecec;
+}
+
+html[dir="rtl"] #jsst-admin .js-admin-staff-cnt .js-report-staff-cnt,
+body.rtl #jsst-admin .js-admin-staff-cnt .js-report-staff-cnt {
+  padding: 5px 10px 0 0px;
+}
+
+html[dir="rtl"] #jsst-admin div.js-report-detail-body,
+body.rtl #jsst-admin div.js-report-detail-body {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div.cron-job span,
+body.rtl #jsst-admin div.cron-job span {
+  float: right !important;
+}
+
+html[dir="rtl"] #jsst-admin div.js-form-wrapper div.js-export-row-alue select,
+body.rtl #jsst-admin div.js-form-wrapper div.js-export-row-alue select {
+  background-position: calc(100% - 95%);
+}
+
+html[dir="rtl"] #jsst-admin div#userpopup div.popup-field-wrapper div.popup-field-obj select,
+body.rtl #jsst-admin div#userpopup div.popup-field-wrapper div.popup-field-obj select {
+  background-position: calc(100% - 95%);
+}
+
+html[dir="rtl"] #jsst-admin .js-ticket-configuration-row a,
+body.rtl #jsst-admin .js-ticket-configuration-row a {
+  width: 100%;
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div.js-ticket-configuration-row div.js-config-value select.inputbox,
+body.rtl #jsst-admin div.js-ticket-configuration-row div.js-config-value select.inputbox {
+  background-position: calc(100% - 95%);
+}
+
+html[dir="rtl"] #jsst-admin .js-col-lg-3.js-col-md-3,
+body.rtl #jsst-admin .js-col-lg-3.js-col-md-3 {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div.download_attachments a,
+body.rtl #jsst-admin div.download_attachments a {
+  float:left;
+}
+
+html[dir="rtl"] #jsst-admin .js-ticket-configuration-row-mail .js-configuration-value select,
+body.rtl #jsst-admin .js-ticket-configuration-row-mail .js-configuration-value select {
+  background-position: calc(100% - 95%);
+}
+
+html[dir="rtl"] #jsst-admin div.js-ticket-configuration-row div.js-config-value select#tve_enabled,
+body.rtl #jsst-admin div.js-ticket-configuration-row div.js-config-value select#tve_enabled {
+  background-position: calc(100% - 95%);
+}
+
+html[dir="rtl"] #jsst-admin div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.js-ticket-data,
+body.rtl #jsst-admin div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.js-ticket-data {
+  padding: 0px 5px 0 0px;
+}
+
+html[dir="rtl"] #jsst-admin div.js-tkt-det-left,
+body.rtl #jsst-admin div.js-tkt-det-left {
+  padding-left: 30px;
+}
+
+html[dir="rtl"] #jsst-admin .js-tkt-det-trsfer-dep .js-tkt-det-hdg-btn,
+body.rtl #jsst-admin .js-tkt-det-trsfer-dep .js-tkt-det-hdg-btn {
+  text-align: left;
+}
+
+html[dir="rtl"] #jsst-admin div.js-tkt-det-user div.js-tkt-det-user-cnt div.js-tkt-det-user-data span.js-tkt-det-user-tit,
+body.rtl #jsst-admin div.js-tkt-det-user div.js-tkt-det-user-cnt div.js-tkt-det-user-data span.js-tkt-det-user-tit {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div.js-tkt-det-user div.js-tkt-det-user-cnt div.js-tkt-det-user-data span.js-tkt-det-user-val,
+body.rtl #jsst-admin div.js-tkt-det-user div.js-tkt-det-user-cnt div.js-tkt-det-user-data span.js-tkt-det-user-val {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopupforintnote div.js-ticket-priorty-header,
+body.rtl #jsst-admin div#userpopupforintnote div.js-ticket-priorty-header {
+  text-align: right;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopupforchangedepartment div.js-ticket-priorty-header,
+body.rtl #jsst-admin div#userpopupforchangedepartment div.js-ticket-priorty-header {
+  text-align: right;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopupforassignstaff div.js-ticket-priorty-header,
+body.rtl #jsst-admin div#userpopupforassignstaff div.js-ticket-priorty-header {
+  text-align: right;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopupforchangepriority div.js-ticket-priorty-header,
+body.rtl #jsst-admin div#userpopupforchangepriority div.js-ticket-priorty-header {
+  text-align: right;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopupforassignstaff div.js-ticket-priorty-fields-wrp div.js-tk-tabs-wrapper div.js-value select.inputbox,
+body.rtl #jsst-admin div#userpopupforassignstaff div.js-ticket-priorty-fields-wrp div.js-tk-tabs-wrapper div.js-value select.inputbox {
+  background-position: calc(100% - 95%);
+}
+
+html[dir="rtl"] #jsst-admin div#userpopupforchangepriority div.js-ticket-priorty-fields-wrp div.js-ticket-select-priorty select#priorityid,
+body.rtl #jsst-admin div#userpopupforchangepriority div.js-ticket-priorty-fields-wrp div.js-ticket-select-priorty select#priorityid {
+  background-position: calc(100% - 95%);
+}
+
+html[dir="rtl"] #jsst-admin div.js-attachment-files span.js-value-text span.js-attachment-remove,
+body.rtl #jsst-admin div.js-attachment-files span.js-value-text span.js-attachment-remove {
+  left: 8px;
+  top: 5px;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-cparea,
+body.rtl #jsst-admin div#js-tk-cparea {
+  padding-right:60px;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-admin-wrapper,
+body.rtl #jsst-admin div#js-tk-admin-wrapper {
+  padding-right:10px;
+}
+
+html[dir="rtl"] #jsst-admin div.js-ticket-admin-cp-head div,
+body.rtl #jsst-admin div.js-ticket-admin-cp-head div {
+  float:right;
+}
+
+html[dir="rtl"] #jsst-admin div.js-ticket-admin-cp-data div,
+body.rtl #jsst-admin div.js-ticket-admin-cp-data div {
+  padding-left:8px;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-cparea div#js-tk-heading a.tk-heading-addbutton,
+body.rtl #jsst-admin div#js-tk-cparea div#js-tk-heading a.tk-heading-addbutton {
+  left:25px;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-cparea div.js-title,
+body.rtl #jsst-admin div#js-tk-cparea div.js-title {
+  text-align: right;
+}
+
+html[dir="rtl"] #jsst-admin div#tabs_wrapper div.js-config-title,
+body.rtl #jsst-admin div#tabs_wrapper div.js-config-title {
+  text-align:right;
+}
+
+html[dir="rtl"] #jsst-admin table#js-table thead tr th,
+body.rtl #jsst-admin table#js-table thead tr th {
+  text-align: right;
+}
+
+html[dir="rtl"] #jsst-admin div.js-admin-info-wrapper span.js-admin-info-vlaue,
+body.rtl #jsst-admin div.js-admin-info-wrapper span.js-admin-info-vlaue {
+  padding-right:10px;
+}
+
+html[dir="rtl"] #jsst-admin div.js-col-md-12.js-col-xs-12.js-col-md-offset-2.js-admin-ticketviaemail-wrapper-checksetting,
+body.rtl #jsst-admin div.js-col-md-12.js-col-xs-12.js-col-md-offset-2.js-admin-ticketviaemail-wrapper-checksetting {
+  margin-right:16%;
+}
+
+html[dir="rtl"] #jsst-admin div.js-col-md-12.js-col-xs-12.js-col-md-offset-2.js-admin-ticketviaemail-wrapper-checksetting a#js-admin-ticketviaemail,
+body.rtl #jsst-admin div.js-col-md-12.js-col-xs-12.js-col-md-offset-2.js-admin-ticketviaemail-wrapper-checksetting a#js-admin-ticketviaemail {
+  float:right;
+}
+
+html[dir="rtl"] #jsst-admin a.js-admin-report-wrapper div.js-admin-overall-report-type-wrapper,
+body.rtl #jsst-admin a.js-admin-report-wrapper div.js-admin-overall-report-type-wrapper {
+  background: url(../images/report/overall-rtl.png) no-repeat 30px 30px #eaf1dd;
+}
+
+html[dir="rtl"] #jsst-admin a.js-admin-report-wrapper div.js-admin-staff-report-type-wrapper,
+body.rtl #jsst-admin a.js-admin-report-wrapper div.js-admin-staff-report-type-wrapper {
+  background: url(../images/report/staffbox-rtl.png) no-repeat 30px 30px #eef9fd;
+}
+
+html[dir="rtl"] #jsst-admin a.js-admin-report-wrapper div.js-admin-user-report-type-wrapper,
+body.rtl #jsst-admin a.js-admin-report-wrapper div.js-admin-user-report-type-wrapper {
+  background: url(../images/report/userbox-rtl.png) no-repeat 30px 30px #fff5eb;
+}
+
+html[dir="rtl"] #jsst-admin form#userpopupsearch div.search-center span.close,
+body.rtl #jsst-admin form#userpopupsearch div.search-center span.close {
+  left:10px;
+}
+
+html[dir="rtl"] #jsst-admin div#req-moredetail div.js-col-md-4,
+body.rtl #jsst-admin div#req-moredetail div.js-col-md-4 {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div#records div.js-title,
+body.rtl #jsst-admin div#records div.js-title {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div#records div.js-value div.js-col-xs-12,
+body.rtl #jsst-admin div#records div.js-value div.js-col-xs-12 {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin form#userpopupsearch div.search-center div.js-search-value,
+body.rtl #jsst-admin form#userpopupsearch div.search-center div.js-search-value {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm div.jsst-feedback-det-list-datea-btm-rec,
+body.rtl #jsst-admin div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm div.jsst-feedback-det-list-datea-btm-rec {
+  margin: 0 0px 7px 30px;
+}
+
+html[dir="rtl"] #jsst-admin div#jsst-middle-wrapper div.js-col-md-4,
+body.rtl #jsst-admin div#jsst-middle-wrapper div.js-col-md-4 {
+  float: right;
+}
+
+html[dir="rtl"] #jsst-admin div.js-attachment-option span.js-attachment-ins,
+body.rtl #jsst-admin div.js-attachment-option span.js-attachment-ins {
+  text-align: right;
+}
+
+@media(max-width: 480px) {
+  html[dir="rtl"] #jsst-admin div#js_ddl span#js_combo #translations,
+  body.rtl #jsst-admin div#js_ddl span#js_combo #translations {
+    width: 100%;
+  }
+
+  html[dir="rtl"] #jsst-admin div#js-tk-cparea,
+  body.rtl #jsst-admin div#js-tk-cparea {
+    padding-right:65px;
+  }
+
+  html[dir="rtl"] #jsst-admin div#tabs_wrapper div.js-config-value,
+  body.rtl #jsst-admin div#tabs_wrapper div.js-config-value {
+    text-align: right;
+  }
+
+  html[dir="rtl"] #jsst-admin div#js-tk-cparea div#js-tk-heading h4,
+  body.rtl #jsst-admin div#js-tk-cparea div#js-tk-heading h4 {
+    padding-right:55px;
+    padding-left:10px;
+  }
+
+  html[dir="rtl"] #jsst-admin div#js-tk-cparea div#js-tk-heading a.tk-heading-addbutton,
+  body.rtl #jsst-admin div#js-tk-cparea div#js-tk-heading a.tk-heading-addbutton {
+    left:10px;
+  }
+
+  html[dir="rtl"] #jsst-admin table#js-table tbody td:before,
+  body.rtl #jsst-admin table#js-table tbody td:before {
+    margin-left:20px;
+  }
+
+  html[dir="rtl"] #jsst-admin div#js-tk-cparea div.js-title,
+  body.rtl #jsst-admin div#js-tk-cparea div.js-title {
+    text-align:right;
+  }
+
+  html[dir="rtl"] #jsst-admin div#tabs_wrapper div.js-config-title,
+  body.rtl #jsst-admin div#tabs_wrapper div.js-config-title {
+    width:100%;
+    text-align: right;
+  }
+
+  html[dir="rtl"] #jsst-admin div#tabs_wrapper div.js-config-value,
+  body.rtl #jsst-admin div#tabs_wrapper div.js-config-value {
+    width:100%;
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-null-margin,
+  body.rtl #jsst-admin div.js-null-margin {
+    margin-bottom: 10px;
+  }
+
+  html[dir="rtl"] #jsst-admin form div.js-col-xs-12.js-col-md-12.js-ticket-configuration-row div.js-ticket-configuration-title,
+  body.rtl #jsst-admin form div.js-col-xs-12.js-col-md-12.js-ticket-configuration-row div.js-ticket-configuration-title {
+    text-align: right;
+    padding-right:15px;
+  }
+
+  html[dir="rtl"] #jsst-admin span.crown_text_left,
+  body.rtl #jsst-admin span.crown_text_left {
+    float:right;
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-admin-staff-wrapper div.js-col-md-9,
+  body.rtl #jsst-admin div.js-admin-staff-wrapper div.js-col-md-9 {
+    width:100%;
+    float:left;
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-admin-staff-wrapper div.js-admin-report-box,
+  body.rtl #jsst-admin div.js-admin-staff-wrapper div.js-admin-report-box {
+    margin:5px !important;
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-admin-staff-wrapper .nopadding,
+  body.rtl #jsst-admin div.js-admin-staff-wrapper .nopadding {
+    width:100%;
+  }
+
+  html[dir="rtl"] #jsst-admin table#js-table thead th.center, #jsst-admin table#js-table tbody td.center,
+  body.rtl #jsst-admin table#js-table thead th.center, #jsst-admin table#js-table tbody td.center {
+    text-align:right;
+  }
+
+  html[dir="rtl"] #jsst-admin div#jsst-middle-wrapper div.js-col-md-4,
+  body.rtl #jsst-admin div#jsst-middle-wrapper div.js-col-md-4 {
+    margin:0px;
+    width:100%;
+  }
+
+  html[dir="rtl"] #jsst-admin div#req-moredetail div.js-col-md-4,
+  body.rtl #jsst-admin div#req-moredetail div.js-col-md-4 {
+    width:100%;
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-ticket-threads div.js-tk-pic,
+  body.rtl #jsst-admin div.js-ticket-threads div.js-tk-pic {
+    padding:0 0 0 17px;
+  }
+
+  html[dir="rtl"] #jsst-admin div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm,
+  body.rtl #jsst-admin div.jsst-feedback-det-wrp div.jsst-feedback-det-list div.jsst-feedback-det-list-top div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm {
+    width: 100%;
+  }
+
+  html[dir="rtl"] #jsst-admin div#jsst-middle-wrapper div.js-col-md-4,
+  body.rtl #jsst-admin div#jsst-middle-wrapper div.js-col-md-4 {
+    width:calc(100% - 20px);
+  }
+
+  html[dir="rtl"] #jsst-admin .js-col-md-12,
+  body.rtl #jsst-admin .js-col-md-12 {
+    width:100%;
+    display: inline-block;
+  }
+
+}
+
+@media(min-width:481px) and (max-width: 667px) {
+
+  html[dir="rtl"] #jsst-admin div#js-history-row span.js-data,
+  body.rtl #jsst-admin div#js-history-row span.js-data {
+    float: right;
+  }
+
+  html[dir="rtl"] #jsst-admin form.jsstadmin-data-wrp div#js-tk-filter div.tk-search-value select,
+  body.rtl #jsst-admin form.jsstadmin-data-wrp div#js-tk-filter div.tk-search-value select {
+    background-position: calc(100% - 95%);
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-admin-staff-wrapper div.js-col-md-8 div.js-admin-report-box,
+  body.rtl #jsst-admin div.js-admin-staff-wrapper div.js-col-md-8 div.js-admin-report-box {
+    margin: 0px 0px 10px 10px;
+  }
+
+  html[dir="rtl"] #jsst-admin div.satisfaction-report-right,
+  body.rtl #jsst-admin div.satisfaction-report-right {
+    left:27px;
+  }
+
+}
+
+@media(min-width:668px) and (max-width: 768px) {
+  html[dir="rtl"] #jsst-admin div#js-tk-filter div.tk-search-value button,
+  body.rtl #jsst-admin div#js-tk-filter div.tk-search-value button {
+    margin-right: -6px;
+  }
+
+  html[dir="rtl"] #jsst-admin form#userpopupsearch div.search-center div.js-search-value-button,
+  body.rtl #jsst-admin form#userpopupsearch div.search-center div.js-search-value-button {
+    float: right;
+  }
+
+  html[dir="rtl"] #jsst-admin form#userpopupsearch div.search-center div.js-search-value-button div.js-button,
+  body.rtl #jsst-admin form#userpopupsearch div.search-center div.js-search-value-button div.js-button {
+    float: right;
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-report-detail-body:last-child,
+  body.rtl #jsst-admin div.js-report-detail-body:last-child {
+    border-right: 1px solid #ebecec !important;
+  }
+
+  html[dir="rtl"] #jsst-admin table#js-table tbody tr td,
+  body.rtl #jsst-admin table#js-table tbody tr td {
+    border: none;
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-ticket-threads,
+  body.rtl #jsst-admin div.js-ticket-threads {
+    padding-left:15px;
+  }
+
+  html[dir="rtl"] #jsst-admin table#js-table tbody td,
+  body.rtl #jsst-admin table#js-table tbody td {
+    text-align:right !important;
+  }
+
+  html[dir="rtl"] #jsst-admin table#js-table tbody td::before,
+  body.rtl #jsst-admin table#js-table tbody td::before {
+    margin-left:20px;
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-admin-staff-wrapper div.js-col-md-4,
+  body.rtl #jsst-admin div.js-admin-staff-wrapper div.js-col-md-4 {
+    width:100%;
+  }
+
+  html[dir="rtl"] #jsst-admin div.js-admin-staff-wrapper div.js-col-md-8 div.js-admin-report-box,
+  body.rtl #jsst-admin div.js-admin-staff-wrapper div.js-col-md-8 div.js-admin-report-box {
+    margin-right: 10px;
+  }
+
+}
+
+@media (max-width: 600px) {
+  #jsst-admin div#js-messagelayout-wrapper div#js-messages-layout {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 16px;
+  }
+
+  #jsst-admin div#js-messages-layout div#js-imgfor-message {
+    justify-content: flex-start;
+    min-height: auto;
+  }
+
+  #jsst-admin .private-crendentials-add-new-popup .js-ticket-priorty-cancel,
+  #jsst-admin .js-ticket-priorty-btn-wrp .js-ticket-priorty-save,
+  #jsst-admin .js-ticket-priorty-btn-wrp .js-ticket-priorty-cancel {
+    width: 100% !important;
+  }
+}
+
+/* ========================================================================
+ * V3 FULL ADMIN LOOP
+ * Component-width responsive rules. This layer is loaded after every view.
+ * ====================================================================== */
+
+#jsst-admin {
+  --jsst-control-height: 46px;
+  --jsst-border: #e5eaf2;
+  --jsst-muted: #64748b;
+  --jsst-ink: #0f172a;
+  --jsst-primary: #2563eb;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* `container-type` also applies layout containment, which makes the element the
+   containing block for its `position: fixed` descendants. Any popup rendered
+   inside #js-tk-cparea therefore centres on the container instead of the
+   viewport. On screens whose popups live inside the form, the query container
+   moves to .jsst-cq-scope, which wraps the content but not the popups. */
+#jsst-admin .jsst-ticket-detail-admin-v2 #js-tk-cparea {
+  container: normal;
+}
+
+#jsst-admin .jsst-cq-scope {
+  container: jsst-admin-content / inline-size;
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin #js-tk-cparea {
+  container: jsst-admin-content / inline-size;
+  min-width: 0;
+  border: 1px solid #e4edf7;
+  border-top: 0;
+  border-radius: 24px;
+  background: var(--jsst-bg, #f4f7fb);
+  box-shadow: 0 24px 60px rgba(15,23,42,.08);
+}
+
+#jsst-admin #jsstadmin-wrapper-top,
+#jsst-admin #js-tk-heading,
+#jsst-admin #jsstadmin-data-wrp,
+#jsst-admin .jsstadmin-data-wrp {
+  min-width: 0;
+  max-width: 100% !important;
+}
+
+#jsst-admin #jsstadmin-wrapper-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* The breadcrumb/config/version bar duplicates navigation the top menu
+   already provides. It's hidden for the modernized management/detail/
+   form screens (jsst-admin-workspace-v2.css); these are the rest of the
+   admin - the plain CRUD list/form pages, the legacy static screens
+   (translation/aboutus/userguide/wizards/mail-message), and the reports
+   subsystem - getting the same treatment so every page matches. */
+#jsst-admin .jsst-screen #jsstadmin-wrapper-top,
+#jsst-admin .jsst-screen-report-v73 #jsstadmin-wrapper-top {
+  display: none;
+}
+
+#jsst-admin #jsstadmin-wrapper-top-left,
+#jsst-admin #jsstadmin-wrapper-top-right,
+#jsst-admin #jsstadmin-breadcrunbs,
+#jsst-admin #jsstadmin-breadcrunbs ul {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin #jsstadmin-breadcrunbs ul {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin #js-tk-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  overflow: hidden;
+}
+
+#jsst-admin #js-tk-heading .jsstadmin-head-text,
+#jsst-admin #js-tk-heading h1,
+#jsst-admin #js-tk-heading h2,
+#jsst-admin #js-tk-heading h3,
+#jsst-admin #js-tk-heading h4 {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+
+/* All controls use one reliable baseline. */
+#jsst-admin input[type="text"],
+#jsst-admin input[type="email"],
+#jsst-admin input[type="password"],
+#jsst-admin input[type="number"],
+#jsst-admin input[type="search"],
+#jsst-admin input[type="url"],
+#jsst-admin input[type="tel"],
+#jsst-admin select,
+#jsst-admin textarea {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin select,
+#jsst-admin input[type="text"],
+#jsst-admin input[type="email"],
+#jsst-admin input[type="password"],
+#jsst-admin input[type="number"],
+#jsst-admin input[type="search"],
+#jsst-admin input[type="url"],
+#jsst-admin input[type="tel"] {
+  min-height: var(--jsst-control-height);
+  line-height: 1.25;
+}
+
+#jsst-admin select {
+  padding-block: 9px;
+  text-align: start;
+  text-align-last: start;
+}
+
+#jsst-admin input[type="file"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 6px;
+  border: 1px solid var(--jsst-border);
+  border-radius: 10px;
+  background: #fff;
+  color: #334155;
+  line-height: 28px;
+}
+
+#jsst-admin input[type="file"]::file-selector-button {
+  min-height: 30px;
+  margin-inline-end: 10px;
+  padding: 5px 11px;
+  border: 0;
+  border-radius: 8px;
+  background: #eaf2ff;
+  color: var(--jsst-primary-dark, #1d4ed8);
+  font-weight: 750;
+  cursor: pointer;
+}
+
+/* Form cards: labels and controls stay aligned, then stack by content width. */
+#jsst-admin .jsst-screen-form form#adminForm,
+#jsst-admin .jsst-admin-form form#adminForm,
+#jsst-admin .jsst-admin-form-ticket-v21 form#adminForm {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin .jsst-screen-form .js-form-wrapper,
+#jsst-admin .jsst-admin-form .js-form-wrapper,
+#jsst-admin .jsst-admin-form-ticket-v21 .js-form-wrapper {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin .jsst-screen-form .js-form-wrapper > .js-title,
+#jsst-admin .jsst-admin-form .js-form-wrapper > .js-title,
+#jsst-admin .jsst-admin-form-ticket-v21 .js-form-wrapper > .js-title {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 8px;
+  padding: 0;
+  text-align: start;
+  line-height: 1.35;
+}
+
+#jsst-admin .jsst-screen-form .js-form-wrapper > .js-value,
+#jsst-admin .jsst-admin-form .js-form-wrapper > .js-value,
+#jsst-admin .jsst-admin-form-ticket-v21 .js-form-wrapper > .js-value,
+#jsst-admin .jsst-screen-form .js-form-wrapper > .js-value-radio-btn {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  text-align: start;
+}
+
+#jsst-admin .jsst-screen-form .js-form-wrapper input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+#jsst-admin .jsst-screen-form .js-form-wrapper select,
+#jsst-admin .jsst-screen-form .js-form-wrapper textarea,
+#jsst-admin .jsst-admin-form .js-form-wrapper input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+#jsst-admin .jsst-admin-form .js-form-wrapper select,
+#jsst-admin .jsst-admin-form .js-form-wrapper textarea {
+  width: 100%;
+}
+
+#jsst-admin .jsst-formfield-radio-button-wrap,
+#jsst-admin .js-value-radio-btn,
+#jsst-admin .js-radio-wrapper,
+#jsst-admin .js-checkbox-wrapper {
+  min-width: 0;
+  text-align: start;
+}
+
+#jsst-admin .jsst-formfield-radio-button-wrap label,
+#jsst-admin .js-value-radio-btn label {
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+/* User selector field, shared by ticket, staff, export, and reports. */
+#jsst-admin .js-value:has(.jsst-userpopup-trigger),
+#jsst-admin .tk-search-value:has(.jsst-userpopup-trigger),
+#jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .js-value:has(.jsst-userpopup-trigger) #username-div,
+#jsst-admin .tk-search-value:has(.jsst-userpopup-trigger) #username-div,
+#jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) #username-div {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin #username-div #username-text,
+#jsst-admin .js-value:has(.jsst-userpopup-trigger) #username-text,
+#jsst-admin .tk-search-value:has(.jsst-userpopup-trigger) #username-text {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin a.jsst-userpopup-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 136px;
+  min-height: var(--jsst-control-height);
+  margin: 0;
+  padding: 9px 15px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--jsst-primary);
+  color: #fff;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+}
+
+#jsst-admin a.action-btn.jsst-userpopup-trigger {
+  min-width: 36px;
+  min-height: 36px;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border-radius: 9px;
+}
+
+/* Joomla calendar variants: calendar button must always remain visible. */
+#jsst-admin .field-calendar,
+#jsst-admin .field-calendar > .input-group,
+#jsst-admin .field-calendar .input-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  gap: 0;
+}
+
+#jsst-admin .field-calendar input,
+#jsst-admin .field-calendar .form-control {
+  grid-column: 1;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+#jsst-admin .field-calendar button:not(.js-btn),
+#jsst-admin .field-calendar .btn:not(.js-btn),
+#jsst-admin .field-calendar .btn-secondary:not(.js-btn),
+#jsst-admin .field-calendar .input-group-text {
+  grid-column: 2;
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  min-width: 42px;
+  min-height: var(--jsst-control-height);
+  margin: 0;
+  padding: 0;
+  opacity: 1;
+  visibility: visible;
+  border: 1px solid var(--jsst-border);
+  border-inline-start: 0;
+  border-radius: 0 11px 11px 0;
+  background: var(--jsst-soft, #f8fafc);
+  color: #334155;
+  box-shadow: none;
+  overflow: visible;
+}
+
+html[dir="rtl"] #jsst-admin .field-calendar button:not(.js-btn),
+html[dir="rtl"] #jsst-admin .field-calendar .btn:not(.js-btn),
+body.rtl #jsst-admin .field-calendar button:not(.js-btn),
+body.rtl #jsst-admin .field-calendar .btn:not(.js-btn) {
+  border-inline-start: 1px solid var(--jsst-border);
+  border-inline-end: 0;
+  border-radius: 11px 0 0 11px;
+}
+
+#jsst-admin .field-calendar button span,
+#jsst-admin .field-calendar button svg,
+#jsst-admin .field-calendar button [class*="icon"],
+#jsst-admin .field-calendar .btn span,
+#jsst-admin .field-calendar .btn svg {
+  display: inline-block;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Select-user modal: one predictable header, filter grid, and scrollable results. */
+#jsst-admin div#userpopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  transform: translate(-50%, -50%);
+  width: min(820px, calc(100vw - 32px));
+  max-height: min(88vh, 760px);
+  overflow: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 16px;
+  box-shadow: 0 30px 90px rgba(15, 23, 42, .28);
+}
+
+#jsst-admin div#userpopup .search-center-heading {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 12px 58px 12px 18px;
+}
+
+#jsst-admin div#userpopup .search-center-heading span.close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  left: auto;
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  opacity: 1;
+  cursor: pointer;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopup .search-center-heading,
+body.rtl #jsst-admin div#userpopup .search-center-heading {
+  padding: 12px 18px 12px 58px;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopup .search-center-heading span.close,
+body.rtl #jsst-admin div#userpopup .search-center-heading span.close {
+  right: auto;
+  left: 12px;
+}
+
+#jsst-admin div#userpopup .search-center > .js-col-md-12 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+}
+
+#jsst-admin div#userpopup .js-search-value,
+#jsst-admin div#userpopup .js-search-value-button,
+#jsst-admin div#userpopup .js-button {
+  float: none;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#jsst-admin div#userpopup .js-search-value-button {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  align-items: stretch;
+  gap: 8px;
+}
+
+#jsst-admin div#userpopup input.js-button-search,
+#jsst-admin div#userpopup input.js-button-reset {
+  width: auto;
+  min-width: 82px;
+  min-height: var(--jsst-control-height);
+  margin: 0;
+}
+
+#jsst-admin div#userpopup #records {
+  width: 100%;
+  max-height: calc(min(88vh, 760px) - 138px);
+  overflow: auto;
+  padding: 0 16px 16px;
+}
+
+#jsst-admin div#userpopup #records-inner {
+  min-width: 600px;
+  max-width: none;
+}
+
+/* Attachments: current and new items become clear rows, never inline strings. */
+#jsst-admin .js-attachment-files,
+#jsst-admin .js-attachment-files {
+  grid-template-columns: 1fr;
+}
+
+#jsst-admin .js-value-attachment-text {
+  min-height: 54px;
+}
+
+#jsst-admin .download_attachments {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 9px 11px;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin .download_attachments a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fff1f2;
+  color: #be123c;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+#jsst-admin #js-attachment-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 7px 13px;
+  border-radius: 9px;
+  background: var(--jsst-primary);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Existing category logo and explicit removal control. */
+#jsst-admin .jsst-current-logo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#jsst-admin .jsst-current-logo > img {
+  display: block;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  padding: 5px;
+  border: 1px solid var(--jsst-border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+#jsst-admin .jsst-remove-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  margin: 0;
+  padding: 7px 11px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fff1f2;
+  color: #9f1239;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+#jsst-admin .jsst-remove-logo input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #e11d48;
+}
+
+/* Configuration help always follows the related control. */
+#jsst-admin .js-ticket-configuration-row {
+  grid-template-columns: minmax(190px, .72fr) minmax(0, 1.8fr);
+  align-items: start;
+}
+
+#jsst-admin .js-ticket-configuration-row > .js-config-help,
+#jsst-admin .js-ticket-configuration-row .js-config-help,
+#jsst-admin .js-ticket-configuration-row small,
+#jsst-admin .js-ticket-configuration-row .description {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 6px;
+  color: var(--jsst-muted);
+  text-align: start;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* List filter areas, including feedback nested filters. */
+#jsst-admin .jsst-screen-list #js-tk-filter,
+#jsst-admin .jsst-screen-list .js-filter-form,
+#jsst-admin .jsst-ticket-filter-grid,
+#jsst-admin .jsst-ticket-filter-advanced {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin .jsst-screen-list #js-filter-wrapper-toggle-area {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-screen-list #js-filter-wrapper-toggle-area > * {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin .jsst-screen-list #js-filter-wrapper-toggle-area select,
+#jsst-admin .jsst-screen-list #js-filter-wrapper-toggle-area input {
+  width: 100%;
+}
+
+/* Ticket list: medium widths collapse before Joomla's sidebar squeezes it. */
+#jsst-admin .jsst-ticket-filter-grid,
+#jsst-admin .jsst-ticket-filter-advanced {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px;
+}
+
+#jsst-admin .jsst-ticket-item,
+#jsst-admin .jsst-ticket-item-main,
+#jsst-admin .jsst-ticket-meta-grid,
+#jsst-admin .jsst-ticket-custom-fields {
+  min-width: 0 !important;
+}
+
+#jsst-admin .jsst-ticket-item * {
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin .jsst-ticket-actions {
+  min-width: 96px !important;
+}
+
+/* Ticket detail: fix merged names/text, action rows, threads, side cards and timers. */
+#jsst-admin .jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+  align-items: start !important;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-user,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-data,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-cnt-btm,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-user-cnt,
+#jsst-admin .jsst-ticket-detail-admin-v2 .jsst-ticket-feature-kv,
+#jsst-admin .jsst-ticket-detail-admin-v2 .jsst-ticket-feature-watch-row {
+  min-width: 0;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-user {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-user-image {
+  flex: 0 0 auto;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-user-data,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-person,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-email,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-note,
+#jsst-admin .jsst-ticket-detail-admin-v2 .note-msg,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-tkt-msg,
+#jsst-admin .jsst-ticket-detail-admin-v2 .jsst-ticket-feature-kv strong,
+#jsst-admin .jsst-ticket-detail-admin-v2 .jsst-ticket-feature-watch-row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  white-space: normal;
+  text-align: start;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-person {
+  display: block;
+  margin: 0 0 3px;
+  font-weight: 850;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-email,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-note {
+  display: block;
+  margin: 0 0 5px;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .note-msg {
+  display: block;
+  clear: both;
+  width: 100%;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-cnt-btm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-date,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-time {
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  white-space: normal;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .ticket-edit-time-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 92px;
+  min-height: 34px;
+  margin: 0;
+  padding: 6px 11px;
+  border-radius: 8px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-actn-btn-wrp {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  width: 100%;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-detal-alinks {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+  min-height: 42px;
+  margin: 0;
+  padding: 8px 10px;
+  overflow: hidden;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-detal-alinks img {
+  flex: 0 0 auto;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-detal-alinks span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .jsst-ticket-feature-watch-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .jsst-ticket-feature-watch-form input,
+#jsst-admin .jsst-ticket-detail-admin-v2 .jsst-ticket-feature-watch-form button {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-user-tkts .js-tkt-det-user-data:last-child {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-prty,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-status {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+  padding: 4px 8px;
+  overflow-wrap: anywhere;
+}
+
+/* Internal-note/private-credential popups: controls and footer cannot disappear. */
+#jsst-admin #js-private-crendentials-popup,
+#jsst-admin #userpopupforintnote,
+#jsst-admin #userpopupforchangedepartment,
+#jsst-admin #userpopupforassignstaff,
+#jsst-admin #userpopupformerge,
+#jsst-admin #userpopupforchangepriority {
+  overflow: auto !important;
+}
+
+#jsst-admin #js-private-crendentials-head .js-image {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  cursor: pointer;
+}
+
+#jsst-admin #js-private-crendentials-head .js-image img {
+  display: block;
+  width: 18px !important;
+  height: 18px !important;
+  object-fit: contain;
+}
+
+#jsst-admin .js-ticket-priorty-btn-wrp {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 9px;
+  width: 100%;
+}
+
+#jsst-admin .js-ticket-priorty-btn-wrp input,
+#jsst-admin .js-ticket-priorty-btn-wrp button {
+  width: auto;
+  min-width: 110px;
+  margin: 0;
+}
+
+#jsst-admin #userpopupforintnote .tox,
+#jsst-admin #userpopupforintnote .mce-tinymce,
+#jsst-admin #userpopupforintnote iframe,
+#jsst-admin #userpopupforintnote textarea {
+  width: 100% !important;
+  min-height: 190px;
+  max-height: 44vh;
+}
+
+/* Report filters. */
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .tk-search-value:has(.jsst-userpopup-trigger) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .tk-search-button {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .js-form-search,
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .js-form-reset {
+  min-width: 96px;
+  width: auto;
+  margin: 0;
+  border-radius: 11px;
+}
+
+/* Empty states: correct direct-child structure and visible CSS icon. */
+#jsst-admin #js-messagelayout-wrapper.jsst-message-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  width: 100%;
+  min-height: 220px;
+  max-width: 100%;
+  margin: 0;
+  padding: 36px 20px;
+  text-align: center;
+}
+
+#jsst-admin #js-messagelayout-wrapper > #js-imgfor-message,
+#jsst-admin #js-messagelayout-wrapper > #js-datafor-message {
+  float: none;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  text-align: center;
+}
+
+#jsst-admin #js-messagelayout-wrapper > #js-imgfor-message {
+  width: 64px;
+  height: 64px;
+  min-height: 64px;
+}
+
+#jsst-admin #js-messagelayout-wrapper .js-message-title {
+  margin-bottom: 5px;
+  font-weight: 850;
+}
+
+#jsst-admin #js-messagelayout-wrapper .js-message-detail {
+  color: var(--jsst-muted);
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin .jsst-report-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 150px;
+  padding: 26px 16px;
+  color: var(--jsst-muted);
+  text-align: center;
+}
+
+#jsst-admin .jsst-report-empty-state::before {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 6px;
+  border: 3px solid #60a5fa;
+  border-radius: 16px;
+  background: linear-gradient(#dbeafe, #eff6ff);
+}
+
+/* Feedback/user-field edit popup. */
+#jsst-admin div#userpopup .popup-top,
+#jsst-admin .popup-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 12px 56px 12px 18px;
+  background: linear-gradient(135deg, var(--jsst-primary, #2563eb), var(--jsst-sky, #0ea5e9));
+  color: #fff;
+}
+
+#jsst-admin #popup_title {
+  min-width: 0;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin #popup_cross {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  left: auto;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border-radius: 9px;
+  opacity: 1;
+  cursor: pointer;
+}
+
+#jsst-admin #popup_cross::before,
+#jsst-admin #popup_cross::after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 8px;
+  width: 16px;
+  height: 2px;
+  border-radius: 999px;
+  background: #fff;
+}
+
+#jsst-admin #popup_cross::before { transform: rotate(45deg); }
+#jsst-admin #popup_cross::after { transform: rotate(-45deg); }
+
+#jsst-admin form.popup-field-from {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+}
+#jsst-admin div#userpopup form.popup-field-from  div.popup-field-wrapper{
+  width: 100%;
+}
+#jsst-admin form.popup-field-from .popup-field-wrapper {
+  float: none;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin form.popup-field-from .popup-field-title {
+  display: block;
+  width: 100%;
+  margin: 0 0 6px;
+  text-align: start;
+}
+
+#jsst-admin form.popup-field-from .popup-field-obj,
+#jsst-admin form.popup-field-from input,
+#jsst-admin form.popup-field-from select {
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin form.popup-field-from .js-submit-container {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center !important;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 9px;
+  width: 100%;
+  margin: 4px 0 0;
+  padding-top: 13px;
+  border-top: 1px solid #e2e8f0;
+}
+
+#jsst-admin form.popup-field-from #user-field-anchor {
+  margin: 0;
+}
+
+html[dir="rtl"] #jsst-admin #popup_cross,
+body.rtl #jsst-admin #popup_cross {
+  right: auto;
+  left: 12px;
+}
+
+/* GDPR action links are text buttons, not 34px icon squares. */
+#jsst-admin .jsst-screen-list td .js-tk-button:not(:has(img)),
+#jsst-admin .jsst-screen-list td a.js-tk-button:not(:has(img)) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  min-height: 34px;
+  margin: 2px;
+  padding: 6px 9px;
+  border-radius: 8px;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Legacy/static screens receive the same shell instead of loose rectangular blocks. */
+#jsst-admin .jsst-screen #js-tk-cparea {
+  min-width: 0 !important;
+}
+
+#jsst-admin .jsst-screen #jsstadmin-data-wrp,
+#jsst-admin .jsst-screen .jsstadmin-data-wrp,
+#jsst-admin .jsst-screen .js-ticket-box-shadow {
+  max-width: 100%;
+}
+
+#jsst-admin .jsst-screen img {
+  height: auto !important;
+}
+
+#jsst-admin .jsst-screen table {
+  max-width: 100%;
+}
+
+/* Reports landing cards: matching wording and consistent cards. */
+#jsst-admin .jsst-screen-report-v73 .js-admin-report-wrapper,
+#jsst-admin .jsst-screen-report-v73 .js-admin-overall-report-type-wrapper,
+#jsst-admin .jsst-screen-report-v73 .js-admin-staff-report-type-wrapper,
+#jsst-admin .jsst-screen-report-v73 .js-admin-user-report-type-wrapper,
+#jsst-admin .jsst-screen-report-v73 .js-admin-department-report-type-wrapper {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* RTL: logical order, text, buttons, and popups. */
+html[dir="rtl"] #jsst-admin,
+body.rtl #jsst-admin {
+  text-align: start !important;
+}
+
+html[dir="rtl"] #jsst-admin .js-tkt-det-actn-btn-wrp,
+html[dir="rtl"] #jsst-admin .js-ticket-thread-cnt-btm,
+html[dir="rtl"] #jsst-admin .js-ticket-priorty-btn-wrp,
+html[dir="rtl"] #jsst-admin .tk-search-button,
+body.rtl #jsst-admin .js-tkt-det-actn-btn-wrp,
+body.rtl #jsst-admin .js-ticket-thread-cnt-btm,
+body.rtl #jsst-admin .js-ticket-priorty-btn-wrp,
+body.rtl #jsst-admin .tk-search-button {
+  direction: rtl !important;
+}
+
+/* Actual component-width breakpoints (works even when Joomla sidebar is open). */
+@container jsst-admin-content (max-width: 1080px) {
+  #jsst-admin .jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+  }
+
+  #jsst-admin .jsst-ticket-filter-grid,
+  #jsst-admin .jsst-ticket-filter-advanced,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter,
+  #jsst-admin .jsst-screen-list #js-filter-wrapper-toggle-area {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-actn-btn-wrp {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container jsst-admin-content (max-width: 720px) {
+  #jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-right,
+  #jsst-admin .jsst-ticket-filter-grid,
+  #jsst-admin .jsst-ticket-filter-advanced,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter,
+  #jsst-admin .jsst-screen-list #js-filter-wrapper-toggle-area,
+  #jsst-admin form.popup-field-from {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-actn-btn-wrp {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin .js-ticket-configuration-row {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin .js-ticket-configuration-row > * {
+    grid-column: 1;
+  }
+
+  #jsst-admin .js-value:has(.jsst-userpopup-trigger),
+  #jsst-admin .tk-search-value:has(.jsst-userpopup-trigger),
+  #jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin a.jsst-userpopup-trigger {
+    width: 100%;
+  }
+}
+
+/* Viewport fallbacks for browsers without container queries. */
+@media (max-width: 1180px) {
+  #jsst-admin .jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+    grid-template-columns: 1fr;
+  }
+  #jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+    position: static;
+  }
+}
+
+@media (max-width: 900px) {
+  #jsst-admin div#userpopup .search-center > .js-col-md-12 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #jsst-admin div#userpopup .js-search-value-button {
+    grid-column: 1 / -1 ;
+    justify-self: end ;
+  }
+}
+
+@media (max-width: 760px) {
+  #jsst-admin #jsstadmin-wrapper-top-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  #jsst-admin div#userpopup {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    transform: none;
+    width: auto;
+    max-height: calc(100vh - 16px);
+  }
+
+  #jsst-admin div#userpopup .search-center > .js-col-md-12 {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin div#userpopup .js-search-value-button {
+    grid-column: 1;
+    grid-template-columns: 1fr 1fr;
+    justify-self: stretch;
+  }
+
+  #jsst-admin div#userpopup input.js-button-search,
+  #jsst-admin div#userpopup input.js-button-reset {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #jsst-admin div#userpopup #records {
+    max-height: calc(100vh - 310px);
+    padding-inline: 10px;
+  }
+
+  #jsst-admin div#userpopup #records-inner {
+    min-width: 520px;
+  }
+
+  #jsst-admin .js-ticket-priorty-btn-wrp input,
+  #jsst-admin .js-ticket-priorty-btn-wrp button {
+    flex: 1 1 140px;
+  }
+}
+
+@media (max-width: 520px) {
+  #jsst-admin #js-tk-heading,
+  #jsst-admin #jsstadmin-wrapper-top {
+    align-items: flex-start;
+  }
+
+  #jsst-admin .download_attachments {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin .download_attachments a {
+    width: 100%;
+  }
+
+  #jsst-admin .jsst-ticket-detail-admin-v2 .js-ticket-thread-cnt-btm {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  #jsst-admin .jsst-ticket-detail-admin-v2 .ticket-edit-time-button {
+    width: 100%;
+  }
+
+  #jsst-admin form.popup-field-from .js-submit-container,
+  #jsst-admin .js-ticket-priorty-btn-wrp {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #jsst-admin form.popup-field-from .js-submit-container > *,
+  #jsst-admin .js-ticket-priorty-btn-wrp > * {
+    width: 100%;
+  }
+}
+
+
+/* V4 COMPLETE PAGE-LOOP STRUCTURAL CORRECTIONS */
+#jsst-admin .jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 300px);
+  align-items: start;
+  gap: 18px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-left,
+#jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin .js-value:has(.jsst-userpopup-trigger),
+#jsst-admin .tk-search-value:has(.jsst-userpopup-trigger),
+#jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 8px;
+}
+
+
+#jsst-admin div#js-tk-admin-wrapper .js-form-wrapper > .js-value:has(.jsst-userpopup-trigger) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 8px;
+}
+
+#jsst-admin .js-value:has(.jsst-userpopup-trigger) > #username-div,
+#jsst-admin .tk-search-value:has(.jsst-userpopup-trigger) > #username-div,
+#jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) > #username-div {
+  grid-column: 1;
+  grid-row: 1;
+  min-height: var(--jsst-control-height);
+}
+
+#jsst-admin .js-value:has(.jsst-userpopup-trigger) > #username-div > #username-text,
+#jsst-admin .tk-search-value:has(.jsst-userpopup-trigger) > #username-div > #username-text,
+#jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) > #username-div > #username-text {
+  float: none;
+  height: var(--jsst-control-height);
+}
+
+#jsst-admin .js-value:has(.jsst-userpopup-trigger) > .jsst-userpopup-trigger,
+#jsst-admin .tk-search-value:has(.jsst-userpopup-trigger) > .jsst-userpopup-trigger,
+#jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) > .jsst-userpopup-trigger {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+#jsst-admin .jsst-popup-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+#jsst-admin .jsst-popup-close img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  max-width: 100%;
+}
+
+#jsst-admin .js-ticket-threads,
+#jsst-admin .js-mail-threads {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@container jsst-admin-content (max-width: 1080px) {
+  #jsst-admin .jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@container jsst-admin-content (max-width: 720px) {
+  #jsst-admin div#js-tk-admin-wrapper .js-form-wrapper > .js-value:has(.jsst-userpopup-trigger),
+  #jsst-admin .js-value:has(.jsst-userpopup-trigger),
+  #jsst-admin .tk-search-value:has(.jsst-userpopup-trigger),
+  #jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #jsst-admin .js-value:has(.jsst-userpopup-trigger) > #username-div,
+  #jsst-admin .tk-search-value:has(.jsst-userpopup-trigger) > #username-div,
+  #jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) > #username-div,
+  #jsst-admin .js-value:has(.jsst-userpopup-trigger) > .jsst-userpopup-trigger,
+  #jsst-admin .tk-search-value:has(.jsst-userpopup-trigger) > .jsst-userpopup-trigger,
+  #jsst-admin .js-export-field-value:has(.jsst-userpopup-trigger) > .jsst-userpopup-trigger {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 1180px) {
+  #jsst-admin .jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-left,
+  #jsst-admin .jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+    grid-column: 1;
+  }
+}
+
+/* Exact ticket-detail selector wins over legacy breakpoint declarations: this
+   file loads after jsst-ticket-detail-admin.css and matches their specificity,
+   so source order is enough. It must NOT be !important, or it would also beat
+   the narrower container-query rule below and pin the grid to two columns. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 300px);
+  align-items: start;
+  gap: 18px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-left,
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+@container jsst-admin-content (max-width: 1080px) {
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Collapsing the template is not enough: the sidebar is explicitly placed at
+     grid-column 2 / grid-row 1, which would keep an implicit second track alive
+     and hold both children on the same row. Reset the placement at the same
+     specificity as the rule that sets it. */
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-left,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 1180px) {
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 #js-tk-ticket-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-left,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-right {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* Full-loop V5: logical alignment for legacy cron, guide and permissions content. */
+#jsst-admin .jsst-cron-recommendation {
+    display: block;
+    margin-inline-end: 4px;
+    text-align: start;
+}
+
+#jsst-admin .jsst-userguide-closing {
+    margin-block-start: 16px;
+    text-align: end;
+}
+
+#jsst-admin .jsst-permission-section-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    text-align: start;
+}
+
+#jsst-admin .jsst-permission-select-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-inline-start: auto;
+    font-size: small;
+    font-weight: normal;
+    text-align: end;
+}
+
+[dir="rtl"] #jsst-admin .jsst-permission-select-all,
+body.rtl #jsst-admin .jsst-permission-select-all {
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+}
+
+@media (max-width: 520px) {
+    #jsst-admin .jsst-permission-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    #jsst-admin .jsst-permission-select-all {
+        margin-inline-start: 0;
+        text-align: start;
+    }
+}
+
+#jsst-admin .jsst-inline-warning {
+    color: #c2410c;
+    display: inline-block;
+    margin-block-start: 6px;
+}
+
+/* Full-loop V6: valid responsive shell for component user pickers. */
+#jsst-admin .jsst-component-user-picker {
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+    box-sizing: border-box;
+    color: #24364b;
+}
+
+#jsst-admin .jsst-component-user-picker form {
+    min-width: 0;
+}
+
+#jsst-admin .jsst-component-user-filter {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+    align-items: end;
+    gap: 10px;
+    margin-block-end: 14px;
+    padding: 12px;
+    border: 1px solid #d9e3ef;
+    border-radius: 10px;
+    background: #f8fbff;
+}
+
+#jsst-admin .jsst-component-user-filter label {
+    display: grid;
+    min-width: 0;
+    gap: 5px;
+    margin: 0;
+    font-weight: 600;
+}
+
+#jsst-admin .jsst-component-user-filter input {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+#jsst-admin .jsst-component-user-filter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#jsst-admin .jsst-component-user-filter button {
+    min-height: 40px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+#jsst-admin .jsst-component-user-table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid #d9e3ef;
+    border-radius: 10px;
+    background: #fff;
+}
+
+#jsst-admin table.jsst-component-user-table {
+    width: 100%;
+    min-width: 560px;
+    margin: 0;
+    border-collapse: collapse;
+}
+
+#jsst-admin table.jsst-component-user-table th,
+#jsst-admin table.jsst-component-user-table td {
+    padding: 10px 12px;
+    vertical-align: middle;
+    text-align: start;
+    overflow-wrap: anywhere;
+}
+
+#jsst-admin table.jsst-component-user-table .jsst-user-number,
+#jsst-admin table.jsst-component-user-table .jsst-user-check,
+#jsst-admin table.jsst-component-user-table .jsst-user-id {
+    width: 1%;
+    white-space: nowrap;
+}
+
+#jsst-admin .jsst-component-user-select {
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+@media (max-width: 680px) {
+    #jsst-admin .jsst-component-user-filter {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    #jsst-admin .jsst-component-user-filter-actions,
+    #jsst-admin .jsst-component-user-filter button {
+        width: 100%;
+    }
+}
+
+/* ========================================================================
+ * V7 SCREENSHOT CORRECTIONS
+ * Explicit component classes replace fragile legacy widths and :has-only
+ * behaviour on the ticket form, user picker, field actions and attachments.
+ * ====================================================================== */
+
+/* Ticket/staff user selector: the readonly value must consume the available
+   column instead of retaining the legacy 60–70% width. */
+#jsst-admin .jsst-user-select-control {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) max-content;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-user-select-control > .jsst-user-select-input,
+#jsst-admin .jsst-user-select-control > #username-div {
+  float: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+}
+
+#jsst-admin .jsst-user-select-control #username-text {
+  float: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: var(--jsst-control-height);
+  margin: 0;
+}
+
+#jsst-admin .jsst-user-select-control > .jsst-userpopup-trigger {
+  align-self: stretch;
+  min-width: 132px;
+  min-height: var(--jsst-control-height);
+  margin: 0;
+}
+
+/* Select User popup: remove the inherited blue action strip and make every
+   control a deliberate, independent element. */
+#jsst-admin div#userpopup .search-center,
+#jsst-admin div#userpopup .search-center > .js-col-md-12,
+#jsst-admin div#userpopup .js-search-value-button,
+#jsst-admin div#userpopup .js-button {
+  background: transparent;
+  background-image: none;
+  border: 0;
+  box-shadow: none;
+}
+
+#jsst-admin div#userpopup .search-center-heading {
+  min-height: 58px;
+  padding: 12px 16px 12px 20px;
+  background: linear-gradient(90deg, var(--jsst-primary, #2563eb) 0%, var(--jsst-sky, #0ea5e9) 100%);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+#jsst-admin div#userpopup .search-center-heading > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin div#userpopup .search-center-heading .close,
+#jsst-admin div#userpopup .search-center-heading .jsst-userpicker-close {
+  position: relative;
+  inset: auto;
+  flex: 0 0 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 10px;
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  opacity: 1;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+#jsst-admin div#userpopup .search-center-heading .close::before,
+#jsst-admin div#userpopup .search-center-heading .close::after,
+#jsst-admin div#userpopup .search-center-heading .jsst-userpicker-close::before,
+#jsst-admin div#userpopup .search-center-heading .jsst-userpicker-close::after {
+  content: "";
+  position: absolute;
+  width: 17px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+#jsst-admin div#userpopup .search-center-heading .close::before,
+#jsst-admin div#userpopup .search-center-heading .jsst-userpicker-close::before {
+  transform: rotate(45deg);
+}
+
+#jsst-admin div#userpopup .search-center-heading .close::after,
+#jsst-admin div#userpopup .search-center-heading .jsst-userpicker-close::after {
+  transform: rotate(-45deg);
+}
+
+#jsst-admin div#userpopup .search-center-heading .jsst-userpicker-close > span {
+  display: none;
+}
+
+#jsst-admin div#userpopup .search-center > .js-col-md-12,
+#jsst-admin div#userpopup .jsst-userpicker-filter-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  background: var(--jsst-soft, #f8fafc);
+}
+
+#jsst-admin div#userpopup .js-search-value input {
+  width: 100%;
+  height: 46px;
+  min-height: 46px;
+  margin: 0;
+  border: 1px solid #d7e1ee;
+  border-radius: 11px;
+  background: #fff;
+  color: var(--jsst-ink, #0f172a);
+  box-shadow: none;
+}
+
+#jsst-admin div#userpopup .js-search-value-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: auto;
+  min-width: 0;
+  gap: 8px;
+}
+
+#jsst-admin div#userpopup .js-search-value-button .js-button {
+  display: contents;
+}
+
+#jsst-admin div#userpopup .js-button-search,
+#jsst-admin div#userpopup .js-button-reset,
+#jsst-admin div#userpopup input.js-button-search,
+#jsst-admin div#userpopup input.js-button-reset,
+#jsst-admin div#userpopup button.js-button-search,
+#jsst-admin div#userpopup button.js-button-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 96px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+#jsst-admin div#userpopup .js-button-search,
+#jsst-admin div#userpopup input.js-button-search,
+#jsst-admin div#userpopup button.js-button-search {
+  border: 1px solid var(--jsst-primary, #2563eb);
+  background: var(--jsst-primary, #2563eb);
+  color: #fff;
+}
+
+#jsst-admin div#userpopup .js-button-reset,
+#jsst-admin div#userpopup input.js-button-reset,
+#jsst-admin div#userpopup button.js-button-reset {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopup .search-center-heading,
+body.rtl #jsst-admin div#userpopup .search-center-heading {
+  padding: 12px 20px 12px 16px !important;
+}
+
+html[dir="rtl"] #jsst-admin div#userpopup .search-center-heading .close,
+html[dir="rtl"] #jsst-admin div#userpopup .search-center-heading .jsst-userpicker-close,
+body.rtl #jsst-admin div#userpopup .search-center-heading .close,
+body.rtl #jsst-admin div#userpopup .search-center-heading .jsst-userpicker-close {
+  margin: 0 auto 0 0 !important;
+}
+
+/* Shared attachment experience. The native input remains available as a
+   no-JavaScript fallback, but becomes a clean file chip after enhancement. */
+#jsst-admin .jsst-admin-attachment-zone {
+  float: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px dashed #bfd5f4;
+  border-radius: 16px;
+  background: #fbfdff;
+  transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+
+#jsst-admin .jsst-admin-attachment-zone.is-dragover {
+  border-color: var(--jsst-primary, #2563eb);
+  background: #eff6ff;
+  box-shadow: 0 0 0 4px rgba(37,99,235,.10);
+}
+
+#jsst-admin .jsst-admin-attachment-zone .jsst-dropzone-message {
+  position: relative;
+  float: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 112px;
+  margin: 0;
+  padding: 18px;
+  border: 1px dashed #c6daf7;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--jsst-ink, #0f172a);
+  text-align: start;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+#jsst-admin .jsst-admin-attachment-zone .jsst-dropzone-message:hover {
+  border-color: #7aa7ef;
+  background: #f8fbff;
+}
+
+#jsst-admin .jsst-admin-attachment-zone .jsst-dropzone-icon {
+  flex: 0 0 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--jsst-soft-accent, #eef4ff);
+  color: var(--jsst-primary, #2563eb);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+#jsst-admin .jsst-admin-attachment-zone .jsst-dropzone-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-admin-attachment-zone .jsst-dropzone-copy strong {
+  color: var(--jsst-ink, #0f172a);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+#jsst-admin .jsst-admin-attachment-zone .jsst-dropzone-copy small {
+  color: var(--jsst-muted, #64748b);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+#jsst-admin .jsst-attachment-enhanced .jsst-attachment-input-row {
+  position: relative;
+  float: none;
+  display: none;
+  grid-template-columns: 30px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  margin: 0;
+  padding: 7px 8px 7px 12px;
+  border: 1px solid #dbe5f1;
+  border-radius: 12px;
+  background: #fff;
+}
+
+#jsst-admin .jsst-attachment-enhanced .jsst-attachment-input-row.is-file-attached {
+  display: grid;
+}
+
+#jsst-admin .jsst-attachment-enhanced .jsst-attachment-input-row::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--jsst-soft-accent, #eef4ff);
+  box-shadow: inset 0 0 0 1px #d9e6fb;
+}
+
+#jsst-admin .jsst-attachment-enhanced .jsst-attachment-input-row::after {
+  content: "↗";
+  position: absolute;
+  inset-inline-start: 20px;
+  top: 14px;
+  color: var(--jsst-primary, #2563eb);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+#jsst-admin .jsst-attachment-enhanced .jsst-attachment-input-row input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-width: 1px;
+  min-height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
+}
+
+#jsst-admin .jsst-attachment-enhanced .jsst-attachment-file-name {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#jsst-admin .jsst-admin-attachment-zone .js-attachment-remove {
+  grid-column: 3;
+  position: relative;
+  inset: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fff1f2;
+  color: #be123c;
+  background-image: none;
+  cursor: pointer;
+}
+
+#jsst-admin .jsst-attachment-add,
+#jsst-admin button.jsst-attachment-add,
+#jsst-admin #js-attachment-add.jsst-attachment-add {
+  float: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 96px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--jsst-primary, #2563eb);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37,99,235,.16);
+}
+
+#jsst-admin .js-attachment-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  width: 100%;
+  margin: 10px 0 0;
+}
+
+#jsst-admin .jsst-existing-attachments {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 9px;
+  width: 100%;
+  margin-top: 14px;
+}
+
+#jsst-admin .jsst-existing-attachment {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto !important;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 54px;
+  padding: 9px 10px;
+  border: 1px solid #dfe7f1;
+  border-radius:var(--jsst-radius-md, 12px);
+  background: var(--jsst-soft, #f8fafc);
+}
+
+#jsst-admin .jsst-existing-attachment-icon {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #eaf2ff;
+  position: relative;
+}
+
+#jsst-admin .jsst-existing-attachment-icon::before {
+  content: "↗";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--jsst-primary, #2563eb);
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+#jsst-admin .jsst-existing-attachment-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-existing-attachment-meta strong {
+  overflow: hidden;
+  color: var(--jsst-ink, #0f172a);
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#jsst-admin .jsst-existing-attachment-meta small {
+  color: var(--jsst-muted, #64748b);
+  font-size: 11px;
+}
+
+#jsst-admin .jsst-existing-attachment-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fff;
+  color: #be123c;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Staff-only reply controls are now rendered only for staff. Keep the active
+   choices compact and aligned when they are present. */
+#jsst-admin .jsst-choice-stack {
+  display: grid;
+  gap: 9px;
+}
+
+#jsst-admin .jsst-choice-stack .jsst-formfield-radio-button-wrp,
+#jsst-admin .jsst-single-choice {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 9px 12px;
+  border: 1px solid #dce6f2;
+  border-radius: 11px;
+  background: #fff;
+  cursor: pointer;
+}
+
+#jsst-admin .jsst-choice-stack input,
+#jsst-admin .jsst-single-choice input {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+/* Ticket Fields action cells: edit and delete use one icon scale and one
+   alignment system instead of the popup trigger's large text-button rules. */
+#jsst-admin .jsst-field-action-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+#jsst-admin table#js-table td .action-btn.jsst-field-action,
+#jsst-admin table#js-table td a.action-btn.jsst-field-action,
+#jsst-admin table#js-table td .action-btn.jsst-userpopup-trigger.jsst-field-action {
+  float: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  min-height: 34px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #dbe4ef;
+  border-radius: 9px;
+  background: #fff;
+  color: #334155;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+#jsst-admin table#js-table td .action-btn.jsst-field-edit-action {
+  border-color: var(--jsst-primary, #2563eb);
+  background: var(--jsst-primary, #2563eb);
+}
+
+#jsst-admin table#js-table td .action-btn.jsst-field-delete-action {
+  border-color: #e2e8f0;
+  background: #fff;
+}
+
+#jsst-admin table#js-table td .action-btn.jsst-field-action img {
+  display: block;
+  width: 15px;
+  height: 15px;
+  max-width: 15px;
+  max-height: 15px;
+  margin: 0;
+  padding: 0;
+  object-fit: contain;
+}
+
+/* Component-width responsive rules. Joomla's navigation can reduce the
+   component area even while the browser viewport is still wide. */
+@container jsst-admin-content (max-width: 920px) {
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-filter-grid,
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-filter-advanced,
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-title-row,
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-list-head,
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-section-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-badges {
+    justify-content: flex-start;
+    max-width: none;
+  }
+
+  #jsst-admin .jsst-existing-attachments {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container jsst-admin-content (max-width: 680px) {
+  #jsst-admin .jsst-user-select-control {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #jsst-admin .jsst-user-select-control > .jsst-userpopup-trigger {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #jsst-admin div#userpopup .js-button-search,
+  #jsst-admin div#userpopup .js-button-reset {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #jsst-admin .jsst-ticket-list-v2 {
+    padding-inline: 0;
+  }
+
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-status-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-filter-grid,
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-filter-advanced,
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-item {
+    grid-template-columns: 1fr;
+    gap: 11px;
+    padding: 13px;
+  }
+
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  #jsst-admin .jsst-ticket-list-v2 .jsst-ticket-subject {
+    font-size: 15px;
+  }
+
+  #jsst-admin .jsst-existing-attachment {
+    grid-template-columns: 32px minmax(0, 1fr) !important;
+  }
+
+  #jsst-admin .jsst-existing-attachment-delete {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  #jsst-admin div#userpopup .search-center > .js-col-md-12,
+  #jsst-admin div#userpopup .jsst-userpicker-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin div#userpopup .js-search-value-button {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  #jsst-admin div#userpopup {
+    width: calc(100vw - 18px);
+    border-radius: 13px;
+  }
+
+  #jsst-admin div#userpopup .search-center-heading {
+    padding-inline: 14px;
+  }
+
+  #jsst-admin div#userpopup .search-center > .js-col-md-12,
+  #jsst-admin div#userpopup .jsst-userpicker-filter-grid {
+    padding: 12px;
+  }
+
+  #jsst-admin div#userpopup .js-search-value-button {
+    grid-template-columns: 1fr;
+  }
+
+  #jsst-admin .jsst-admin-attachment-zone .jsst-dropzone-message {
+    min-height: 98px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 15px;
+  }
+}
+
+#jsst-admin table#js-table td .js-tk-button.jsst-field-action,
+#jsst-admin table#js-table td a.js-tk-button.jsst-field-action {
+  float: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  min-height: 34px;
+  margin: 0;
+  padding: 0;
+  border-radius: 9px;
+  box-shadow: none;
+}
+
+#jsst-admin table#js-table td .js-tk-button.jsst-field-edit-action {
+  border-color: #2563eb;
+  background: #2563eb;
+}
+
+#jsst-admin table#js-table td .js-tk-button.jsst-field-delete-action {
+  border-color: #e2e8f0;
+  background: #fff;
+}
+
+
+/* ======================================================================
+ * V8 USER-REPORTED SCREENSHOT CORRECTIONS
+ * High-specificity overrides for older ticket-form rules that used a
+ * calculated input width and physical border radii. These selectors are
+ * deliberately scoped to the explicit user-selector component.
+ * ====================================================================== */
+#jsst-admin div#js-tk-admin-wrapper.jsst-admin-form-ticket-v21 form#adminForm .js-value.jsst-user-select-control {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) max-content !important;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-admin-form-ticket-v21 form#adminForm .js-value.jsst-user-select-control > #username-div.jsst-user-select-input {
+  float: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-admin-form-ticket-v21 form#adminForm .js-value.jsst-user-select-control > #username-div.jsst-user-select-input > input#username-text {
+  float: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: var(--jsst-control-height);
+  margin: 0;
+  border-radius: 14px 0 0 14px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-admin-form-ticket-v21 form#adminForm .js-value.jsst-user-select-control > a.jsst-userpopup-trigger {
+  float: none;
+  align-self: stretch;
+  width: auto;
+  min-width: 132px;
+  min-height: var(--jsst-control-height);
+  margin: 0 !important;
+  border-radius: 14px;
+}
+
+/* The same component is reused by staff, export and report screens. Keep
+   their older page-specific widths from winning over the shared grid. */
+#jsst-admin div#js-tk-admin-wrapper form#adminForm .jsst-user-select-control > .jsst-user-select-input,
+#jsst-admin div#js-tk-admin-wrapper form#adminForm .jsst-user-select-control > #username-div {
+  float: none;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper form#adminForm .jsst-user-select-control > .jsst-user-select-input > input[type="text"],
+#jsst-admin div#js-tk-admin-wrapper form#adminForm .jsst-user-select-control > #username-div > input[type="text"] {
+  float: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  border-radius: 12px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper form#adminForm .jsst-user-select-control > a.jsst-userpopup-trigger {
+  float: none;
+  width: auto;
+  margin: 0;
+  border-radius: 12px;
+}
+
+@container jsst-admin-content (max-width: 680px) {
+  #jsst-admin div#js-tk-admin-wrapper.jsst-admin-form-ticket-v21 form#adminForm .js-value.jsst-user-select-control,
+  #jsst-admin div#js-tk-admin-wrapper form#adminForm .jsst-user-select-control {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #jsst-admin div#js-tk-admin-wrapper.jsst-admin-form-ticket-v21 form#adminForm .js-value.jsst-user-select-control > a.jsst-userpopup-trigger,
+  #jsst-admin div#js-tk-admin-wrapper form#adminForm .jsst-user-select-control > a.jsst-userpopup-trigger {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ================================================================
+   Screenshot QA batch 646-655
+   Dedicated fixes for user picker, feedback filters, report calendars,
+   GDPR actions and the translation contribution row.
+   ================================================================ */
+
+/* The user picker no longer relies on legacy Bootstrap column widths or
+   wrapper divs. Direct controls keep Search and Reset together. */
+#jsst-admin #userpopup.jsst-userpicker-modal {
+  width: min(880px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-filter-grid {
+  float: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) max-content;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 16px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  background: var(--jsst-soft, #f8fafc);
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .js-search-value,
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions {
+  float: none;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .js-search-value input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  min-height: 46px;
+  margin: 0;
+  padding: 10px 13px;
+  border: 1px solid #d7e1ee;
+  border-radius: 11px;
+  background: #fff;
+  color: var(--jsst-ink, #0f172a);
+  box-shadow: none;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(96px, auto));
+  align-items: stretch;
+  gap: 8px;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 96px;
+  height: 46px;
+  min-height: 46px;
+  margin: 0;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions > .js-button-search {
+  border: 1px solid var(--jsst-primary, #2563eb);
+  background: var(--jsst-primary, #2563eb);
+  color: #fff;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions > .js-button-reset {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-results {
+  width: 100%;
+  min-width: 0;
+  max-height: min(52vh, 430px) !important;
+  margin: 0;
+  padding: 14px 18px 18px;
+  overflow: auto;
+  background: #fff;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-results .js-ticket-table-wrp {
+  min-width: 650px;
+}
+
+@container jsst-admin-content (max-width: 760px) {
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-filter-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 760px) {
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-filter-grid {
+    grid-template-columns: 1fr !important;
+  }
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 430px) {
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-results {
+    padding-inline: 10px;
+  }
+}
+
+/* Feedback filter: its advanced wrapper used to consume an entire grid row,
+   pushing the actions outside the panel. Visible advanced fields now
+   participate directly in the parent grid. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-list #js-tk-filter.jsst-feedback-filter {
+  grid-template-columns: repeat(5, minmax(140px, 1fr)) max-content !important;
+  align-items: center;
+  gap: 12px;
+}
+
+#jsst-admin #js-tk-filter.jsst-feedback-filter > #js-filter-wrapper-toggle-area.jsst-feedback-advanced {
+  display: contents;
+}
+
+#jsst-admin #js-tk-filter.jsst-feedback-filter > #js-filter-wrapper-toggle-area.jsst-feedback-advanced.is-collapsed {
+  display: none;
+}
+
+#jsst-admin #js-tk-filter.jsst-feedback-filter .jsst-feedback-filter-actions {
+  float: none;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  align-self: stretch;
+  width: auto !important;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+}
+
+#jsst-admin #js-tk-filter.jsst-feedback-filter .jsst-feedback-filter-actions > * {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+#jsst-admin #js-tk-filter.jsst-feedback-filter #js-filter-wrapper-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+}
+
+#jsst-admin #js-tk-filter.jsst-feedback-filter .js-search-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #d7e1ee;
+  border-radius: 10px;
+  background: #fff;
+  color: #334155;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@container jsst-admin-content (max-width: 1200px) {
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-list #js-tk-filter.jsst-feedback-filter {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@container jsst-admin-content (max-width: 720px) {
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-list #js-tk-filter.jsst-feedback-filter {
+    grid-template-columns: 1fr !important;
+  }
+  #jsst-admin #js-tk-filter.jsst-feedback-filter .jsst-feedback-filter-actions button,
+  #jsst-admin #js-tk-filter.jsst-feedback-filter .js-search-filter-btn {
+    width: 100%;
+  }
+}
+
+/* Report filters use a fixed, intentional number of columns. */
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-department-report-filter {
+  grid-template-columns: repeat(2, minmax(220px, 1fr)) max-content !important;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-staff-report-filter,
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-user-report-filter {
+  grid-template-columns: repeat(3, minmax(190px, 1fr)) max-content !important;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-user-select-control {
+  float: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-user-select-control > .jsst-user-select-input {
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-user-select-control input#username-text {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid #dbe3ef;
+  border-radius: var(--jsst-radius-md);
+  background: #fff;
+  color: var(--jsst-ink);
+  box-shadow: none;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-user-select-control > a.jsst-userpopup-trigger {
+  min-width: 118px;
+  height: 46px;
+  min-height: 46px;
+  border-radius: var(--jsst-radius-md);
+  background: var(--jsst-ink);
+  border-radius: var(--jsst-radius-md) !important;
+}
+
+/* Joomla calendar: higher specificity is required because the old report
+   rule styled every button inside the filter, including calendar controls. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar > .input-group,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar .input-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 46px;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  gap: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar .input-group > input,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar input.form-control,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar input.inputbox {
+  grid-column: 1;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid #dbe3ef;
+  border-inline-end: 0;
+  border-radius: var(--jsst-radius-md) 0 0 var(--jsst-radius-md) !important;
+  background: #fff;
+  color: var(--jsst-ink);
+  box-shadow: none;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar .input-group > button:not(.js-btn),
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar button.btn:not(.js-btn),
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar button.btn-secondary:not(.js-btn),
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar button.btn-primary:not(.js-btn) {
+  grid-column: 2;
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  min-width: 46px;
+  height: 46px;
+  min-height: 46px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #dbe3ef !important;
+  border-inline-start: 0 !important;
+  border-radius: 0 var(--jsst-radius-md) var(--jsst-radius-md) 0 !important;
+  background: var(--jsst-soft);
+  color: #334155;
+  box-shadow: none;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar button span,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar button svg,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar button [class*="icon"] {
+  display: inline-block !important;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar > .js-calendar {
+  position: absolute;
+  inset-block-start: calc(100% + 8px);
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+  top: auto;
+  left: 0;
+  right: auto;
+  transform: none;
+  width: min(360px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: min(520px, calc(100vh - 80px));
+  margin: 0;
+  overflow: auto;
+  z-index: 10050;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, .28);
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar > .js-calendar[hidden] {
+  display: none;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .js-calendar .buttons-wrapper,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .js-calendar .btn-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 8px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .js-calendar .buttons-wrapper button,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .js-calendar .btn-group button {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  min-height: 36px;
+  margin: 0;
+  padding: 0 8px;
+  border: 1px solid #d6e4fb;
+  border-radius: var(--jsst-radius-sm);
+  background: #f8fbff;
+  color: var(--jsst-primary, #2563eb);
+  font-size: 12px;
+  font-weight: 750;
+  box-shadow: none;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar .input-group > input,
+body.rtl #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar .input-group > input {
+  border-inline-start: 0;
+  border-inline-end: 1px solid #dbe3ef;
+  border-radius: 0 var(--jsst-radius-md) var(--jsst-radius-md) 0;
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar .input-group > button,
+body.rtl #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar .input-group > button {
+  border-inline-start: 1px solid #dbe3ef;
+  border-inline-end: 0;
+  border-radius: var(--jsst-radius-md) 0 0 var(--jsst-radius-md);
+}
+
+html[dir="rtl"] #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar > .js-calendar,
+body.rtl #jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .field-calendar > .js-calendar {
+  left: auto;
+  right: 0;
+}
+
+@container jsst-admin-content (max-width: 1040px) {
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-department-report-filter,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-staff-report-filter,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-user-report-filter {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container jsst-admin-content (max-width: 680px) {
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-department-report-filter,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-staff-report-filter,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-user-report-filter {
+    grid-template-columns: 1fr;
+  }
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-user-select-control > a.jsst-userpopup-trigger {
+    width: 100%;
+  }
+}
+
+/* GDPR actions need a real action column. Do not split words into a vertical
+   stack when the message column takes the remaining width. */
+#jsst-admin table#js-table.jsst-gdpr-erase-table {
+  table-layout: auto;
+}
+
+#jsst-admin table#js-table.jsst-gdpr-erase-table th:last-child,
+#jsst-admin table#js-table.jsst-gdpr-erase-table td.jsst-gdpr-action-cell {
+  width: 190px;
+  min-width: 190px;
+  max-width: 190px;
+}
+
+#jsst-admin table#js-table.jsst-gdpr-erase-table td.jsst-gdpr-action-cell {
+  vertical-align: middle;
+  padding: 12px;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+#jsst-admin table#js-table.jsst-gdpr-erase-table .jsst-gdpr-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  margin: 0 0 7px;
+  padding: 8px 10px;
+  border: 1px solid #dbe3ef;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--jsst-primary-dark, #1d4ed8);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+#jsst-admin table#js-table.jsst-gdpr-erase-table .jsst-gdpr-action-button:last-child {
+  margin-bottom: 0;
+  color: #b91c1c;
+}
+
+/* Translation contribution row: stop Joomla's external-link decoration and
+   the legacy image margin from placing icons over the label. */
+#jsst-admin .jsst-jssupportticket-translation #js-lang-toserver .col {
+  float: none;
+  display: block;
+  width: min(100%, 840px);
+  margin: 0 auto;
+  padding: 0 !important;
+}
+
+#jsst-admin .jsst-jssupportticket-translation #js-lang-toserver a.jsst-translation-contribute {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  margin: 0;
+  padding: 12px 20px;
+  text-align: center;
+  overflow: hidden;
+}
+
+#jsst-admin .jsst-jssupportticket-translation #js-lang-toserver a.jsst-translation-contribute::before,
+#jsst-admin .jsst-jssupportticket-translation #js-lang-toserver a.jsst-translation-contribute::after {
+  display: none;
+  content: none;
+}
+
+#jsst-admin .jsst-jssupportticket-translation #js-lang-toserver a.jsst-translation-contribute img.jsst-translation-contribute__icon {
+  flex: 0 0 38px;
+  display: block;
+  width: 38px;
+  height: 38px;
+  max-width: 38px;
+  margin: 0;
+  object-fit: contain;
+}
+
+#jsst-admin .jsst-jssupportticket-translation .jsst-translation-contribute__text {
+  min-width: 0;
+  color: #334155;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+/* Media-query fallback for browsers/pages where the component container is
+   not established early enough during Joomla admin rendering. */
+@media (max-width: 1400px) {
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-list #js-tk-filter.jsst-feedback-filter {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  #jsst-admin #js-tk-filter.jsst-feedback-filter .jsst-feedback-filter-actions {
+    grid-column: 1 / -1 !important;
+    justify-self: end !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-department-report-filter,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-staff-report-filter,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-user-report-filter {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter .tk-search-button {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-list #js-tk-filter.jsst-feedback-filter {
+    grid-template-columns: 1fr;
+  }
+  #jsst-admin #js-tk-filter.jsst-feedback-filter .jsst-feedback-filter-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-column: auto;
+    width: 100%;
+  }
+  #jsst-admin #js-tk-filter.jsst-feedback-filter #js-filter-wrapper-toggle-btn {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-department-report-filter,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-staff-report-filter,
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter.jsst-user-report-filter {
+    grid-template-columns: 1fr;
+  }
+  #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-user-select-control {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================================================================
+   Screenshot QA batch 646-655 — final cascade corrections
+   These rules deliberately sit last. They neutralize older container-query
+   and calendar-button rules that still won on Joomla's narrow admin canvas.
+   ================================================================ */
+
+/* User picker sizing must follow the modal/viewport, not Joomla's content
+   container. A narrow admin canvas can coexist with a wide fixed modal. */
+#jsst-admin #userpopup.jsst-userpicker-modal {
+  width: min(920px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: min(88vh, 760px);
+  overflow: hidden;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-shell,
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-form {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) max-content;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions {
+  display: flex;
+  grid-template-columns: none;
+  align-items: center;
+  justify-content: flex-end;
+  width: auto;
+  gap: 8px;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions > button {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 96px;
+}
+
+#jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-results {
+  max-height: min(50vh, 430px);
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 900px) {
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 620px) {
+  #jsst-admin #userpopup.jsst-userpicker-modal {
+    width: calc(100vw - 18px);
+    max-width: calc(100vw - 18px);
+  }
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-filter-grid {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions {
+    grid-column: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-self: stretch;
+    width: 100%;
+  }
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions > button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 390px) {
+  #jsst-admin #userpopup.jsst-userpicker-modal .jsst-userpicker-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Staff form's selected-user field remains a normal input/button pair. */
+#jsst-admin .jsst-staff-form-v69 .jsst-user-select-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+}
+
+#jsst-admin .jsst-staff-form-v69 .jsst-user-select-control .jsst-user-select-input,
+#jsst-admin .jsst-staff-form-v69 .jsst-user-select-control .jsst-user-select-input > input {
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-staff-form-v69 .jsst-user-select-control .jsst-user-select-input > input {
+  border-radius: 13px;
+}
+
+#jsst-admin .jsst-staff-form-v69 .jsst-user-select-control > a.jsst-userpopup-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 142px;
+  height: 46px;
+  margin: 0;
+  border-radius: 13px;
+}
+
+@media (max-width: 620px) {
+  #jsst-admin .jsst-staff-form-v69 .jsst-user-select-control {
+    grid-template-columns: 1fr;
+  }
+  #jsst-admin .jsst-staff-form-v69 .jsst-user-select-control > a.jsst-userpopup-trigger {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* Joomla 6 calendar markup is .field-calendar > .input-group > input + button.
+   Keep the pair intact and let the core script calculate from a visible,
+   normally positioned trigger. */
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field,
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .input-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 46px;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  gap: 0;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .input-group > input {
+  grid-column: 1;
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid #dbe3ef;
+  border-right: 0;
+  border-radius: var(--jsst-radius-md) 0 0 var(--jsst-radius-md);
+  background: #fff;
+  color: var(--jsst-ink);
+  box-shadow: none;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .input-group > button {
+  grid-column: 2;
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  min-width: 46px;
+  max-width: 46px;
+  height: 46px;
+  min-height: 46px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #dbe3ef;
+  border-left: 0;
+  border-radius: 0 var(--jsst-radius-md) var(--jsst-radius-md) 0;
+  background: var(--jsst-soft);
+  color: #334155;
+  opacity: 1;
+  visibility: visible;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .input-group > button .icon-calendar {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  opacity: 1;
+  visibility: visible;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .input-group > button .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+html[dir="rtl"] #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .input-group > input,
+body.rtl #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .input-group > input {
+  border-right: 1px solid #dbe3ef;
+  border-left: 0;
+  border-radius: 0 var(--jsst-radius-md) var(--jsst-radius-md) 0;
+}
+
+html[dir="rtl"] #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .input-group > button,
+body.rtl #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .input-group > button {
+  border-right: 0;
+  border-left: 1px solid #dbe3ef;
+  border-radius: var(--jsst-radius-md) 0 0 var(--jsst-radius-md);
+}
+
+/* Some Joomla builds insert the datepicker beneath the field. Use physical
+   coordinates here; mixing logical inset properties with top/left caused the
+   popup to jump toward the admin navigation. */
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .js-calendar,
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar .js-calendar {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: auto;
+  bottom: auto;
+  transform: none;
+  width: min(360px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: min(520px, calc(100vh - 80px));
+  margin: 0;
+  overflow: auto;
+  z-index: 10050;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, .28);
+}
+
+html[dir="rtl"] #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .js-calendar,
+html[dir="rtl"] #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar .js-calendar,
+body.rtl #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar > .js-calendar,
+body.rtl #jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .field-calendar .js-calendar {
+  left: auto;
+  right: 0;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .js-calendar .buttons-wrapper button,
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .js-calendar .btn-group button {
+  position: static;
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--jsst-radius-sm);
+  background: var(--jsst-soft);
+  color: var(--jsst-ink);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .js-calendar .buttons-wrapper button:last-child,
+#jsst-admin .jsst-screen-report-v73 #js-tk-filter .jsst-report-date-field .js-calendar .btn-group button:last-child {
+  border-color: var(--jsst-primary);
+  background: var(--jsst-primary);
+  color: #fff;
+}
+
+/* A report section should never end as a dark title bar plus unexplained
+   white space when the current range has no members. */
+#jsst-admin .jsst-screen-report-v73 .jsst-report-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 128px;
+  margin: 0;
+  padding: 24px;
+  color: var(--jsst-muted);
+  text-align: center;
+}
+
+#jsst-admin .jsst-screen-report-v73 .jsst-report-empty__icon {
+  position: relative;
+  display: block;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 4px;
+  border-radius: 13px;
+  background: #eff6ff;
+}
+
+#jsst-admin .jsst-screen-report-v73 .jsst-report-empty__icon::before {
+  content: "";
+  position: absolute;
+  inset: 12px 10px;
+  border: 2px solid var(--jsst-primary);
+  border-radius: 5px;
+}
+
+#jsst-admin .jsst-screen-report-v73 .jsst-report-empty strong {
+  color: var(--jsst-ink);
+  font-size: 15px;
+  font-weight: 850;
+}
+
+/* GDPR table keeps readable actions and scrolls as one table on smaller
+   canvases rather than breaking each action into vertical letters. */
+#jsst-admin .jsst-gdpr-table-scroll {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius:var(--jsst-radius-lg, 18px);
+  overscroll-behavior-inline: contain;
+}
+
+#jsst-admin .jsst-gdpr-table-scroll > table.jsst-gdpr-erase-table {
+  width: 100%;
+  min-width: 980px;
+  margin: 0;
+}
+
+#jsst-admin table#js-table.jsst-gdpr-erase-table th:last-child,
+#jsst-admin table#js-table.jsst-gdpr-erase-table td.jsst-gdpr-action-cell {
+  width: 210px;
+  min-width: 210px;
+  max-width: 210px;
+}
+
+#jsst-admin table#js-table.jsst-gdpr-erase-table .jsst-gdpr-action-button {
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
+}
+
+/* Email-template page: retain the current design while ensuring the editor,
+   template chips and parameter tokens never enlarge the admin canvas. */
+#jsst-admin .jsst-email-template-v86 form#adminForm,
+#jsst-admin .jsst-email-template-v86 .js-email-body,
+#jsst-admin .jsst-email-template-v86 .a-js-form-field {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+#jsst-admin .jsst-email-template-v86 .js-email-menu {
+  float: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-email-template-v86 .js-email-menu-link {
+  float: none;
+  display: inline-flex;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin .jsst-email-template-v86 .js-email-link {
+  max-width: 100%;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+
+#jsst-admin .jsst-email-template-v86 .tox,
+#jsst-admin .jsst-email-template-v86 .tox-tinymce,
+#jsst-admin .jsst-email-template-v86 .mce-tinymce,
+#jsst-admin .jsst-email-template-v86 .js-editor-tinymce,
+#jsst-admin .jsst-email-template-v86 iframe,
+#jsst-admin .jsst-email-template-v86 textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin .jsst-email-template-v86 .js-email-parameters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+  width: 100%;
+}
+
+#jsst-admin .jsst-email-template-v86 .js-email-parameter-heading {
+  grid-column: 1 / -1;
+}
+
+#jsst-admin .jsst-email-template-v86 .js-email-paramater {
+  float: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 720px) {
+  #jsst-admin .jsst-email-template-v86 .js-email-parameters {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   QA pass v10: Joomla 6.1 calendar footer, GDPR actions, email editor canvas
+   ------------------------------------------------------------------------- */
+
+/* Joomla's calendar footer markup varies between minor releases. Keep the
+   three actions in one compact row regardless of whether core uses
+   .buttons-wrapper, .btn-group, or a nested group. */
+#jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper > .btn-group,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .btn-group.buttons-wrapper,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .calendar-buttons,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .calendar-footer {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: column;
+  align-items: stretch;
+  gap: 8px !important;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 10px !important;
+}
+
+#jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper > *,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper > .btn-group > *,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .btn-group.buttons-wrapper > *,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .calendar-buttons > *,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .calendar-footer > * {
+  float: none;
+  flex: none;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+}
+
+#jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper button,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper .btn,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .btn-group.buttons-wrapper button,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .calendar-buttons button,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .calendar-footer button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: 38px;
+  min-height: 38px;
+  margin: 0;
+  padding: 0 10px;
+  border: 1px solid #d6e4fb;
+  border-radius: 9px;
+  background: #f8fbff;
+  color: var(--jsst-primary, #2563eb);
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+/* Keep the popup compact enough to avoid covering most of the chart. */
+#jsst-admin .jsst-screen-report-v73 .js-calendar {
+  max-height: min(480px, calc(100vh - 72px));
+}
+
+/* GDPR action links use a dedicated inner stack. This avoids the legacy
+   34px icon-button rule and prevents long labels from becoming vertical. */
+#jsst-admin .jsst-gdpr-table-scroll > table.jsst-gdpr-erase-table {
+  min-width: 1120px;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-list table#js-table.jsst-gdpr-erase-table th:last-child,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-list table#js-table.jsst-gdpr-erase-table td.jsst-gdpr-action-cell {
+  width: 230px;
+  min-width: 230px;
+  max-width: 230px;
+}
+
+#jsst-admin .jsst-gdpr-action-stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-list table#js-table.jsst-gdpr-erase-table td.jsst-gdpr-action-cell a.js-tk-button.jsst-gdpr-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  min-height: 40px;
+  margin: 0;
+  padding: 9px 12px;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: var(--jsst-primary-dark, #1d4ed8);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  box-shadow: none;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-list table#js-table.jsst-gdpr-erase-table td.jsst-gdpr-action-cell a.js-tk-button.jsst-gdpr-action-button:last-child {
+  border-color: #fecaca;
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+/* The email template itself is rendered inside TinyMCE's iframe. Parent-page
+   CSS cannot set its inherited text colour, but these rules keep the outer
+   editor and fallback textarea visually neutral while the page script injects
+   the matching content style into the iframe document. */
+#jsst-admin .jsst-email-template-v86 .tox-edit-area,
+#jsst-admin .jsst-email-template-v86 .tox-edit-area__iframe,
+#jsst-admin .jsst-email-template-v86 iframe[id$="_ifr"] {
+  background: #fff;
+}
+
+#jsst-admin .jsst-email-template-v86 textarea[name="body"] {
+  background: #fff;
+  color: #334155;
+}
+
+/* =====================================================================
+   Email template page (v21 polish): a readable active tab, a full-width
+   stacked Subject/Body editor, flattened card nesting, and cleaner
+   parameter chips. Scoped to this page's wrapper only; qa-fixes.css loads
+   last. The 2-ID `div#js-tk-admin-wrapper.jsst-email-template-v86` form is
+   used where a rule must out-rank the equally 2-ID
+   `.jsst-screen-special` base rules (tabs); the rest just need to beat the
+   generic CRUD form grid, so a plain suffices.
+   ===================================================================== */
+
+/* Tabs: smooth hover lift + a genuinely readable solid active state. The
+   base rule paints `background:#eef4ff` on every link, which
+   otherwise wins over the intended selected colour and leaves white text on
+   pale blue (unreadable). Match its 2-ID specificity and win by load order. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-menu-link a,
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-menu-link .js-email-link{
+  transition:background .15s ease, box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-menu-link:hover a,
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-menu-link:hover .js-email-link{
+  background:#dbe8ff;
+  border-color:#bfdbfe;
+  transform:translateY(-1px);
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-menu-link.selected a,
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-menu-link.selected .js-email-link{
+  background:linear-gradient(135deg,#2563eb 0%,#4f46e5 100%);
+  border-color:#2563eb;
+  color:#fff;
+  box-shadow:0 10px 22px rgba(37,99,235,.28);
+}
+
+/* Flatten the redundant outer card: `.js-email-body` is only a container, so
+   let the Subject, Body and Parameters read as three clean sibling cards
+   rather than cards nested inside another bordered/shadowed card. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-body{
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  display:block;
+}
+
+/* Subject + Body stack full-width. The generic 2-up CRUD field grid
+   (`#jsst-admin form#adminForm div.js-form-wrapper{width:calc(50% - 20px);
+   float:inline-start}`, spec 212, no !important) otherwise squeezes them into
+   two half-width columns - a one-line subject beside a tall rich-text editor.
+   A plain !important beats it. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-body .js-form-wrapper{
+  width:100%;
+  float:none;
+  margin:0 0 16px;
+}
+
+/* Give the rich-text Body editor real vertical room. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .a-js-form-field .tox-tinymce{
+  min-height:400px;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .a-js-form-field .tox-edit-area__iframe,
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .a-js-form-field textarea[name="body"]{
+  min-height:330px;
+}
+
+/* Parameters: scannable copy-paste chips with an accent rail and hover. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-parameters{
+  gap:10px 14px;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-paramater{
+  border:1px solid #e3ecf7;
+  border-left:3px solid #93c5fd;
+  background:#f8fbff;
+  color:#334155;
+  transition:background .15s ease, border-left-color .15s ease;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-email-template-v86 .js-email-paramater:hover{
+  background:#eef5ff;
+  border-left-color:#2563eb;
+}
+
+@media (max-width: 760px) {
+  #jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper,
+  #jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper > .btn-group,
+  #jsst-admin .jsst-screen-report-v73 .js-calendar .btn-group.buttons-wrapper,
+  #jsst-admin .jsst-screen-report-v73 .js-calendar .calendar-buttons,
+  #jsst-admin .jsst-screen-report-v73 .js-calendar .calendar-footer {
+    gap: 6px;
+    padding: 8px;
+  }
+}
+
+/* Calendar popups may be moved outside #jsst-admin by Joomla. The shared
+   admin script tags report calendars so their footer remains component-scoped
+   even after that move. */
+.jsst-report-calendar-popup .jsst-calendar-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 10px;
+}
+
+.jsst-report-calendar-popup .jsst-calendar-actions > .jsst-calendar-action-button,
+.jsst-report-calendar-popup .jsst-calendar-action-button {
+  float: none;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: 38px;
+  min-height: 38px;
+  margin: 0;
+  padding: 0 10px;
+  border: 1px solid #d6e4fb;
+  border-radius: 9px;
+  background: #f8fbff;
+  color: var(--jsst-primary, #2563eb);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+.jsst-report-calendar-popup .jsst-calendar-action-close {
+  border-color: var(--jsst-primary, #2563eb);
+  background: var(--jsst-primary, #2563eb);
+  color: #fff;
+}
+
+/* The rule above is (0,3,0) and loses to the footer-button rule further up,
+   which is (1,3,1) — so the accent never showed. Restated here at a matching
+   weight. The [data-action="exit"] half is a fallback for when the tagging
+   script has not run. */
+#jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper .jsst-calendar-action-close,
+#jsst-admin .jsst-screen-report-v73 .js-calendar .buttons-wrapper button[data-action="exit"],
+#jsst-admin .jsst-screen-report-v73 .js-calendar .calendar-footer .jsst-calendar-action-close {
+  border-color: var(--jsst-primary, #2563eb);
+  background: var(--jsst-primary, #2563eb);
+  color: #fff;
+}
+
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .js-calendar .buttons-wrapper .jsst-calendar-action-close,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .js-calendar .buttons-wrapper button[data-action="exit"],
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .js-calendar .btn-group .jsst-calendar-action-close,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-report-v73 #js-tk-filter .js-calendar .btn-group button[data-action="exit"] {
+  border-color: var(--jsst-primary, #2563eb);
+  background: var(--jsst-primary, #2563eb);
+  color: #fff;
+}
+
+/* systemerrors/tmpl/error.php: moved out of an inline <style> block */
+#jsst-admin .jsst-error-detail-card{background:#fff;border:1px solid #dbe4ef;border-radius:22px;box-shadow:0 18px 40px rgba(15,23,42,.06);overflow:hidden;margin:0;}
+#jsst-admin .jsst-error-detail-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid #e5edf7;background:#fbfdff;}
+#jsst-admin .jsst-error-detail-head a{display:inline-flex;align-items:center;min-height:38px;padding:0 14px;border-radius:var(--jsst-radius-md, 12px);background:#eef5ff;border:1px solid #d5e8ff;color:#0b57d0;text-decoration:none;font-weight:900;}
+#jsst-admin .jsst-error-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:20px 22px;border-bottom:1px solid #e5edf7;}
+#jsst-admin .jsst-error-meta-item{border:1px solid #dbe4ef;border-radius:16px;background:#f8fbff;padding:14px;}
+#jsst-admin .jsst-error-meta-item strong{display:block;color:#101827;font-weight:900;margin-bottom:5px;}
+#jsst-admin .jsst-error-meta-item span{display:block;color:#52657f;font-weight:700;word-break:break-word;}
+#jsst-admin .jsst-error-raw{padding:20px 22px;}
+#jsst-admin .jsst-error-raw strong{display:block;color:#101827;font-weight:900;margin-bottom:10px;}
+#jsst-admin .jsst-error-pre{white-space:pre-wrap;word-break:break-word;margin:0;background:var(--jsst-ink, #0f172a);color:#e5edf7;border-radius:16px;padding:18px;line-height:1.55;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;font-size:13px;}
+@media(max-width:900px){#jsst-admin .jsst-error-meta{grid-template-columns:1fr;}}
+
+/* Phase 4 polish: keyboard focus visibility on the plain CRUD screens.
+   Additive only (focus-visible never shows for mouse interaction), so it
+   cannot change the existing hover/default appearance of these controls. */
+#jsst-admin .jsst-screen a:focus-visible,
+#jsst-admin .jsst-screen button:focus-visible,
+#jsst-admin .jsst-screen input:focus-visible,
+#jsst-admin .jsst-screen select:focus-visible,
+#jsst-admin .jsst-screen textarea:focus-visible {
+  outline: none;
+  box-shadow: var(--jsst-focus-ring);
+  border-radius: var(--jsst-radius-sm);
+}
+
+/* Phase 4 polish: circular badge treatment for the status/default toggle
+   icons in list tables (previously bare 16-20px icons with no grouping). */
+#jsst-admin table#js-table tbody td img[src$="good.png"],
+#jsst-admin table#js-table tbody td img[src$="close.png"] {
+  width: 14px;
+  height: 14px;
+  padding: 5px;
+  box-sizing: content-box;
+  border-radius: var(--jsst-radius-pill);
+  vertical-align: middle;
+}
+#jsst-admin table#js-table tbody td img[src$="good.png"] {
+  background: rgba(22, 163, 74, .12);
+}
+#jsst-admin table#js-table tbody td img[src$="close.png"] {
+  background: rgba(100, 116, 139, .14);
+}
+
+/* ===== Mail message view (jsst-mail-message-v3) — reuses the proven
+   ticket-detail thread-card pattern (jsst-ticket-detail-admin-v2's
+   .js-ticket-threads/.js-tk-pic/.js-tk-message grid, already verified
+   rendering correctly there) instead of inventing new layout, since
+   the markup is structurally the same avatar+message-bubble shape.
+   Only the class differences (js-tk-row/timedate instead of
+   js-ticket-thread-data/-person/-date, the subject-only row, the old
+   speech-bubble .pointer corner graphic) are handled specially. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 div.js-mail-threads {
+  float: none;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 15px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 14px;
+  padding: 18px;
+  background: var(--jsst-card);
+  border: 1px solid var(--jsst-border);
+  border-radius: var(--jsst-radius-lg);
+  box-shadow: var(--jsst-shadow-soft);
+  overflow: hidden;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 div.js-mail-threads:has(.js-tk-pic-subject) {
+  grid-template-columns: minmax(58px, max-content) minmax(0, 1fr);
+  align-items: center;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .js-tk-pic {
+  float: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  min-width: 58px;
+  height: 58px;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--jsst-radius-pill);
+  background: var(--jsst-soft-accent);
+  overflow: hidden;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .js-tk-pic img {
+  float: none;
+  display: block;
+  width: 48px;
+  height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  margin: 0;
+  border-radius: var(--jsst-radius-pill);
+  object-fit: cover;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .js-tk-pic-subject {
+  float: none;
+  font-weight: 800;
+  color: var(--jsst-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .js-tk-message {
+  float: none;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow-wrap: anywhere;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .js-tk-message .pointer {
+  display: none;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .message-area-subject {
+  font-weight: 800;
+  color: var(--jsst-ink);
+  font-size: 14px;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .js-tk-row {
+  float: none;
+  display: block;
+  width: 100%;
+  margin: 0 0 6px;
+  color: var(--jsst-ink);
+  font-weight: 800;
+  font-size: 13px;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .js-tk-row .timedate {
+  float: none;
+  display: inline-block;
+  margin-inline-start: 8px;
+  color: var(--jsst-muted);
+  font-weight: 400;
+  font-size: 12px;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .message-area {
+  float: none;
+  width: 100%;
+  color: var(--jsst-ink);
+  font-size: 14px;
+  line-height: 1.6;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-mail-message-v3 .js-tk-subheading {
+  float: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 42px;
+  margin: 0 0 14px;
+  padding: 0 16px;
+  background: var(--jsst-ink);
+  color: #fff;
+  border: 0;
+  border-radius: var(--jsst-radius-md);
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+/* ===== end mail message view ===== */
+
+/* ===== Postinstallation wizard (stepone/steptwo/stepthree/settingcomplete)
+   — maps the wizard's existing .pic-config/.title/.field/.desc row markup
+   onto the same visual treatment as the proven config screen's
+   .js-ticket-configuration-row/.js-config-title/.js-config-value/
+   .js-config-help pattern (jsst-modern-admin.css, jsst-screen-special
+   scope), since the shape is identical (label + input + help text per
+   row). Text inputs/selects already pick up jsst-modern-admin.css's
+   unscoped global input styling (border/radius/focus ring) since they're
+   plain <input type="text">/<select> elements - only the row layout and
+   Next/Back buttons needed new rules here. The step-progress sidebar and
+   background images are deliberately left untouched: no proven pattern
+   exists elsewhere to safely reuse for those, so redesigning them would
+   be guessing blind rather than reuse. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepone div.pic-config,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-steptwo div.pic-config,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepthree div.pic-config,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-settingcomplete div.pic-config {
+  float: none;
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr) minmax(0, 320px);
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 14px;
+  border: 1px solid #e5eaf3;
+  border-bottom: 1px solid #e5eaf3;
+  border-radius: 16px;
+  background: var(--jsst-card);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, .04);
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepone div.pic-config div.title,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-steptwo div.pic-config div.title,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepthree div.pic-config div.title,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-settingcomplete div.pic-config div.title {
+  display: flex;
+  align-items: center;
+  width: auto;
+  min-height: 40px;
+  margin-right: 0;
+  padding: 0;
+  text-align: left;
+  color: var(--jsst-ink);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepone div.pic-config div.field,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-steptwo div.pic-config div.field,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepthree div.pic-config div.field,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-settingcomplete div.pic-config div.field {
+  display: block;
+  width: 100%;
+  color: #334155;
+  font-size: 13px;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepone div.pic-config div.desc,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-steptwo div.pic-config div.desc,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepthree div.pic-config div.desc,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-settingcomplete div.pic-config div.desc {
+  display: block;
+  width: 100%;
+  padding-left: 0;
+  margin: 0;
+  color: var(--jsst-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepone div.pic-config div.field input.jsst-postsetting,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-steptwo div.pic-config div.field input.jsst-postsetting,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepthree div.pic-config div.field input.jsst-postsetting,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-settingcomplete div.pic-config div.field input.jsst-postsetting,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepone div.pic-config div.field select.jsst-postsetting,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-steptwo div.pic-config div.field select.jsst-postsetting,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepthree div.pic-config div.field select.jsst-postsetting,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-settingcomplete div.pic-config div.field select.jsst-postsetting {
+  width: 100%;
+  max-width: 100%;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepone div.post-installtion-content div.pic-button-part,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-steptwo div.post-installtion-content div.pic-button-part,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepthree div.post-installtion-content div.pic-button-part,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-settingcomplete div.post-installtion-content div.pic-button-part {
+  float: none;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 22px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid #eef2f7;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepone div.post-installtion-content div.pic-button-part a.next-step,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-steptwo div.post-installtion-content div.pic-button-part a.next-step,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-stepthree div.post-installtion-content div.pic-button-part a.next-step,
+#jsst-admin div#js-tk-admin-wrapper.jsst-postinstallation-settingcomplete div.post-installtion-content div.pic-button-part a.next-step {
+  float: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 220px;
+  min-height: 44px;
+  margin: 0 5px;
+  padding: 0 24px;
+  border-radius: 10px;
+  font-weight: 800;
+  text-decoration: none;
+}
+/* ===== end postinstallation wizard ===== */
+
+/* ===== Feedback list detail cards (views/feedback/tmpl/feedbacks.php)
+   — reuses the avatar+card visual language already established for the
+   ticket-thread and staff-card widgets (58px circular avatar, card
+   border/radius/shadow, grid layout) instead of inventing something new.
+   .jsst-feedback-det-* class names are exclusive to this one template
+   (confirmed via grep), so no wrapper-class scoping is needed - the
+   shared .jsst-screen.jsst-screen-list wrapper class here is used
+   by ~45 other CRUD pages and scoping to it would leak these rules
+   everywhere. */
+#jsst-admin div.jsst-feedback-det-list {
+  float: none;
+  width: 100%;
+  margin: 0 0 16px;
+  border: 1px solid var(--jsst-border);
+  border-radius: var(--jsst-radius-lg);
+  background: var(--jsst-card);
+  box-shadow: var(--jsst-shadow-soft);
+  overflow: hidden;
+}
+#jsst-admin div.jsst-feedback-det-list-top {
+  float: none;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  width: 100%;
+  padding: 18px;
+}
+#jsst-admin div.jsst-feedback-det-list-top div.js-ticket-pic {
+  float: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  min-width: 58px;
+  height: 58px;
+  border-radius: var(--jsst-radius-pill);
+  background: var(--jsst-soft-accent);
+  overflow: hidden;
+}
+#jsst-admin div.jsst-feedback-det-list-top div.js-ticket-pic img {
+  width: 48px;
+  height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  border-radius: var(--jsst-radius-pill);
+  object-fit: cover;
+}
+#jsst-admin div.jsst-feedback-det-list-top div.js-ticket-data {
+  float: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+}
+#jsst-admin div.jsst-feedback-det-list-data-wrp {
+  float: none;
+  width: 100%;
+  min-width: 0;
+}
+#jsst-admin div.js-ticket-right {
+  float: none;
+  width: auto;
+  text-align: center;
+  padding: 0;
+}
+#jsst-admin div.jsst-feedback-det-list-img-wrp {
+  float: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  padding: 8px;
+  border: 1px solid var(--jsst-border);
+  border-radius: var(--jsst-radius-md);
+  background: var(--jsst-soft);
+}
+#jsst-admin div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm {
+  float: none;
+  display: block;
+  width: 100%;
+  margin: 0 0 8px;
+}
+#jsst-admin div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm:first-child div.jsst-feedback-det-list-data-btm-val {
+  color: var(--jsst-ink);
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: none;
+}
+#jsst-admin div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm:nth-child(2) a.jsst-feedback-det-list-data-top-val-txt {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  color: var(--jsst-primary);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: none;
+}
+#jsst-admin div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-datea-btm-rec {
+  display: inline-flex;
+  float: none;
+  align-items: center;
+  gap: 4px;
+  margin: 0 16px 6px 0;
+}
+#jsst-admin div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm-title {
+  display: inline-block;
+  float: none;
+  margin-right: 0;
+  color: var(--jsst-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+#jsst-admin div.jsst-feedback-det-list-data-wrp div.jsst-feedback-det-list-data-btm-val {
+  display: inline-block;
+  float: none;
+  color: var(--jsst-ink);
+  font-size: 12px;
+}
+#jsst-admin div.jsst-feedback-det-list-btm {
+  float: none;
+  display: block;
+  width: 100%;
+  padding: 14px 18px 18px;
+  border-top: 1px solid var(--jsst-border);
+}
+#jsst-admin div.jsst-feedback-det-list-btm div.jsst-feedback-det-list-btm-title {
+  display: inline;
+  float: none;
+  margin-right: 4px;
+  color: var(--jsst-muted);
+  font-weight: 700;
+}
+#jsst-admin div.jsst-feedback-det-list-btm div.jsst-feedback-det-list-btm-val {
+  display: inline;
+  float: none;
+  color: var(--jsst-ink);
+}
+/* ===== end feedback list detail cards ===== */
+
+/* ===== Ticket-detail subsystem: last provably-safe float cleanup.
+   These 5 selectors are each a solo full-width (width:100%) floated
+   block with no floating sibling sharing its row - confirmed via
+   markup read, not assumed. A width:100% floated block occupies the
+   full row identically whether float:left or float:none, since there
+   is nothing else present that could float alongside it, so this is
+   provably visual-output-neutral the same way the reports circle-count
+   conversion was - not a design change, just removing the float
+   mechanism dependency. Confirmed via careful re-verification (using
+   exact brace-depth tracing, not indentation, after catching a mistake
+   where indentation alone gave a false "already covered" reading) that
+   none of these get any float override anywhere at desktop width - the
+   remaining 10 of the original 15 "still load-bearing" rules genuinely
+   have siblings meant to sit side-by-side and were correctly left
+   alone. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-info-cnt {
+  float: none;
+}
+/* .js-title/.js-value inside each row are still float:inline-start
+   (jsticketadmin.css) with no clearfix on this row itself - a block
+   container whose only content is floated children collapses to 0
+   height, so the next row's floated title lands on the same float line
+   as the current row's value whenever that value is short enough to
+   leave room (long values, which fill the row, look fine by accident).
+   display:flex neutralizes float on the row's own children per spec and
+   gives the row real height, fixing every row instead of patching
+   individual short ones. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-info-cnt div.js-tkt-det-info-data {
+  float: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 6px;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-info-cnt div.js-tkt-det-info-data > .js-value {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-trsfer-dep {
+  float: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* UNVERIFIED - user-accepted risk. .js-tkt-det-trsfer-dep-txt (width:80%,
+   still floated) sits beside .js-tkt-det-hdg-btn ("Change" link,
+   already float:none from item 14) - only 2 possible children, simple
+   case unlike the thread-date/time row. float:left + a following
+   non-floating inline "Change" link wrapping into the remaining ~20%
+   is the same visual outcome as display:flex;justify-content:space-between
+   on the parent with both children float:none, so this is a fairly
+   confident translation of the existing float direction into flex,
+   not a blind guess - but still not provably neutral, so flagged the
+   same as the other unverified items. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-trsfer-dep-txt {
+  float: none;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-tkt-prty-txt {
+  float: none;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-usr-tkt-list {
+  float: none;
+}
+/* ===== end ticket-detail float cleanup ===== */
+
+/* .js-ticket-thread-note and .js-ticket-thread-person are each the
+   sole child of their own .js-ticket-thread-data wrapper (confirmed
+   via markup read) - no sibling to float alongside, so float:none
+   renders identically. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-ticket-thread-note {
+  float: none;
+}
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-ticket-thread-person {
+  float: none;
+}
+
+/* UNVERIFIED - best-guess completion, accepted risk per explicit user
+   direction, not provably neutral like the rules above.
+   .js_ticketattachment already gets display:flex + margin:10px 0 0
+   (top-only, no side margins) from an existing modern rule, which
+   reads as an intentional full-width-vertical-stack redesign; the
+   legacy width:calc(50% - 7px) float is still live underneath since
+   nothing overrides it. Completing that apparent redesign: */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js_ticketattachment {
+  float: none;
+  width: 100%;
+}
+
+/* UNVERIFIED - best-guess completion, accepted risk per explicit user
+   direction. .js-tkt-det-prty's sibling .js-tkt-det-status already
+   became float:none;width:100%;display:flex in item 14's verified
+   work, so it now occupies its own full-width line. Matching
+   .js-tkt-det-prty to float:none too makes both badges stack
+   consistently (small inline priority badge, then the full-width
+   status badge below) instead of the priority badge floating against
+   a sibling that no longer shares its line either way. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-ticket-detail-admin-v2 .js-tkt-det-usr-tkt-list .js-tkt-det-prty {
+  float: none;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* =====================================================================
+   Ticket fields form (c=userfields) - two layout defects
+   ===================================================================== */
+
+/* 1. Field description text.
+   `#js-tk-cparea div.js-form-desc` still carries `float:left` from the
+   pre-grid stylesheet, while its siblings .js-title / .js-value were
+   converted to `display:block` further down this file. A floated child
+   among block siblings escapes its row, which is why the "e.g I have read
+   and agree to the [link]..." hint on the Terms and Conditions field
+   landed on top of the next row instead of under its own input.
+
+   Note the `div#js-tk-cparea` in the selector. The rule being overridden is
+   `#jsst-admin div#js-tk-cparea div.js-form-desc` - two IDs. Specificity
+   compares ID count before class count, so a one-ID selector here loses no
+   matter how many classes it carries and no matter that this file loads
+   last. Two IDs plus the extra class is what actually wins. */
+#jsst-admin div#js-tk-cparea .js-form-wrapper > .js-form-desc,
+#jsst-admin div#js-tk-cparea .js-form-desc {
+  float: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 6px 0 0;
+  padding: 0;
+  color: var(--jsst-muted, #64748b);
+  font-size: var(--jsst-fs-sm, 12px);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* 2. Dependent-field option rows.
+   The equivalent rules for .input-field-wrapper / .input-field-remove-img
+   are scoped to `div#divValues`, and the Add More button was never styled
+   at all, so inside #for-combo-options all three fell back to browser
+   defaults. `box-sizing: content-box` on the text input is what pushed it
+   out past the bordered box: with padding and a border added on top of
+   width:100% it is wider than its own container. */
+#jsst-admin div#for-combo-options div.combo-options-fields {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: var(--jsst-radius, 10px);
+  border-color: var(--jsst-border, #e2e8f0);
+}
+
+#jsst-admin div#for-combo-options div.combo-options-fields input[type="text"] {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+#jsst-admin div#for-combo-options .input-field-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+#jsst-admin div#for-combo-options .input-field-remove-img {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  opacity: .75;
+}
+
+#jsst-admin div#for-combo-options .input-field-remove-img:hover {
+  opacity: 1;
+}
+
+#jsst-admin div#for-combo-options input#depandant-field-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 32px;
+  margin: 2px 0 0;
+  padding: 0 14px;
+  border: 1px solid var(--jsst-border-strong, #cbd5e1);
+  border-radius: var(--jsst-radius-pill, 999px);
+  background: #fff;
+  color: var(--jsst-primary-dark, #1d4ed8);
+  font-size: var(--jsst-fs-sm, 12px);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+
+#jsst-admin div#for-combo-options input#depandant-field-button:hover {
+  border-color: var(--jsst-primary, #2563eb);
+  background: #eff6ff;
+  color: var(--jsst-primary, #2563eb);
+}
+
+/* =====================================================================
+   Edit Field popup footer (#userpopup)
+   =====================================================================
+   Every selector below carries TWO ids on purpose. The rules being replaced
+   live in jsst-modern-admin.css as `#jsst-admin div#userpopup ...`, and
+   specificity weighs ID count before class count - so the one-id rules in
+   this file were being ignored outright, however late the file loads.
+
+   What was wrong:
+   - `a.button` in the footer was painted `background:#2b2b2b`, so the
+     "Advanced" link rendered as a black slab. That link IS the advanced
+     options entry point, which is why it read as a stray black button
+     sitting under Save rather than as an action.
+   - The container was `float:left` + `text-align:center` with a 2px #32373c
+     top rule, so Save and Advanced stacked instead of sitting on one row,
+     pushing Advanced past the bottom of the dialog where it got clipped. */
+
+#jsst-admin div#userpopup div.js-submit-container {
+  float: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  width: auto;
+  margin: 16px 20px 20px;
+  padding: 14px 0 0;
+  text-align: start;
+  border-top: 1px solid var(--jsst-border, #e2e8f0);
+}
+
+#jsst-admin div#userpopup div.js-submit-container > * {
+  flex: 0 0 auto;
+}
+
+/* Save: keep the green, drop the square 1990s edges and the stretch. */
+#jsst-admin div#userpopup div.js-submit-container input[type="submit"] {
+  min-width: 120px;
+  padding: 10px 22px;
+  border: 1px solid #1f8a24;
+  border-radius: var(--jsst-radius, 10px);
+  background: #209e24;
+  color: #fff;
+  font-size: var(--jsst-fs-base, 14px);
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+#jsst-admin div#userpopup div.js-submit-container input[type="submit"]:hover {
+  background: #1b8a1f;
+  color: #fff;
+}
+
+/* Advanced: a secondary action, not a black slab. */
+#jsst-admin div#userpopup div.js-submit-container a.button,
+#jsst-admin div#userpopup div.js-submit-container a#user-field-anchor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  margin: 0;
+  padding: 10px 22px;
+  border: 1px solid var(--jsst-border-strong, #cbd5e1);
+  border-radius: var(--jsst-radius, 10px);
+  background: #fff;
+  color: var(--jsst-primary-dark, #1d4ed8);
+  font-size: var(--jsst-fs-base, 14px);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+#jsst-admin div#userpopup div.js-submit-container a.button:hover,
+#jsst-admin div#userpopup div.js-submit-container a#user-field-anchor:hover {
+  border-color: var(--jsst-primary, #2563eb);
+  background: #eff6ff;
+  color: var(--jsst-primary, #2563eb);
+}
+
+/* Bottom padding so the footer never sits flush against the scroll edge. */
+#jsst-admin div#userpopup form.popup-field-from {
+  padding-bottom: 4px;
+}
+
+/* =====================================================================
+   Round 2 corrections
+   ===================================================================== */
+
+/* Save button was still full width.
+   `#jsst-admin form.popup-field-from input` sets `width:100%` for the text
+   inputs, and it catches input[type=submit] too. The previous rule here set
+   min-width and padding but never declared `width`, so 100% still won and
+   pushed "Advanced" onto a second line where the dialog clipped it.
+   flex:0 0 auto does not help on its own - flex-basis:auto defers to width. */
+#jsst-admin div#userpopup div.js-submit-container input[type="submit"],
+#jsst-admin div#userpopup div.js-submit-container a.button {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+/* Close control: pin the box so nothing inherited from Bootstrap's .close
+   can stretch it out of square. */
+#jsst-admin div#userpopup #popup_cross,
+#jsst-admin div#userpopup span.close {
+  box-sizing: border-box;
+  display: block;
+  width: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .18);
+  font-size: 0;
+  line-height: 0;
+  text-indent: -9999px;
+  overflow: hidden;
+  float: none;
+  text-shadow: none;
+}
+
+#jsst-admin div#userpopup #popup_cross:hover {
+  background: rgba(255, 255, 255, .3);
+}
+
+/* Ticket-fields form: the two grouping containers.
+   `#for-terms-condtions-show` and `#for-combo-options` are plain divs sitting
+   as direct children of form#adminForm, which is
+   `grid-template-columns:repeat(2,minmax(0,1fr))`. So each container is ONE
+   grid item pinned to a single column, and every .js-form-wrapper inside it
+   stacked vertically at half width instead of being laid out as cards like
+   the rest of the form. That is why the whole Terms and Conditions group ran
+   down the left-hand side while the right-hand column sat empty.
+
+   Making them span the full row and repeat the same two-column grid lets
+   their children behave exactly like top-level rows. It also stops mattering
+   that `for-terms-condtions-linktype2` is authored outside the container
+   while `linktype1` is inside it - both now render as ordinary cards. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-form form#adminForm > div#for-terms-condtions-show,
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-form form#adminForm > div#for-combo-options {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+/* A row holding a long hint reads better across the full width. */
+#jsst-admin div#js-tk-admin-wrapper.jsst-screen-form form#adminForm > div#for-terms-condtions-show > .js-form-wrapper:has(.js-form-desc) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-form form#adminForm > div#for-terms-condtions-show,
+  #jsst-admin div#js-tk-admin-wrapper.jsst-screen-form form#adminForm > div#for-combo-options {
+    grid-template-columns: 1fr;
+  }
+}

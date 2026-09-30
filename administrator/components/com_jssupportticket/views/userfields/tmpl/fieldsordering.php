@@ -18,11 +18,11 @@
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Version;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filter\OutputFilter;
 
-use Joomla\CMS\Version;
 $version = new Version;
 $joomla = $version->getShortVersion();
 if (getJSTicketPHPFunctionsClass()->jsticket_substr($joomla, 0, 3) != '1.5') {
@@ -39,7 +39,7 @@ if (getJSTicketPHPFunctionsClass()->jsticket_substr($joomla, 0, 3) != '1.5') {
         document.getElementById('jssupportticketform').submit();
     }
     jQuery(document).ready(function () {
-        jQuery("a#userpopup").click(function (e) {
+        jQuery("a.jsst-userpopup-trigger").click(function (e) {
             e.preventDefault();
             jQuery("div#userpopupblack").show();
             var f = jQuery(this).attr('data-id');
@@ -72,52 +72,23 @@ if (getJSTicketPHPFunctionsClass()->jsticket_substr($joomla, 0, 3) != '1.5') {
 </div>
 
 
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen jsst-screen-list">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-        <div id="jsstadmin-wrapper-top">
-            <div id="jsstadmin-wrapper-top-left">
-                <div id="jsstadmin-breadcrunbs">
-                    <ul>
-                        <li><a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel" title="Dashboard"><?php echo Text::_('Dashboard'); ?></a></li>
-                        <li>
-                            <?php
-                                echo Text::_('Ticket Fields');
-                            ?>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div id="jsstadmin-wrapper-top-right">
-                <div id="jsstadmin-config-btn">
-                    <a title="Configuration" href="index.php?option=com_jssupportticket&c=config&layout=config">
-                        <img alt="Configuration" src="components/com_jssupportticket/include/images/config.png">
-                    </a>
-                </div>
-                <div id="jsstadmin-vers-txt">
-                    <?php echo Text::_('Version').Text::_(' : '); ?>
-                    <span class="jsstadmin-ver">
-                        <?php $version = str_split($this->version);
-                        $version = implode('.', $version);
-                        echo $version; ?>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div id="js-tk-heading">
-            <h1 class="jsstadmin-head-text"><?php
-                echo Text::_('Ticket Fields');
-            ?></h1>
-            <?php $link = 'index.php?option='.$this->option.'&c=userfields&task=adduserfield&ff='.$_SESSION['ffusr']; ?>
-            <a class="tk-heading-addbutton" href="<?php echo $link; ?>">
-                <img class="js-heading-addimage" src="components/com_jssupportticket/include/images/plus.png">
-                <?php
-                    echo Text::_('Add Ticket').' '.Text::_('Field');
-                ?>
-            </a>
-        </div>
+        <?php
+$jsstPageTitle = ($_SESSION['ffusr'] == 1) ? 'Ticket Fields' : 'Feedback Fields';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label' => $jsstPageTitle, 'link' => null),
+);
+$jsstAddLink = 'index.php?option='.$this->option.'&c=userfields&task=adduserfield&ff='.$_SESSION['ffusr'];
+$jsstAddLabelRaw = ($_SESSION['ffusr'] == 1)
+    ? Text::_('Add Ticket').' '.Text::_('Field')
+    : Text::_('Add').' '.Text::_('Feedback').' '.Text::_('Field');
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?>
         <form class="jsstadmin-data-wrp" action="index.php" method="post" name="adminForm" id="adminForm">
             <?php
             if (!(empty($this->fields)) && is_array($this->fields)) {  ?>
@@ -128,6 +99,7 @@ if (getJSTicketPHPFunctionsClass()->jsticket_substr($joomla, 0, 3) != '1.5') {
                             <th class="center"><?php echo Text::_('S.No'); ?></th>
                             <th><?php echo Text::_('Field Title'); ?></th>
                             <th class="center"><?php echo Text::_('Published'); ?></th>
+                            <th class="center"><?php echo Text::_('Visitor Published'). ' *'; ?></th>
                             <th class="center"><?php echo Text::_('Required'); ?></th>
                             <th class="center"><?php echo Text::_('Ordering'); ?></th>
                             <th class="center"><?php echo Text::_('Action'); ?></th>
@@ -145,16 +117,18 @@ if (getJSTicketPHPFunctionsClass()->jsticket_substr($joomla, 0, 3) != '1.5') {
                         foreach ($this->fields AS $row) {
                             $checked = HTMLHelper::_('grid.id', $k, $row->id);
                             $pubtask = $row->published ? 'fieldunpublished' : 'fieldpublished';
+                            $vpubtask = $row->isvisitorpublished ? 'visitorfieldunpublished' : 'visitorfieldpublished';
                             $reqtask = $row->required ? 'fieldnotrequired' : 'fieldrequired';
                             $pubimg = ($row->published == 0) ? 'close.png' : 'good.png';
+                            $vpubimg = ($row->isvisitorpublished == 0) ? 'close.png' : 'good.png';
                             if($row->userfieldtype == 'termsandconditions'){
                                 $reqimg = 'good.png';
                             }else{
                                 $reqimg = ($row->required == 0) ? 'close.png' : 'good.png';
                             }
                             $alt = $row->published ? Text::_('Published') : Text::_('Unpublished');
-                            $reqalt = $row->required ? Text::_('Required') : Text::_('Not required');
-                            ?>
+                            $valt = $row->isvisitorpublished ? Text::_('Published') : Text::_('Unpublished');
+                            $reqalt = $row->required ? Text::_('Required') : Text::_('Not required'); ?>
                             <tr>
                                 <td style="display:none;" class="center"><?php echo $checked; ?></td>
                                 <td class="center"><?php echo $k + 1 + $this->pagination->limitstart; ?></td>
@@ -163,7 +137,7 @@ if (getJSTicketPHPFunctionsClass()->jsticket_substr($joomla, 0, 3) != '1.5') {
                                         if ($row->fieldtitle) {
                                             echo Text::_($row->fieldtitle);
                                         }else{
-                                            echo "";
+                                            echo Text::_($row->userfieldtitle);
                                         }
                                             
                                         if($row->cannotunpublish == 1){
@@ -189,6 +163,17 @@ if (getJSTicketPHPFunctionsClass()->jsticket_substr($joomla, 0, 3) != '1.5') {
                                 </td>
                                 <td class="center">
                                     <?php 
+                                        if ($row->cannotunpublish == 1) { ?>
+                                            <img src="components/com_jssupportticket/include/images/<?php echo $vpubimg; ?>" width="16" height="16" border="0" title="<?php echo Text::_('Can Not Unpublished'); ?>" />
+                                        <?php } else { ?>
+                                            <?php $status_link = OutputFilter::ampReplace('index.php?option='.$this->option.'&task=userfields.'.$vpubtask.'&cid[]='.$row->id.'&'.$token.'=1'); ?>
+                                            <a href="<?php echo $status_link;?>">
+                                                <img src="components/com_jssupportticket/include/images/<?php echo $vpubimg; ?>" width="16" height="16" border="0" title="<?php echo $valt; ?>" />
+                                            </a>
+                                    <?php } ?>
+                                </td>
+                                <td class="center">
+                                    <?php 
                                         if($row->cannotunpublish == 1 || $row->userfieldtype == 'termsandconditions'){ ?>
                                             <img src="components/com_jssupportticket/include/images/<?php echo $reqimg; ?>" width="16" height="16" border="0" title="<?php echo Text::_('Can Not mark as not required'); ?>" />
                                     <?php }else{ ?>
@@ -201,25 +186,27 @@ if (getJSTicketPHPFunctionsClass()->jsticket_substr($joomla, 0, 3) != '1.5') {
                                 <td class="center">
                                     <?php if ($k != 0) { ?>
                                         <a href="index.php?option=com_jssupportticket&c=common&task=userfields.<?php echo $downtask; ?>&cid[]=<?php echo $row->id; ?>&<?php echo $token; ?>=1">
-                                            <img src="components/com_jssupportticket/include/images/<?php echo $upimg; ?>" alt="<?php echo Text::_('Order Up');?>" /></a>
+                                            <img src="components/com_jssupportticket/include/images/<?php echo $upimg; ?>" alt="<?php echo Text::_('Order Up');?>" />
                                         </a> 
                                     <?php } else echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
                                         echo $row->ordering; ?>&nbsp;&nbsp; 
                                     <?php if ($k < $n - 1) { ?> 
                                         <a href="index.php?option=com_jssupportticket&c=common&task=userfields.<?php echo $uptask; ?>&cid[]=<?php echo $row->id; ?>&<?php echo $token; ?>=1">
-                                            <img src="components/com_jssupportticket/include/images/<?php echo $downimg; ?>" alt="<?php echo Text::_('Order Down');?>" /></a>
+                                            <img src="components/com_jssupportticket/include/images/<?php echo $downimg; ?>" alt="<?php echo Text::_('Order Down');?>" />
                                         </a> 
                                     <?php } ?>
                                 </td>
                                 <td class="center">
+                                    <span class="jsst-field-action-group">
                                     <?php
+                                        $edit_label = htmlspecialchars(Text::_('Edit'), ENT_QUOTES, 'UTF-8');
+                                        echo '<a href="#" class="action-btn jsst-userpopup-trigger jsst-field-action jsst-field-edit-action" data-id="'.(int) $row->id.'" title="'.$edit_label.'" aria-label="'.$edit_label.'"><img alt="" src="components/com_jssupportticket/include/images/edit.png" /></a>';
                                         if($row->isuserfield == 1){
-                                            echo '<a class="action-btn" id="userpopup" data-id='.$row->id.'><img src="components/com_jssupportticket/include/images/edit.png" /></a>';
-                                            echo '<a class="action-btn" onclick="return confirm(\''.Text::_('Are you sure to delete').'\');" href="index.php?option=com_jssupportticket&c=userfields&task=removeuserfields&cid[]='.$row->id.'&' . Factory::getSession()->getFormToken() .'=1"><img src="components/com_jssupportticket/include/images/delete.png" /></a>';
-                                        }else{
-                                            echo '<a class="action-btn" id="userpopup" data-id='.$row->id.'><img src="components/com_jssupportticket/include/images/edit.png" /></a>';
+                                            $delete_label = htmlspecialchars(Text::_('Delete'), ENT_QUOTES, 'UTF-8');
+                                            echo '<a class="action-btn jsst-field-action jsst-field-delete-action" title="'.$delete_label.'" aria-label="'.$delete_label.'" onclick="return confirm(\''.Text::_('Are you sure to delete').'\');" href="index.php?option=com_jssupportticket&c=userfields&task=removeuserfields&cid[]='.(int) $row->id.'&' . Factory::getSession()->getFormToken() .'=1"><img alt="" src="components/com_jssupportticket/include/images/delete.png" /></a>';
                                         }
                                     ?>
+                                    </span>
                                 </td>
                             </tr>
                         <?php
@@ -245,10 +232,7 @@ if (getJSTicketPHPFunctionsClass()->jsticket_substr($joomla, 0, 3) != '1.5') {
         </form>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>
 <script type="text/javascript">
     var headertext = [],
     headers = document.querySelectorAll("#js-table th"),

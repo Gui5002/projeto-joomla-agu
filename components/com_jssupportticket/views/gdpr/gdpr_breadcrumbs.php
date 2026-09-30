@@ -16,10 +16,10 @@ use Joomla\CMS\Language\Text;
 	$commonpath="index.php?option=com_jssupportticket";
 	$pathway = $mainframe->getPathway();
 	if ($config['cur_location'] == 1) {
-		$pathway->addItem(Text::_('Control panel'), $commonpath.'&c=jssupportticket&layout=controlpanel');
+		$pathway->addItem(Text::_('Control Panel'), $commonpath.'&c=jssupportticket&layout=controlpanel');
 		switch($layoutName){
 			case 'adderasedatarequest':
-				$pathway->addItem(Text::_('Erase Data Request'), $commonpath."&c=ticket&layout=formticket&Itemid=".$itemid);
+				$pathway->addItem(Text::_('Erase Data Request'), $commonpath."&c=ticket&layout=formticket&Itemid=".$Itemid);
 			break;
 		}
 	}

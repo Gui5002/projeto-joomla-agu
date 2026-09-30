@@ -7,27 +7,18 @@
 
 defined('_JEXEC') || die();
 
-use Akeeba\Engine\Factory;
+use Akeeba\Component\AkeebaBackup\Administrator\Helper\Utils;
 use Joomla\CMS\Language\Text;
 
 /** @var  \Akeeba\Component\AkeebaBackup\Administrator\View\Log\RawView $this */
 
 // -- Get the log's file name
 $tag     = $this->tag;
-$logFile = Factory::getLog()->getLogFilename($tag);
-
-if (!@is_file($logFile) && @file_exists(substr($logFile, 0, -4)))
-{
-	/**
-	 * Transitional period: the log file akeeba.tag.log.php may not exist but the akeeba.tag.log does. This
-	 * addresses this transition.
-	 */
-	$logFile = substr($logFile, 0, -4);
-}
+$logFile = Utils::getLogFilePath($tag);
 
 @ob_end_clean();
 
-if (!@file_exists($logFile))
+if (is_null($logFile))
 {
 	// Oops! The log doesn't exist!
 	echo '<p>' . Text::_('COM_AKEEBABACKUP_LOG_ERROR_LOGFILENOTEXISTS') . '</p>';

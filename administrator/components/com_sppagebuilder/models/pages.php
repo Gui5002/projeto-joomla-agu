@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -149,9 +149,8 @@ class SppagebuilderModelPages extends ListModel
 		}
 		elseif (is_array($categoryId))
 		{
-			ArrayHelper::toInteger($categoryId);
-			$categoryId = implode(',', $categoryId);
-			$query->where('a.catid IN (' . $categoryId . ')');
+			$categoryId = ArrayHelper::toInteger($categoryId);
+			$query->where('a.catid IN (' . implode(',', $categoryId) . ')');
 		}
 
 		// Filter by language
@@ -199,6 +198,7 @@ class SppagebuilderModelPages extends ListModel
 			$orderCol = 'ag.title';
 		}
 
+		$orderDirn = strtoupper($orderDirn) === 'ASC' ? 'ASC' : 'DESC';
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;

@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -33,8 +33,7 @@ $params = ComponentHelper::getParams('com_sppagebuilder');
 
 $GLOBAL_TYPOGRAPHIES_URL = Uri::root() . 'index.php?option=com_sppagebuilder&task=typography.globalTypographies&_method=get';
 
-$globalTypographies = new SppagebuilderControllerTypography();
-$globalTypographies = $globalTypographies->getGlobalTypographiesLocally() ?? null;
+$globalTypographies = SppagebuilderControllerTypography::getGlobalTypographiesLocally() ?? null;
 $doc->addScriptdeclaration('var globalTypographies=' . json_encode($globalTypographies) . ';');
 
 if (!$params->get('enable_frontend_editing', 1)) {
@@ -218,7 +217,7 @@ $model = new SppagebuilderModelEditor();
 $previewUrl = $model->getPreviewUrl($this->item->id, $this->item->language)['url'] ?? '';
 ?>
 
-<div id="sp-page-builder" class="sp-pagebuilder <?php echo $menuClassPrefix; ?> page-<?php echo $this->item->id; ?>" data-pageid="<?php echo $this->item->id; ?>" data-pageurl="<?php echo $previewUrl; ?>">
+<div id="sp-page-builder" class="sp-pagebuilder <?php echo $menuClassPrefix; ?> page-<?php echo $this->item->id; ?>" data-pageid="<?php echo $this->item->id; ?>" data-pageurl="<?php echo $previewUrl; ?>" data-page-type="<?php echo $this->escape($this->item->page_type ?? ''); ?>">
 	<form action="<?php echo Route::_('index.php?option=com_sppagebuilder&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm" class="form-validate page-builder-form" style="display: none;">
 		<div id="page-options">
 			<?php $fieldsets = $this->form->getFieldsets(); ?>

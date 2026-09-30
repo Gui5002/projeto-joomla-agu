@@ -564,6 +564,16 @@ if (typeof akeebabackup.System === "undefined")
                     useCaching = true;
                 }
 
+                // Add Joomla's anti-CSRF token to the request, when one is available. This lets the backend tasks
+                // invoked through doAjax enforce $this->checkToken() against cross-site request forgery. The token is
+                // only present on pages which set it up (i.e. the backend), so guest/front-end pages are unaffected.
+                var csrfToken = Joomla.getOptions("csrf.token", "");
+
+                if (csrfToken)
+                {
+                    data[csrfToken] = 1;
+                }
+
                 // We always want to burst the cache
                 var now                = new Date().getTime() / 1000;
                 var s                  = parseInt(String(now), 10);

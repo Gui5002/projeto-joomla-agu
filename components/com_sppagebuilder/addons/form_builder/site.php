@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -21,7 +21,16 @@ use Joomla\CMS\Session\Session;
 
 class SppagebuilderAddonForm_builder extends SppagebuilderAddons
 {
-    public static $salt = '3a1q3ko70zwa2lxnui73qk3hm7g2xq6oe7bi0ydk0eulifabjb';
+    /**
+     * Sign a payload with the site's own secret so submissions cannot be forged offline.
+     *
+     * @param   string  $payload  The value to sign.
+     * @return  string            The HMAC signature.
+     */
+    protected static function getSignature($payload)
+    {
+        return hash_hmac('sha256', (string) $payload, (string) Factory::getConfig()->get('secret'));
+    }
 
     /**
      * Return the form steps, wrapping a legacy flat field list into a single step.
@@ -58,11 +67,20 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
     {
         //CSRF
         HTMLHelper::_('jquery.token');
+        Text::script('COM_SPPAGEBUILDER_ADDON_FORM_BUILDER_LENGTH_VALIDATION_ERROR');
 
         $settings          = $this->addon->settings;
         $addon_id          = $this->addon->id;
         $class             = (isset($settings->class) && $settings->class) ? ' ' . $settings->class : '';
-        $recipient_email   = (isset($settings->recipient_email) && $settings->recipient_email) ? $settings->recipient_email : '';
+        // Recipient email can be an array (new tags input) or a plain string (legacy
+        // single-email pages). Normalize to a comma-separated string so the rest of
+        // the pipeline (signing, decoding, sendMail) stays unchanged.
+        $recipient_email_raw = isset($settings->recipient_email) ? $settings->recipient_email : '';
+        if (is_array($recipient_email_raw)) {
+            $recipient_email = implode(',', array_filter(array_map('trim', $recipient_email_raw)));
+        } else {
+            $recipient_email = $recipient_email_raw ? trim($recipient_email_raw) : '';
+        }
         $additional_header = (isset($settings->additional_header) && $settings->additional_header) ? $settings->additional_header : '';
         $from              = (isset($settings->from) && $settings->from) ? $settings->from : '';
         $email_template    = (isset($settings->email_template) && $settings->email_template) ? $settings->email_template : '';
@@ -111,6 +129,7 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
         $success_message        = (isset($settings->success_message) && $settings->success_message) ? $settings->success_message : 'Email successfully sent!';
         $failed_message         = (isset($settings->failed_message) && $settings->failed_message) ? $settings->failed_message : 'Email sent failed, fill required field and try again!';
         $required_field_message = (isset($settings->required_field_message) && $settings->required_field_message) ? $settings->required_field_message : 'Please fill the required field.';
+        $inline_validation      = (isset($settings->inline_validation) && $settings->inline_validation) ? true : false;
 
         // Button options
         $btn_text      = (isset($settings->btn_text) && $settings->btn_text) ? $settings->btn_text : '';
@@ -141,7 +160,7 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
         $output = '';
         $output .= '<div class="sppb-addon sppb-addon-form-builder' . $class . '">';
         $output .= '<div class="sppb-addon-content">';
-        $output .= '<form class="sppb-addon-form-builder-form"' . ($enable_redirect && $redirect_url != '' ? ' data-redirect="yes" data-redirect-url="' . $redirect_url . '"' : '') . '>';
+        $output .= '<form class="sppb-addon-form-builder-form"' . ($enable_redirect && $redirect_url != '' ? ' data-redirect="yes" data-redirect-url="' . $redirect_url . '"' : '') . ($inline_validation ? ' novalidate' : '') . '>';
         $output .= HTMLHelper::_('form.token');
 
         $date_formatters = [];
@@ -317,7 +336,7 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
                     }
 
                     $output .= '<textarea name="form-builder-item-[' . $field_name . '' . ($field_is_required ? '*' : '') . ']" id="' . $item_name_id . '" class="sppb-form-control' . ($is_resize ? '' : ' not-resize') . '" ' . ($field_placeholder ? 'placeholder="' . $field_placeholder . '"' : '') . '' . ($field_is_required ? ' aria-required="true" required' : '') . $maximum_character . $minimum_character . '></textarea>';
-                    $output .= $field_is_required ? '<span class="sppb-form-builder-required">' . $required_field_message . '</span>' : '';
+                    $output .= ($field_is_required || $minimum_character || $maximum_character) ? '<span class="sppb-form-builder-required">' . $required_field_message . '</span>' : '';
 
                     $output .= '</div>'; //.sppb-form-group
                 } elseif ($field_type == 'select') {
@@ -368,7 +387,7 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
                     }
 
                     $output .= '<input inputmode="numeric" type="number" id="' . $item_name_id . '" name="form-builder-item-[' . $field_name . '' . ($field_is_required ? '*' : '') . ']" class="sppb-form-control"' . ($number_min != '' ? ' min="' . $number_min . '"' : '') . '' . ($number_max ? ' max="' . $number_max . '"' : '') . '' . ($number_step ? ' step="' . $number_step . '"' : '') . '' . ($field_placeholder ? ' placeholder="' . $field_placeholder . '"' : '') . '' . ($field_is_required ? ' aria-required="true" required' : '') . '>';
-                    $output .= $field_is_required ? '<span class="sppb-form-builder-required">' . $required_field_message . '</span>' : '';
+                    $output .= ($field_is_required || $inline_validation) ? '<span class="sppb-form-builder-required">' . $required_field_message . '</span>' : '';
                     $output .= '</div>'; //.sppb-form-group
                 } else if ($field_type == 'heading') {
                     $item_unique_class = 'sppb-form-builder-heading-' . $item_key;
@@ -376,6 +395,16 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
                     $output .= '<' . $heading_selector . ' class="sppb-addon-title ' . $item_unique_class . '">';
                     $output .= $label;
                     $output .= '</' . $heading_selector . '>';
+                } elseif ($field_type === 'tel') {
+                    $output .= '<div class="sppb-form-group ' . $item_name_id . '">';
+
+                    if ($label) {
+                        $output .= '<label ' . $hidden_label_class . ' for="' . $item_name_id . '">' . $label . '' . ($field_required_star && $field_is_required ? '<span class="sppb-field-required"> *</span>' : '') . '</label>';
+                    }
+
+                    $output .= '<input type="tel" id="' . $item_name_id . '" name="form-builder-item-[' . $field_name . '' . ($field_is_required ? '*' : '') . ']" class="sppb-form-control"' . ($field_placeholder ? ' placeholder="' . $field_placeholder . '"' : '') . '' . ($tel_pattern ? ' pattern="' . htmlspecialchars($tel_pattern, ENT_QUOTES) . '"' : '') . '' . ($field_is_required ? ' aria-required="true" required' : '') . '>';
+                    $output .= ($field_is_required || $inline_validation) ? '<span class="sppb-form-builder-required">' . $required_field_message . '</span>' : '';
+                    $output .= '</div>'; //.sppb-form-group
                 } else {
                     $output .= '<div class="sppb-form-group ' . $item_name_id . '">';
 
@@ -383,8 +412,8 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
                         $output .= '<label ' . $hidden_label_class . ' for="' . $item_name_id . '">' . $label . '' . ($field_required_star && $field_is_required ? '<span class="sppb-field-required"> *</span>' : '') . '</label>';
                     }
 
-                    $output .= '<input type="' . $field_type . '" id="' . $item_name_id . '" name="form-builder-item-[' . $field_name . '' . ($field_is_required ? '*' : '') . ']" class="sppb-form-control"' . ($field_placeholder ? ' placeholder="' . $field_placeholder . '"' : '') . '' . ($field_type === 'tel' && $tel_pattern ? ' pattern="' . $tel_pattern . '"' : '') . '' . ($field_is_required ? ' aria-required="true" required' : '') . '>';
-                    $output .= $field_is_required ? '<span class="sppb-form-builder-required">' . $required_field_message . '</span>' : '';
+                    $output .= '<input type="' . $field_type . '" id="' . $item_name_id . '" name="form-builder-item-[' . $field_name . '' . ($field_is_required ? '*' : '') . ']" class="sppb-form-control"' . ($field_placeholder ? ' placeholder="' . $field_placeholder . '"' : '') . '' . ($field_is_required ? ' aria-required="true" required' : '') . ($field_type === 'text' ? $maximum_character . $minimum_character : '') . '>';
+                    $output .= ($field_is_required || $inline_validation || ($field_type === 'text' && ($minimum_character || $maximum_character))) ? '<span class="sppb-form-builder-required">' . $required_field_message . '</span>' : '';
                     $output .= '</div>'; //.sppb-form-group
                 }
             } //end fields foreach
@@ -405,12 +434,16 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
         $hidden_json   = json_encode($hidden_value);
         $hidden_base64 = base64_encode($hidden_json);
 
-        $encrypted_salt_key = md5(self::$salt . $hidden_base64);
+        $email_subject_b64  = base64_encode($email_subject);
+        $email_template_b64 = base64_encode($email_template);
+
+        // Sign the recipient/from blob together with the subject and body so none can be forged or tampered.
+        $encrypted_salt_key = self::getSignature($hidden_base64 . ':' . $email_subject_b64 . ':' . $email_template_b64);
 
         $output .= '<input type="hidden" name="form_id" value="' . $hidden_base64 . ':' . $encrypted_salt_key . '" >';
         $output .= '<input type="hidden" name="addon_id" value="' . $addon_id . '">';
-        $output .= '<input type="hidden" name="email_subject" value="' . base64_encode($email_subject) . '">';
-        $output .= '<textarea style="display:none;" name="email_template" aria-label="Not For Read">' . base64_encode($email_template) . '</textarea>';
+        $output .= '<input type="hidden" name="email_subject" value="' . $email_subject_b64 . '">';
+        $output .= '<textarea style="display:none;" name="email_template" aria-label="Not For Read">' . $email_template_b64 . '</textarea>';
         $output .= '<input type="hidden" name="success_message" value="' . base64_encode($success_message) . '">';
         $output .= '<input type="hidden" name="failed_message" value="' . base64_encode($failed_message) . '">';
 
@@ -423,7 +456,7 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
         }
 
         if ($enable_captcha && $captcha_type == 'default') {
-            $output .= '<input type="hidden" name="captcha_answer" value="' . md5($captcha_answer) . '">';
+            // Answer intentionally not emitted; it is verified server-side from stored settings.
         } elseif ($enable_captcha && ($captcha_type == 'recaptcha' || $captcha_type == 'gcaptcha')) {
 
             PluginHelper::importPlugin('captcha', 'recaptcha');
@@ -541,6 +574,10 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
         $addonId  = '';
         $decrypted_data = null;
 
+        $hidden_data         = [];
+        $rawEmailSubjectB64  = '';
+        $rawEmailTemplateB64 = '';
+
         foreach ($inputs as $name => $input) {
 
             if ($input['name'] == 'captcha_selector') {
@@ -551,19 +588,15 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
             }
 
             if ($input['name'] == 'form_id') {
-                $data               = $input['value'];
-                $hidden_data        = explode(':', $data);
-                $encrypted_salt_key = md5(self::$salt . $hidden_data[0]);
-
-                if ($encrypted_salt_key === $hidden_data[1]) {
-                    $decrypted_data         = json_decode(base64_decode($hidden_data[0]));
-                    $recipient              = base64_decode($decrypted_data->recipient_email);
-                    $additional_header_ajax = base64_decode($decrypted_data->additional_header);
-                    $from                   = base64_decode($decrypted_data->from);
-                    $send_copy_to_applicant = !empty($decrypted_data->send_copy_to_applicant) ? base64_decode($decrypted_data->send_copy_to_applicant) : 0;
-                } else {
-                    die('Restricted Access');
-                }
+                // Decode here; the signature (which also covers subject/body) is verified
+                // after this loop, before any mail is sent.
+                $data                   = $input['value'];
+                $hidden_data            = explode(':', $data);
+                $decrypted_data         = json_decode(base64_decode($hidden_data[0]));
+                $recipient              = isset($decrypted_data->recipient_email) ? base64_decode($decrypted_data->recipient_email) : '';
+                $additional_header_ajax = isset($decrypted_data->additional_header) ? base64_decode($decrypted_data->additional_header) : '';
+                $from                   = isset($decrypted_data->from) ? base64_decode($decrypted_data->from) : '';
+                $send_copy_to_applicant = !empty($decrypted_data->send_copy_to_applicant) ? base64_decode($decrypted_data->send_copy_to_applicant) : 0;
             }
 
             if ($input['name'] == 'captcha_type') {
@@ -637,10 +670,12 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
             }
 
             if ($input['name'] === 'email_template') {
-                $emailBody = base64_decode($input['value']);
+                $rawEmailTemplateB64 = $input['value'];
+                $emailBody           = base64_decode($input['value']);
             }
             if ($input['name'] === 'email_subject') {
-                $emailSubjectAjax = base64_decode($input['value']);
+                $rawEmailSubjectB64 = $input['value'];
+                $emailSubjectAjax   = base64_decode($input['value']);
             }
 
             if ($input['name'] === 'success_message') {
@@ -649,6 +684,12 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
             if ($input['name'] === 'failed_message') {
                 $failed_message_ajax = base64_decode($input['value']);
             }
+        }
+
+        // Verify the signature covers recipient/from AND subject/body, so none can be forged or tampered.
+        $expectedSignature = self::getSignature(($hidden_data[0] ?? '') . ':' . $rawEmailSubjectB64 . ':' . $rawEmailTemplateB64);
+        if (empty($hidden_data[0]) || empty($hidden_data[1]) || !hash_equals($expectedSignature, $hidden_data[1])) {
+            die('Restricted Access');
         }
 
         $secureData        = Session::getInstance();
@@ -709,11 +750,19 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
         $output['gcaptchaId'] = '';
 
         // Match has addon id
-        if (self::verifyAddon($item_data->content ?? $item_data->text, $addon_id) === false) {
+        $captchaAddon = self::getAddonById($item_data->content ?? $item_data->text, $addon_id);
+
+        if ($captchaAddon === null) {
             $output['content'] = '<span class="sppb-text-danger">' . $failed_message_ajax . '</span>';
 
             return json_encode($output);
         }
+
+        // Read the captcha type from the stored addon, never from the request, so a form
+        // configured for reCAPTCHA cannot be downgraded to the simple question captcha.
+        $captcha_type = (isset($captchaAddon->settings->captcha_type) && $captchaAddon->settings->captcha_type)
+            ? $captchaAddon->settings->captcha_type
+            : 'default';
 
         if ($showcaptcha) {
             if ($gcaptcha == '' && $captcha_type != 'default') {
@@ -731,12 +780,11 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
                     $output['gcaptchaType'] = 'dynamic';
                 }
 
+                // The captcha plugin's verdict is authoritative in every render context.
+                // $view_type comes from the request, and the module branch that used to sit
+                // here replaced this result with a non-empty test, so posting view_type=module
+                // passed any token at all.
                 $res = Factory::getApplication()->triggerEvent('onCheckAnswer', [$gcaptcha]);
-
-                // If module then verify gcaptcha
-                if ($view_type === 'module') {
-                    $res = ($gcaptcha != null || strlen($gcaptcha) != 0) ? [true] : [false];
-                }
 
                 if (empty($res[0])) {
                     $output['content'] = '<span class="sppb-text-danger">' . Text::_('COM_SPPAGEBUILDER_ADDON_AJAX_CONTACT_INVALID_CAPTCHA') . '</span>';
@@ -744,7 +792,10 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
                     return json_encode($output);
                 }
             } else if ($captcha_type == 'default') {
-                if (md5($captcha_question) != $captcha_answer) {
+                // Read the expected answer from the stored addon, never from the request.
+                $expectedAnswer = isset($captchaAddon->settings->captcha_answer) ? (string) $captchaAddon->settings->captcha_answer : '';
+
+                if ($expectedAnswer === '' || trim((string) $captcha_question) !== trim($expectedAnswer)) {
                     $output['content'] = '<span class="sppb-text-danger">' . Text::_('COM_SPPAGEBUILDER_ADDON_AJAX_CONTACT_WRONG_CAPTCHA') . '</span>';
                     return json_encode($output);
                 }
@@ -900,6 +951,13 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
         }
         if (empty($bcc)) {
             $bcc = null;
+        }
+
+        // $recipient may hold multiple comma-separated addresses (multi-recipient
+        // field); split into an array the same way $cc/$bcc are handled above.
+        if (is_string($recipient)) {
+            $recipient = str_replace([' ', "\t", "\n", "\r", "\0", "\x0B"], '', $recipient);
+            $recipient = explode(',', $recipient);
         }
 
         if ($mail->sendMail($senderMail, $senderName, $recipient, $emailSubjectAjax, $emailBody, $isHtmlMode, $cc, $bcc, $attachment, $replyToMail, $replyToName)) {
@@ -1232,35 +1290,45 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
         $transformCss = $cssHelper->generateTransformStyle('.sppb-addon-form-builder-form', $settings, 'transform');
         $css .= $transformCss;
 
+        if (!empty($settings->inline_validation)) {
+            $css .= $cssHelper->generateStyle('.sppb-form-builder-required', $settings, ['inline_validation_color' => 'color'], ['inline_validation_color' => false]);
+        }
+
         return $css;
     }
 
-    public static function verifyAddon($pageContent, $addonId)
+    /**
+     * Locate a form_builder addon by id within the stored page content and return its object.
+     * The stored content is the trusted source of the addon's settings (e.g. the captcha
+     * answer), so security-sensitive values must be read from here, never from the request.
+     *
+     * @param   string  $pageContent  The stored page/module content JSON.
+     * @param   mixed   $addonId      The addon id to find.
+     * @return  object|null           The addon object, or null if not found.
+     */
+    public static function getAddonById($pageContent, $addonId)
     {
-        $addonInfo   = false;
         $pageContent = json_decode($pageContent);
 
         if (! is_array($pageContent)) {
-            return false;
+            return null;
         }
 
-        foreach ($pageContent as $key => $row) {
-            foreach ($row->columns as $key => $column) {
-                foreach ($column->addons as $key => $addon) {
+        foreach ($pageContent as $row) {
+            foreach ($row->columns as $column) {
+                foreach ($column->addons as $addon) {
 
                     // if direct addon
                     if (($addon->id == $addonId) && ($addon->name == 'form_builder')) {
-                        return true;
-                        break;
+                        return $addon;
                     }
 
                     // if has inner array
                     if (isset($addon->columns) && count($addon->columns) && $addon->columns) {
-                        foreach ($addon->columns as $key => $inner_column) {
-                            foreach ($inner_column->addons as $key => $inner_addon) {
+                        foreach ($addon->columns as $inner_column) {
+                            foreach ($inner_column->addons as $inner_addon) {
                                 if (($inner_addon->id == $addonId) && ($inner_addon->name == 'form_builder')) {
-                                    return true;
-                                    break;
+                                    return $inner_addon;
                                 }
                             }
                         }
@@ -1273,8 +1341,7 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
                             if (isset($inner_item->content) && is_array($inner_item->content) && ! empty($inner_item->content)) {
                                 foreach ($inner_item->content as $inner_addon) {
                                     if (($inner_addon->id == $addonId) && ($inner_addon->name == 'form_builder')) {
-                                        return true;
-                                        break;
+                                        return $inner_addon;
                                     }
                                 }
                             }
@@ -1284,7 +1351,7 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
                 }
             }
         }
-        return false;
+        return null;
     }
 
 
@@ -1586,6 +1653,12 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
 
         $output .= $lodash->generateTransformCss('.sppb-addon-form-builder-form', 'data.transform');
 
+        // Match css(): only apply the colour when inline validation is actually on, otherwise
+        // the editor preview would show it even with the toggle off.
+        $output .= '<# if (data.inline_validation) { #>';
+        $output .= $lodash->color('color', '.sppb-form-builder-required', 'data.inline_validation_color');
+        $output .= '<# } #>';
+
         $output .= '
         </style>
 
@@ -1599,11 +1672,13 @@ class SppagebuilderAddonForm_builder extends SppagebuilderAddons
                 redirect_url_attr = `data-redirect="yes" data-redirect-url="${redirect_url}"`;
             }
 
+            let inline_validation_attr = data.inline_validation ? "novalidate" : "";
+
         #>
 
         <div class="sppb-addon sppb-addon-form-builder {{data.class}}">
         <div class="sppb-addon-content">
-        <form class="sppb-addon-form-builder-form" {{{redirect_url_attr}}}>
+        <form class="sppb-addon-form-builder-form" {{{redirect_url_attr}}} {{{inline_validation_attr}}}>
 
             <#
             var __steps = (_.isArray(data.sp_form_builder_steps) && data.sp_form_builder_steps.length) ? data.sp_form_builder_steps : [{ step_title: "Step 1", sp_form_builder_item: (data.sp_form_builder_item || []) }];

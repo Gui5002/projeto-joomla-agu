@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -133,6 +133,7 @@ trait AddonsTrait
 			$hasContext = isset($addon['context']) && stripos($addon['context'], 'easystore') === 0;
 
 			// If we are not in the easystore pages, then skip the single & collection addons.
+			// if ($hasContext && !in_array($type, ['single', 'storefront', 'collection', 'quick_cart_modal']))
 			if ($hasContext && !in_array($type, ['single', 'storefront', 'collection']))
 			{
 				$contextArray = explode('.', $addon['context'], 2);
@@ -164,6 +165,17 @@ trait AddonsTrait
 					continue;
 				}
 			}
+
+			// In the quick cart modal page, we only need the single (details) & common addons.
+			// if ($hasContext && $type === 'quick_cart_modal')
+			// {
+			// 	$contextArray = explode('.', $addon['context'], 2);
+
+			// 	if (!empty($contextArray[1]) && in_array($contextArray[1], ['list', 'collection']))
+			// 	{
+			// 		continue;
+			// 	}
+			// }
 
 			$category = $addon['category'] ?? 'General';
 			$addon['default'] = [];

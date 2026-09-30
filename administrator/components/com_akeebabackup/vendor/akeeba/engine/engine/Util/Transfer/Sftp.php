@@ -234,7 +234,7 @@ class Sftp implements TransferInterface, RemoteResourceInterface
 			{
 				$this->connection = null;
 
-				throw new RuntimeException(sprintf('Cannot log in to SFTP server using key files [username:private_key_file:public_key_file:password] = %s:%s:%s:%s', $this->username, $this->privateKey, $this->publicKey, $this->password), 500);
+				throw new RuntimeException(sprintf('Cannot log in to SFTP server as user %s using the key files %s and %s', $this->username, $this->privateKey, $this->publicKey), 500);
 			}
 		}
 		else
@@ -243,7 +243,7 @@ class Sftp implements TransferInterface, RemoteResourceInterface
 			{
 				$this->connection = null;
 
-				throw new RuntimeException(sprintf('Cannot log in to SFTP server [username:password] = %s:%s', $this->username, $this->password), 500);
+				throw new RuntimeException(sprintf('Cannot log in to SFTP server as user %s', $this->username), 500);
 			}
 		}
 

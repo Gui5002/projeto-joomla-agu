@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -18,7 +18,9 @@ final class ApplicationHelper
 {
 	public static function generateSiteClassName($addonName)
 	{
-		if (empty($addonName))
+		// The name becomes part of a class name resolved at runtime, so it must
+		// be a bare addon identifier — same whitelist as AddonParser::getAddonPath().
+		if (empty($addonName) || !is_string($addonName) || !preg_match('/^[A-Za-z0-9_-]+$/', $addonName))
 		{
 			return '';
 		}
@@ -44,7 +46,7 @@ final class ApplicationHelper
 
 		$query->select('content')
 			->from($db->quoteName('#__sppagebuilder'))
-			->where($db->quoteName('id') . ' = ' . $id);
+			->where($db->quoteName('id') . ' = ' . (int)$id);
 
 		$db->setQuery($query);
 
@@ -147,7 +149,7 @@ final class ApplicationHelper
 		return false;
 	}
 
-	public static function getStorePageId($viewType)
+	public static function getStorePageId($viewType, $language = null)
 	{
 		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
@@ -157,7 +159,28 @@ final class ApplicationHelper
 			->where($db->quoteName('extension') . ' = ' . $db->quote('com_easystore'))
 			->where($db->quoteName('extension_view') . ' = ' . $db->quote($viewType));
 
-		$db->setQuery($query);
+		if (!is_null($language))
+		{
+			// Store pages are multilingual: one row per (extension_view, language). Legacy rows
+			// created before language support have language = '' (the column's schema default),
+			// not '*' - treat them as the same "All" row so lookups for '*' still find them.
+			if ($language === '*')
+			{
+				$query->where('(' . $db->quoteName('language') . ' = ' . $db->quote('*') . ' OR ' . $db->quoteName('language') . ' = ' . $db->quote('') . ')');
+			}
+			else
+			{
+				$query->where($db->quoteName('language') . ' = ' . $db->quote($language));
+			}
+		}
+		else
+		{
+			// Prefer the "All (*)" row so the default open is deterministic.
+			$query->order('CASE WHEN ' . $db->quoteName('language') . ' = ' . $db->quote('*') . ' THEN 0 ELSE 1 END ASC')
+				->order($db->quoteName('id') . ' ASC');
+		}
+
+		$db->setQuery($query, 0, 1);
 
 		try
 		{

@@ -2,7 +2,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  */
 
 namespace JoomShaper\SPPageBuilder\Comment\Services;
@@ -45,7 +45,7 @@ class CommentService
 		$query = $db->getQuery(true);
 		$query->select('view_id')
 			->from('#__sppagebuilder')
-			->where('id = ' . $pageId)
+			->where('id = ' . (int) $pageId)
 			->where('extension_view = ' . $db->quote('article'));
 
 		$db->setQuery($query);
@@ -94,9 +94,17 @@ class CommentService
 			$this->sendResponse(['error' => Text::_('COM_SPPAGEBUILDER_ERROR_CREATING_COMMENT')], 500);
 		}
 
-        // Check if anonymous comments are enabled
-        $enableAnonymousComment = !empty($commentPayload['enable_anonymous_comment']) ? true : false;
-        
+        $sourceType = !empty($sanitizedPayload['source_type']) ? $sanitizedPayload['source_type'] : '';
+        $itemId = !empty($sanitizedPayload['item_id']) ? $sanitizedPayload['item_id'] : 0;
+
+        if (empty($sourceType) || empty($itemId)) {
+            $this->sendResponse(['error' => Text::_('COM_SPPAGEBUILDER_ERROR_INVALID_PARAMETERS')], 400);
+        }
+
+        // Check if anonymous comments are enabled. Taken from the session (set while
+        // rendering the addon), not from the payload, which the client can forge.
+        $enableAnonymousComment = (bool) $this->app->getSession()->get('sppb_anon_comment_' . $sourceType . '_' . $itemId, 0);
+
         // If user is not logged in and anonymous comments are not enabled, return error
         if(empty($userId) && !$enableAnonymousComment) {
             $this->sendResponse(['error' => Text::_('COM_SPPAGEBUILDER_ERROR_ANONYMOUS_COMMENTS_DISABLED')], 400);
@@ -109,34 +117,29 @@ class CommentService
 
 		if($manualCommentApproval) {
 			if($previouslyApprovedComment) {
-				$published = $this->hasPreviouslyApprovedComment($userId, $sanitizedPayload['item_id']) ? 1 : 0;
+				$published = $this->hasPreviouslyApprovedComment($userId, $itemId, $sourceType) ? 1 : 0;
 			} else {
 				$published = 0;
 			}
 		}
 
-        if((!empty($userId) || $enableAnonymousComment) && !empty($sanitizedPayload['item_id'])) {
-             $payload = [
-                'created_by' => $userId ?: null, // Set to null for anonymous comments
-                'item_id' => isset($sanitizedPayload['item_id']) ? $sanitizedPayload['item_id'] : 0,
-				'source_type' => !empty($sanitizedPayload['source_type']) ? $sanitizedPayload['source_type'] : 'articles',
-                'content' => $sanitizedPayload['content'],
-                'likes' => 0,
-                'replies' => 0,
-                'parent_id' => isset($sanitizedPayload['parent_id']) ? $sanitizedPayload['parent_id'] : null,
-				'published' => $published,
-            ];
+        $payload = [
+            'created_by' => $userId ?: null, // Set to null for anonymous comments
+            'item_id' => $itemId,
+            'source_type' => $sourceType,
+            'content' => $sanitizedPayload['content'],
+            'likes' => 0,
+            'replies' => 0,
+            'parent_id' => isset($sanitizedPayload['parent_id']) ? $sanitizedPayload['parent_id'] : null,
+            'published' => $published,
+        ];
 
-            $response = $this->model->createComment($payload);
+        $response = $this->model->createComment($payload);
 
-            if ($response) {
-                $this->sendResponse(['success' => true, 'message' => Text::_('COM_SPPAGEBUILDER_COMMENT_CREATED_SUCCESSFULLY'), 'data' => $response]);
-            } else {
-                $this->sendResponse(['error' => Text::_('COM_SPPAGEBUILDER_ERROR_CREATING_COMMENT')], 500);
-            }
-
+        if ($response) {
+            $this->sendResponse(['success' => true, 'message' => Text::_('COM_SPPAGEBUILDER_COMMENT_CREATED_SUCCESSFULLY'), 'data' => $response]);
         } else {
-            $this->sendResponse(['error' => Text::_('COM_SPPAGEBUILDER_ERROR_INVALID_USER_OR_ARTICLE')], 400);
+            $this->sendResponse(['error' => Text::_('COM_SPPAGEBUILDER_ERROR_CREATING_COMMENT')], 500);
         }
     }
 
@@ -203,6 +206,8 @@ class CommentService
 	 */
 	public function updateComment($commentId, $data)
 	{
+		$sanitizedData = $this->sanitizeCommentPayload($data);
+
 		if (!Session::checkToken('post'))
 		{
 			$this->sendResponse(['error' => Text::_('JINVALID_TOKEN')], 403);
@@ -234,7 +239,7 @@ class CommentService
 				$this->sendResponse(['error' => Text::_('COM_SPPAGEBUILDER_ERROR_NOT_AUTHORIZED')], 403);
 			}
 
-			if ($model->updateComment($commentId, $data['content']))
+			if ($model->updateComment($commentId, $sanitizedData['content']))
 			{
 				$this->sendResponse(['success' => true, 'message' => Text::_('COM_SPPAGEBUILDER_COMMENT_UPDATED_SUCCESSFULLY')]);
 			}
@@ -310,6 +315,11 @@ class CommentService
 
 	public function likeComment($commentId, $userId)
 	{
+		if (!Session::checkToken('post'))
+		{
+			$this->sendResponse(['error' => Text::_('JINVALID_TOKEN')], 403);
+		}
+
 		if (empty($commentId)) {
 			$this->sendResponse(['error' => Text::_('COM_SPPAGEBUILDER_ERROR_INVALID_PARAMETERS')], 400);
 		}

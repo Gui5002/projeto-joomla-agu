@@ -11,12 +11,12 @@
 */
 
 defined('_JEXEC') or die('Restricted access');
-
-jimport('joomla.application.component.view');
-jimport('joomla.html.pagination');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Text;
+
+jimport('joomla.application.component.view');
+jimport('joomla.html.pagination');
 
 class JSSupportticketViewEmailtemplate extends JSSupportTicketView
 {

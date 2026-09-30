@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 
 ?>
 
-<div id="jsst-main-wrapper" >
+<div id="jsst-main-wrapper" class="jsst-screen jsst-proinstaller-finish">
     <div id="jsst-upper-wrapper">
         <span class="jsst-title"><?php echo Text::_('JS Support Ticket Pro Installer'); ?></span>
         <span class="jsst-logo">

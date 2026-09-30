@@ -239,7 +239,7 @@ class Ftp implements TransferInterface, RemoteResourceInterface
 			@ftp_close($this->connection);
 			$this->connection = null;
 
-			throw new RuntimeException(sprintf('Cannot log in to FTP server [username:password] = %s:%s', $this->username, $this->password), 500);
+			throw new RuntimeException(sprintf('Cannot log in to FTP server as user %s', $this->username), 500);
 		}
 
 		// Attempt to change to the initial directory

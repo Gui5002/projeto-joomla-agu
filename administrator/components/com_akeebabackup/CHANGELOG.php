@@ -1,3 +1,41 @@
+Akeeba Backup 10.4.0
+================================================================================
++ akeeba:profile:import into specific profile ID with --profile, overwriting profile with --force
+~ Logs never created with .log extension; when .log.php is blocked we now use just .php
+~ JSON API v2, and Secret Word authentication on the v3 API, are deprecated; removal in 11.0, October 2027
+~ JSON API: support for non-Super-User accounts in the API
+# [MEDIUM] POST requests to the v3 JSON API endpoint always failed
+# [MEDIUM] akeeba:sysconfig:get and akeeba:sysconfig:set improper error when missing the argument
+# [MEDIUM] Split archives could end in an empty part, failing post-processing with "Missing input parameters"
+# [LOW] Failed JSON API authentication did not fire onUserLoginFailure
+# [LOW] CLI commands treated mandatory arguments as optional
+# [LOW] CLI command reference documented positional arguments as --options
+# [LOW] akeeba:backup:alternate was missing from the CLI command reference
+# [LOW] Some English, French, and Italian strings displayed a literal backslash before an apostrophe
+# [LOW] Three Site Transfer Wizard strings were untranslated
+# [LOW] The Options page "Check for failed backups" section header had no language string, showing the raw key instead
+# [LOW] The OAuth2 token refresh had wrong cache-busting headers
+# [LOW] Manage Backups, Site Transfer Wizard showed wrong path when output directory missing or outside open_basedir
+
+Akeeba Backup 10.3.7
+================================================================================
+# [HIGH] Database dumps silently lost precision on DOUBLE columns (PDO MySQL and PostgreSQL)
+# [HIGH] Box, Dropbox, Google Drive, OneDrive token refresh during upload could overwrite another profile's remote storage configuration
+# [MEDIUM] Box, Dropbox, Google Drive, and OneDrive did not refresh an access token missing from the backup profile, failing with an opaque authorisation error
+# [MEDIUM] Box reported a lapsed authorisation as an opaque HTTP 401 error
+# [MEDIUM] Dropbox did not explain a missing or lapsed Download ID
+# [MEDIUM] Google Drive and OneDrive did not report a rejected token refresh
+# [MEDIUM] Test FTP Connection button ignored the "Use FTP over SSL (FTPS)" setting, causing spurious authentication errors against FTPS-only servers
+# [MEDIUM] WebDAV did not surface failed upload reason to the UI or the log file
+# [MEDIUM] Backend views did not all enforce their intended ACL privilege (Schedule, Push, Statistic, Profile, and deleting backup records)
+# [MEDIUM] The Schedule page is now restricted to users allowed to edit the component's Options (it displays the front-end/JSON API secrets)
+# [LOW] The backend backup AJAX endpoint did not send no-cache headers
+# [LOW] Importing a profile without selecting a file caused an error page instead of a graceful redirect
+# [LOW] Hardening: assorted backend control panel actions now require an anti-CSRF token (backup filter/exclusion/inclusion editors, remote archive delete/download, Transfer Wizard, Upload, S3 import, FTP/SFTP connection tests, custom data processing API, Configuration Wizard, output directory check, hide restoration modal, dismiss upsell)
+# [LOW] Hardening: the backend backup AJAX flow now uses a per-backup anti-CSRF token, immune to session token rotation during long backups
+# [LOW] Hardening: the front-end and JSON API Secret Word is now compared in constant time
+# [LOW] Hardening: all database queries built from filter, user-state, and request values now use bound, typed query parameters across the backend, front-end JSON API, and the Akeeba Engine
+
 Akeeba Backup 10.3.6
 ================================================================================
 + Site Transfer Wizard: transfer any backup archive present on the server, not just the latest one (gh-36)

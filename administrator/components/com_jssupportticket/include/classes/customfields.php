@@ -12,8 +12,8 @@
  */
 defined('_JEXEC') or die('Not Allowed');
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;    
 
 class customfields {
@@ -82,7 +82,7 @@ class customfields {
                         $value = "";
                         $userdataid = "";
                         if (isset($obj_id)) {
-                            if($obj_params != ''){ // to handle not null check for json decode
+                            if($obj_params){
                                 $userfielddataarray = json_decode($obj_params);
                                 $uffield = $field->field;
                                 if (isset($userfielddataarray->$uffield) || !empty($userfielddataarray->$uffield)) {
@@ -90,9 +90,11 @@ class customfields {
                                 } else {
                                     $value = '';
                                 }
+                            } else {
+                                $value = '';
                             }
                         }
-                        if (isset($obj_params) && $obj_params != '') {
+                        if (isset($obj_params)) {
                             $userfielddataarray = json_decode($obj_params);
                             $uffield = $field->field;
                             if (isset($userfielddataarray->$uffield) || !empty($userfielddataarray->$uffield)) {
@@ -173,7 +175,7 @@ class customfields {
                                         if(in_array($option, $valuearray)){
                                             $check = 'checked';
                                         }
-                                        $html .= '<div class="js-ticket-radio-box js-ticket-white-background">';
+                                        $html .= '<div class="js-ticket-signature-radio-box js-ticket-white-background">';
                                             $html .= '<input type="radio" ' . $check . ' class="radiobutton js-ticket-radio-btn $cssclass" value="' . $option . '" id="' . $field->field . '_' . $i . '" name="' . $field->field . '" data-validation ="'.$cssclass.'" onclick = "'.$jsFunction.'"> ';
                                             $html .= '<label for="' . $field->field . '_' . $i . '" id="foruf_checkbox1">' . $option . '</label>';
                                         $html .= '</div>';
@@ -323,7 +325,7 @@ class customfields {
         if($col != 2){
             $html .= '</div>';
         }
-        $html .= '<div class="js-col-md-3 js-filter-field-wrp">';
+        $html .= '<div class="js-filter-field-wrp">';
         
         if($isadmin == 1){
             $html = ''; // only field send
@@ -419,7 +421,7 @@ class customfields {
                             if($option == $value){
                                 $check = 'checked';
                             }
-                            $html .= '<div class="js-ticket-radio-box js-ticket-white-background">';
+                            $html .= '<div class="js-ticket-signature-radio-box js-ticket-white-background">';
                                 $html .= '<input type="radio" ' . $check . ' class="radiobutton js-ticket-radio-btn $cssclass" value="' . $option . '" id="' . $field->field . '_' . $i . '" name="' . $field->field . '" data-validation ="'.$cssclass.'" onclick = "'.$jsFunction.'"> ';
                                 $html .= '<label for="' . $field->field . '_' . $i . '" id="foruf_checkbox1">' . $option . '</label>';
                             $html .= '</div>';

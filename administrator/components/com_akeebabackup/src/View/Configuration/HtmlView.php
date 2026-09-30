@@ -16,6 +16,7 @@ use Akeeba\Engine\Factory;
 use Akeeba\Engine\Platform;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
@@ -62,7 +63,7 @@ class HtmlView extends BaseHtmlView
 			'browser'      => addslashes('index.php?option=com_akeebabackup&view=Browser&processfolder=1&tmpl=component&folder='),
 			'testFtp'      => addslashes('index.php?option=com_akeebabackup&view=Configuration&task=testftp'),
 			'testSftp'     => addslashes('index.php?option=com_akeebabackup&view=Configuration&task=testsftp'),
-			'dpeauthopen'  => addslashes('index.php?option=com_akeebabackup&view=Configuration&task=dpeoauthopen&format=raw'),
+			'dpeauthopen'  => addslashes('index.php?option=com_akeebabackup&view=Configuration&task=dpeoauthopen&format=raw&' . Session::getFormToken() . '=1'),
 			'dpecustomapi' => addslashes('index.php?option=com_akeebabackup&view=Configuration&task=dpecustomapi&format=raw'),
 		];
 
@@ -111,7 +112,9 @@ class HtmlView extends BaseHtmlView
 		)
 		        ->icon('fa fa-bolt');
 
-		if (AKEEBABACKUP_PRO)
+		// The Schedule page echoes the front-end/JSON API secrets, so it is only available to users who are allowed to
+		// edit the component's Options page (core.admin).
+		if (AKEEBABACKUP_PRO && $this->getCurrentUser()->authorise('core.admin', 'com_akeebabackup'))
 		{
 			$toolbar->link(
 				Text::_('COM_AKEEBABACKUP_SCHEDULE'),

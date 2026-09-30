@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -43,7 +43,7 @@ class SppagebuilderAddonComment extends SppagebuilderAddons
 				require_once JPATH_ROOT . '/components/com_sppagebuilder/helpers/articles.php';
 			}
 			$articleId = Factory::getApplication()->input->get('collection_item_id', null, 'array');
-			$articleId = $articleId ? $articleId[0] : null;
+			$articleId = $articleId ? (int) $articleId[0] : null;
 			$authorised = \SppagebuilderHelperArticles::checkAuthorised($articleId);
 	
 			if (!$authorised) {
@@ -102,6 +102,8 @@ class SppagebuilderAddonComment extends SppagebuilderAddons
 
 		$currentUserId = Factory::getUser()->id;
 
+		// The service reads this from the session; never trust the posted payload.
+		Factory::getApplication()->getSession()->set('sppb_anon_comment_' . $collectionType . '_' . $itemId, (int) $enableAnonymousComment);
 
 		$output = '';
 		$output .= '<div class="sppb-addon sppb-addon-comment ' . $class . '">';
@@ -127,12 +129,11 @@ class SppagebuilderAddonComment extends SppagebuilderAddons
 
 		$output .= '<form class="sppb-comment-form">';
 		$output .= '<input hidden name="addon-id" value="' . $addonId . '">';
-		$output .= '<input hidden name="enable-anonymous-comment" value="' . $enableAnonymousComment . '">';
 		$output .= '<textarea class="sppb-comment-field" name="comment" placeholder="' . $placeHolderText . '"></textarea>';
 		$output .= '<div class="sppb-comment-btn-wrapper">';
 		
 		// Show normal comment submit button
-		$output .= '<button aria-label="' . $postBtnAriaLabel . '" type="submit" class="comment-submit-btn ' . $btnClass . '" ' . (!$currentUserId && !$enableAnonymousComment ? 'disabled' : '') . ' style="cursor: ' . (!$currentUserId && !$enableAnonymousComment ? 'not-allowed' : 'pointer') . '; ' . (!$currentUserId && !$enableAnonymousComment ? 'opacity: 0.5' : '') . '" ' . (!$currentUserId && !$enableAnonymousComment ? 'title="Please sign in to comment"' : '') . '>';
+		$output .= '<button aria-label="' . $postBtnAriaLabel . '" type="submit" class="comment-submit-btn ' . $btnClass . '" ' . (!$currentUserId && !$enableAnonymousComment ? 'disabled' : '') . ' style="cursor: ' . (!$currentUserId && !$enableAnonymousComment ? 'not-allowed' : 'pointer') . '; ' . (!$currentUserId && !$enableAnonymousComment ? 'opacity: 0.5' : '') . '" ' . (!$currentUserId && !$enableAnonymousComment ? 'title="' . Text::_("COM_SPPAGEBUILDER_PLEASE_SIGN_IN_TO_COMMENT") . '"' : '') . '>';
 		if($postBtnIcon && $postBtnIconPosition === 'left')
 		{
 			$output .= '<i class="sppb-btn-icon ' . $postBtnIcon . '"></i>';
@@ -1019,7 +1020,6 @@ class SppagebuilderAddonComment extends SppagebuilderAddons
 					const form = event.target;
 					const formData = new FormData(form);
 					const commentContent = formData.get("comment");
-					const enableAnonymousComment = formData.get("enable-anonymous-comment") == "1";
 					const ajaxData = $(form).serializeArray();
 
 					const apiUrl = "'.Uri::root().'index.php?option=com_sppagebuilder&task=comment.comments";
@@ -1030,8 +1030,7 @@ class SppagebuilderAddonComment extends SppagebuilderAddons
 							content: commentContent,
 							item_id: ' . $itemId . ',
 							source_type: "'. $collectionType .'",
-							parent_id: null,
-							enable_anonymous_comment: enableAnonymousComment
+							parent_id: null
 						}
 					};
 
@@ -1147,9 +1146,6 @@ class SppagebuilderAddonComment extends SppagebuilderAddons
 					return;
 				}
 
-				// Get the anonymous comment setting from the main form
-				const enableAnonymousComment = $self.closest(".sppb-addon-comment").find("form.sppb-comment-form").find("input[name=\'enable-anonymous-comment\']")?.[0]?.value == "1";
-
 				const apiUrl = "'.Uri::root().'index.php?option=com_sppagebuilder&task=comment.comments";
 
 				const requestData = {
@@ -1158,8 +1154,7 @@ class SppagebuilderAddonComment extends SppagebuilderAddons
 						content: replyContent,
 						item_id: ' . $itemId . ',
 						parent_id: commentId,
-						source_type: "'. $collectionType .'",
-						enable_anonymous_comment: enableAnonymousComment
+						source_type: "'. $collectionType .'"
 					}
 				};
 

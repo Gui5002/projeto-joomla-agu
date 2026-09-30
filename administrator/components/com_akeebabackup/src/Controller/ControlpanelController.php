@@ -209,6 +209,9 @@ class ControlpanelController extends BaseController
 	 */
 	public function checkOutputDirectory($cachable = false, $urlparams = [])
 	{
+		// Anti-CSRF protection. The token is sent by akeebabackup.System.doAjax() in the POST body.
+		$this->checkToken();
+
 		/** @var ControlpanelModel $model */
 		$model  = $this->getModel('Controlpanel', 'Administrator');
 		$outDir = $model->getOutputDirectory();
@@ -292,6 +295,9 @@ class ControlpanelController extends BaseController
 	 */
 	public function dismissUpsell($cachable = false, $urlparams = [])
 	{
+		// Anti-CSRF protection. The token is appended to the upsell dismissal link.
+		$this->checkToken('get');
+
 		$reset = $this->input->getBool('reset', false);
 
 		$params = ComponentHelper::getParams('com_akeebabackup');

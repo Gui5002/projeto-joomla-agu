@@ -11,9 +11,10 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.model');
 jimport('joomla.html.html');
-use Joomla\CMS\Factory;
 
 class JSSupportticketModelattachments extends JSSupportTicketModel {
 
@@ -27,67 +28,24 @@ class JSSupportticketModelattachments extends JSSupportTicketModel {
         $db = Factory::getDbo();
         $query = "SELECT filename,filesize,id
                     FROM `#__js_ticket_attachments`
-                    WHERE ticketid = " . $id . " AND (replyattachmentid = 0 OR replyattachmentid IS NULL)";
+                    WHERE ticketid = " . $id . " and replyattachmentid = 0";
         $db->setQuery($query);
         $result = $db->loadObjectList();
         return $result;
     }
 
-
-    function storeTicketAttachment($ticketid,$replyattachmentid = ''){
-        $config = $this->getJSModel('config')->getConfigByFor('default');
-        $filesize = $config['filesize'];
-        $total = getJSTicketPHPFunctionsClass()->jsticket_count($_FILES['filename']['name']);
-        for ($i = 0; $i < $total; $i++) {
-            if ($_FILES['filename']['name'][$i] != '') {
-                if ($_FILES['filename']['size'][$i] > 0) {
-                    $uploadfilesize = $_FILES['filename']['size'][$i];
-                    $uploadfilesize = $uploadfilesize / 1024; //kb
-                    if ($uploadfilesize > $filesize) {
-                        return FILE_SIZE_ERROR;
-                    }
-                    $file_name = getJSTicketPHPFunctionsClass()->jsticket_str_replace(' ', '_', $_FILES['filename']['name'][$i]);
-                    $result = $this->checkExtension($file_name);
-                    if ($result == 'N') {
-                        return FILE_EXTENTION_ERROR;
-                    }
-                    $res = $this->uploadAttchments($i, $ticketid, 1, 0, 'ticket');
-                    if ($res) {
-                        $result = $this->storeAttachment($ticketid, $uploadfilesize, $file_name,$replyattachmentid);
-                    }else{ 
-                        return FILE_RW_ERROR;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    function storeAttachment($ticketid, $filesize, $filename, $replyattachmentid = 0) {
-        if (!is_numeric($ticketid))
+    function getAttachmentForReply($id, $replyattachmentid) {
+        if (!is_numeric($id))
             return false;
-        $row = $this->getTable('attachments');
-        $data['ticketid'] = $ticketid;
-        $data['replyattachmentid'] = $replyattachmentid; // this should set to zero when new ticket created
-        $data['filename'] = $filename;
-        $data['filesize'] = $filesize;
-        $data['created'] = $curdate = date('Y-m-d H:i:s');
-
-        $data = getJSTicketPHPFunctionsClass()->jsticket_sanitizeData($data);// Sanitize entire array to string
-        if (!$row->bind($data)) {
-            $this->setError($row->getError());
+        if (!is_numeric($replyattachmentid))
             return false;
-        }
-        if (!$row->check()) {
-            $this->setError($row->getError());
-            return false;
-        }
-        if (!$row->store()) {
-            $this->getJSModel('systemerrors')->updateSystemErrors($row->getError());
-            $this->setError($row->getError());
-            return false;
-        }
-        return true;
+        $db = Factory::getDbo();
+        $query = "SELECT filename,filesize,id AS attachmentid,id 
+                    FROM `#__js_ticket_attachments`
+                    WHERE ticketid = " . $id . " AND replyattachmentid = " . $replyattachmentid;
+        $db->setQuery($query);
+        $result = $db->loadObjectList();
+        return $result;
     }
     
     function uploadAttchments($i, $id, $action, $isdeletefile, $filefor){
@@ -115,10 +73,14 @@ class JSSupportticketModelattachments extends JSSupportTicketModel {
             if($_FILES['filename']['size'][$i] > 0){
                 $file_name = getJSTicketPHPFunctionsClass()->jsticket_str_replace(' ', '_', $_FILES['filename']['name'][$i]);
                 $file_tmp = $_FILES['filename']['tmp_name'][$i]; // actual location
-                $db = Factory::getDbo();
-                $query = "SELECT attachmentdir FROM `#__js_ticket_tickets` WHERE id = ".$id;
-                $db->setQuery($query);
-                $foldername = $db->loadResult();
+                if($filefor == 'ticket'){
+                    $db = Factory::getDbo();
+                    $query = "SELECT attachmentdir FROM `#__js_ticket_tickets` WHERE id = ".$id;
+                    $db->setQuery($query);
+                    $foldername = $db->loadResult();
+                }else{
+                    $foldername = $filefor.'_'.$id;
+                }
                 $userpath = $path . '/'.$foldername;
                 if (!file_exists($userpath)) { // create user directory
                     $this->makeDir($userpath);

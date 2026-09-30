@@ -13,7 +13,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
+use JoomShaper\SPPageBuilder\DynamicContent\Constants\CollectionIds;
 use JoomShaper\SPPageBuilder\DynamicContent\Constants\FieldTypes;
+use JoomShaper\SPPageBuilder\DynamicContent\Models\Collection;
 use JoomShaper\SPPageBuilder\DynamicContent\Models\CollectionField;
 use JoomShaper\SPPageBuilder\DynamicContent\Services\CollectionsService;
 use JoomShaper\SPPageBuilder\DynamicContent\Supports\Arr;
@@ -138,6 +140,14 @@ class SppagebuilderModelForm extends SppagebuilderModelPage
 					$attribs = new stdClass;
 				}
 
+				// Legacy rows (created before language support, or inserted before the
+				// `language` column got a `'*'` default) can have an empty language value,
+				// which renders as a blank dropdown instead of "All". Normalize it here.
+				if (empty($data->language))
+				{
+					$data->language = '*';
+				}
+
 				$data->link = SppagebuilderHelperRoute::getPageRoute($data->id, $data->language);
 				$data->formLink = SppagebuilderHelperRoute::getFormRoute($data->id, $data->language);
 
@@ -163,6 +173,9 @@ class SppagebuilderModelForm extends SppagebuilderModelPage
 				$data->menutype = (isset($menu->menutype) && $menu->menutype) ? $menu->menutype : '';
 				$data->menuparent_id = (isset($menu->parent_id) && $menu->parent_id) ? $menu->parent_id : 0;
 				$data->menuordering = (isset($menu->id) && $menu->id) ? $menu->id : -2;
+
+				// Readable route-style page type (e.g. "/articles" or "/articles/:slug") for dynamic content pages.
+				$data->page_type = $this->getPageTypeLabel($data->extension_view ?? '', $data->view_id ?? 0);
 
 				$this->_item[$pageId] = $data;
 			}
@@ -266,7 +279,7 @@ class SppagebuilderModelForm extends SppagebuilderModelPage
 		$query = $db->getQuery(true);
 		$query->select(array('a.*'));
 		$query->from('#__menu as a');
-		$query->where('a.id = ' . $menuId);
+		$query->where('a.id = ' . (int) $menuId);
 		$query->where('a.client_id = 0');
 		$db->setQuery($query);
 
@@ -308,6 +321,167 @@ class SppagebuilderModelForm extends SppagebuilderModelPage
 		$db->insertObject('#__sppagebuilder', $page);
 
 		return $db->insertid();
+	}
+
+	/**
+	 * Get (or create) the EasyStore store page for a given type + language.
+	 * Store pages (storefront / single / collection) are multilingual: one row
+	 * per (extension_view, language). A missing language gets a fresh empty page.
+	 *
+	 * @param   string  $extensionView  storefront | single | collection
+	 * @param   string  $language       Language tag, or '*' for All.
+	 *
+	 * @return  int  The page id.
+	 */
+	public function getOrCreateStorePage($extensionView, $language)
+	{
+		$db = $this->getDbo();
+
+		// Legacy rows created before language support have language = '' (the column's schema
+		// default), not '*' - treat them as the same "All" row everywhere below, so a lookup
+		// for '*' still finds them instead of creating a second, blank '*' row alongside them.
+		$languageCondition = ($language === '*')
+			? '(' . $db->quoteName('language') . ' = ' . $db->quote('*') . ' OR ' . $db->quoteName('language') . ' = ' . $db->quote('') . ')'
+			: $db->quoteName('language') . ' = ' . $db->quote($language);
+
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName('id'))
+			->from($db->quoteName('#__sppagebuilder'))
+			->where($db->quoteName('extension') . ' = ' . $db->quote('com_easystore'))
+			->where($db->quoteName('extension_view') . ' = ' . $db->quote($extensionView))
+			->where($languageCondition);
+		$db->setQuery($query);
+
+		$existingId = $db->loadResult();
+
+		if ($existingId)
+		{
+			return (int) $existingId;
+		}
+
+		$user = Factory::getUser();
+		$date = Factory::getDate();
+
+		// New language variants inherit the '*' (All) page's layout instead of
+		// starting blank, so translators begin from the existing design.
+		$initialContent = '[]';
+		$initialCss = '';
+
+		if ($language !== '*')
+		{
+			$sourceQuery = $db->getQuery(true);
+			$sourceQuery->select($db->quoteName(['content', 'text', 'css']))
+				->from($db->quoteName('#__sppagebuilder'))
+				->where($db->quoteName('extension') . ' = ' . $db->quote('com_easystore'))
+				->where($db->quoteName('extension_view') . ' = ' . $db->quote($extensionView))
+				->where('(' . $db->quoteName('language') . ' = ' . $db->quote('*') . ' OR ' . $db->quoteName('language') . ' = ' . $db->quote('') . ')');
+			$db->setQuery($sourceQuery);
+			$sourceRow = $db->loadObject();
+
+			if (!empty($sourceRow))
+			{
+				// `content` is authoritative; `text` is only ever set once, at creation, so it
+				// goes stale the moment the source page is edited - copy the '*' page's real,
+				// current state, not whatever `text` was at its own creation time.
+				$initialContent = !is_null($sourceRow->content) ? $sourceRow->content : (!empty($sourceRow->text) ? $sourceRow->text : '[]');
+				$initialCss = !empty($sourceRow->css) ? $sourceRow->css : '';
+			}
+		}
+
+		$page = new stdClass();
+		$page->title = ucwords(str_replace(['-', '_'], ' ', $extensionView));
+		$page->text = $initialContent;
+		$page->content = $initialContent;
+		$page->css = $initialCss;
+		$page->extension = 'com_easystore';
+		$page->extension_view = $extensionView;
+		$page->published = 1;
+		$page->created_by = (int) $user->id;
+		$page->created_on = $date->toSql();
+		$page->modified = $date->toSql();
+		$page->language = $language;
+		$page->access = 1;
+
+		$db->insertObject('#__sppagebuilder', $page);
+
+		return (int) $db->insertid();
+	}
+
+	public function getOrCreateDynamicContentPage($extensionView, $collectionId, $title, $language)
+	{
+		$db = $this->getDbo();
+
+		// Legacy rows created before language support have language = '' (the column's schema
+		// default), not '*' - treat them as the same "All" row everywhere below, so a lookup
+		// for '*' still finds them instead of creating a second, blank '*' row alongside them.
+		$languageCondition = ($language === '*')
+			? '(' . $db->quoteName('language') . ' = ' . $db->quote('*') . ' OR ' . $db->quoteName('language') . ' = ' . $db->quote('') . ')'
+			: $db->quoteName('language') . ' = ' . $db->quote($language);
+
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName('id'))
+			->from($db->quoteName('#__sppagebuilder'))
+			->where($db->quoteName('extension') . ' = ' . $db->quote('com_sppagebuilder'))
+			->where($db->quoteName('extension_view') . ' = ' . $db->quote($extensionView))
+			->where($db->quoteName('view_id') . ' = ' . (int) $collectionId)
+			->where($languageCondition);
+		$db->setQuery($query);
+
+		$existingId = $db->loadResult();
+
+		if ($existingId)
+		{
+			return (int) $existingId;
+		}
+
+		$user = Factory::getUser();
+		$date = Factory::getDate();
+
+		// New language variants inherit the '*' (All) page's layout instead of
+		// starting blank, so translators begin from the existing design.
+		$initialContent = '[]';
+		$initialCss = '';
+
+		if ($language !== '*')
+		{
+			$sourceQuery = $db->getQuery(true);
+			$sourceQuery->select($db->quoteName(['content', 'text', 'css']))
+				->from($db->quoteName('#__sppagebuilder'))
+				->where($db->quoteName('extension') . ' = ' . $db->quote('com_sppagebuilder'))
+				->where($db->quoteName('extension_view') . ' = ' . $db->quote($extensionView))
+				->where($db->quoteName('view_id') . ' = ' . (int) $collectionId)
+				->where('(' . $db->quoteName('language') . ' = ' . $db->quote('*') . ' OR ' . $db->quoteName('language') . ' = ' . $db->quote('') . ')');
+			$db->setQuery($sourceQuery);
+			$sourceRow = $db->loadObject();
+
+			if (!empty($sourceRow))
+			{
+				// `content` is authoritative; `text` is only ever set once, at creation, so it
+				// goes stale the moment the source page is edited - copy the '*' page's real,
+				// current state, not whatever `text` was at its own creation time.
+				$initialContent = !is_null($sourceRow->content) ? $sourceRow->content : (!empty($sourceRow->text) ? $sourceRow->text : '[]');
+				$initialCss = !empty($sourceRow->css) ? $sourceRow->css : '';
+			}
+		}
+
+		$page = new stdClass();
+		$page->title = !empty($title) ? $title : ucwords(str_replace(['-', '_', ':'], ' ', $extensionView));
+		$page->text = $initialContent;
+		$page->content = $initialContent;
+		$page->css = $initialCss;
+		$page->extension = 'com_sppagebuilder';
+		$page->extension_view = $extensionView;
+		$page->view_id = (int) $collectionId;
+		$page->published = 1;
+		$page->created_by = (int) $user->id;
+		$page->created_on = $date->toSql();
+		$page->modified = $date->toSql();
+		$page->language = $language;
+		$page->access = 1;
+
+		$db->insertObject('#__sppagebuilder', $page);
+
+		return (int) $db->insertid();
 	}
 
 	public function deletePage($id = 0)
@@ -688,7 +862,7 @@ class SppagebuilderModelForm extends SppagebuilderModelPage
 	
 			$query->select('*')
 				->from($db->quoteName('#__sppagebuilder'))
-				->where($db->quoteName('id') . ' = ' . $id);
+				->where($db->quoteName('id') . ' = ' . (int)$id);
 	
 			$db->setQuery($query);
 
@@ -706,6 +880,9 @@ class SppagebuilderModelForm extends SppagebuilderModelPage
 				} else if ($result->extension_view === 'dynamic_content:detail' && !empty($result->view_id && $result->view_id == -2)) {
 					$result->dynamic_fields = $this->getArticleFields();
 				}
+
+				// Readable route-style page type (e.g. "/articles" or "/articles/:slug"), same as the page list.
+				$result->page_type = $this->getPageTypeLabel($result->extension_view, $result->view_id ?? 0);
 			}
 			
 			$result->status = true;
@@ -719,6 +896,50 @@ class SppagebuilderModelForm extends SppagebuilderModelPage
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Get the readable route-style page type for dynamic content pages.
+	 * e.g. "/articles" or "/articles/:slug". Returns '' for non-dynamic pages.
+	 *
+	 * @param string   $extensionView
+	 * @param int|null $viewId
+	 *
+	 * @return string
+	 * @since 6.6.1
+	 */
+	private function getPageTypeLabel($extensionView, $viewId = null)
+	{
+		if ($extensionView !== 'dynamic_content:index' && $extensionView !== 'dynamic_content:detail')
+		{
+			return '';
+		}
+
+		$alias = null;
+
+		if ((int) $viewId === (int) CollectionIds::ARTICLES_COLLECTION_ID)
+		{
+			$alias = 'articles';
+		}
+		elseif ((int) $viewId === (int) CollectionIds::TAGS_COLLECTION_ID)
+		{
+			$alias = 'tags';
+		}
+		else
+		{
+			$collection = Collection::find((int) $viewId);
+			if ($collection && !$collection->isEmpty())
+			{
+				$alias = $collection->alias;
+			}
+		}
+
+		if (empty($alias))
+		{
+			return '';
+		}
+
+		return $extensionView === 'dynamic_content:index' ? '/' . $alias : '/' . $alias . '/:slug';
 	}
 
 	private function getCollectionFields($collectionId)
@@ -781,7 +1002,7 @@ class SppagebuilderModelForm extends SppagebuilderModelPage
 
 		$query->select('created_by')
 			->from($db->quoteName('#__sppagebuilder'))
-			->where($db->quoteName('id') . ' = ' . $pageId);
+			->where($db->quoteName('id') . ' = ' . (int)$pageId);
 
 		$db->setQuery($query);
 

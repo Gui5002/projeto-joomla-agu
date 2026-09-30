@@ -65,6 +65,7 @@ class FileSystem
 	public function TranslateWinPath($p_path)
 	{
 		$is_unc = false;
+		$p_path = (string) $p_path;
 
 		if ($this->isWindows)
 		{
@@ -79,11 +80,8 @@ class FileSystem
 		}
 
 		// Remove multiple slashes
-		if (!is_null($p_path))
-		{
-			$p_path = str_replace('///', '/', $p_path);
-			$p_path = str_replace('//', '/', $p_path);
-		}
+		$p_path = str_replace('///', '/', $p_path);
+		$p_path = str_replace('//', '/', $p_path);
 
 		// Fix UNC paths
 		if ($is_unc)
@@ -103,6 +101,7 @@ class FileSystem
 	 */
 	public function TrimTrailingSlash($path)
 	{
+		$path    = (string) $path;
 		$newpath = $path;
 
 		if (substr($path, strlen($path) - 1, 1) == '\\')
@@ -221,11 +220,11 @@ class FileSystem
 			self::$stockDirs = Platform::getInstance()->get_stock_directories();
 		}
 
-		$temp = $folder;
+		$temp = (string) $folder;
 
 		foreach (self::$stockDirs as $find => $replace)
 		{
-			$temp = str_replace($find, $replace, $temp);
+			$temp = str_replace($find, (string) $replace, $temp);
 		}
 
 		if ($translate_win_dirs)

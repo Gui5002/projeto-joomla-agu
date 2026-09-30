@@ -19,7 +19,7 @@ use Joomla\CMS\Language\Text;
 	if ($config['cur_location'] == 1) {
 		switch($layoutName){
 			case 'controlpanel':
-				$pathway->addItem(Text::_('Control panel'), $commonpath.'&c=jssupportticket&layout=controlpanel');
+				$pathway->addItem(Text::_('Control Panel'), $commonpath.'&c=jssupportticket&layout=controlpanel');
 			break;
 		}
 	}	

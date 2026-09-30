@@ -58,7 +58,7 @@ class SppagebuilderTableComment extends Table
 	public function publish($pks = null, $published = 1, $userId = 0)
 	{
 		$k = $this->_tbl_key;
-		ArrayHelper::toInteger($pks);
+		$pks = ArrayHelper::toInteger((array) $pks);
 		$published = (int) $published;
 
 		if (empty($pks))
@@ -77,7 +77,7 @@ class SppagebuilderTableComment extends Table
 		$where = $k . '=' . implode(' OR '. $k . ' = ', $pks);
 		$query = $this->_db->getQuery(true)
 			->update($this->_db->quoteName($this->_tbl))
-			->set($this->_db->quoteName('published') . ' = '. $published)
+			->set($this->_db->quoteName('published') . ' = '. $this->_db->quote($published))
 			->where($where);
 
 		$this->_db->setQuery($query);

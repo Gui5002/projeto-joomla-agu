@@ -85,7 +85,7 @@ class ProfilesController extends AdminController
 		// Get some data from the request
 		$file = $this->input->files->get('importfile', [], 'array');
 
-		if (!isset($file['name']))
+		if (!isset($file['name']) || empty($file['name']) || ($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK)
 		{
 			$this->setRedirect(Uri::base() . 'index.php?option=com_akeebabackup&view=Profiles', Text::_('MSG_UPLOAD_INVALID_REQUEST'), 'error');
 
@@ -100,8 +100,9 @@ class ProfilesController extends AdminController
 		$data = json_decode($data, true);
 
 		// Import
-		$message     = Text::_('COM_AKEEBABACKUP_PROFILES_MSG_IMPORT_COMPLETE');
-		$messageType = null;
+		$message      = Text::_('COM_AKEEBABACKUP_PROFILES_MSG_IMPORT_COMPLETE');
+		$messageType  = null;
+		$newProfileId = null;
 
 		try
 		{

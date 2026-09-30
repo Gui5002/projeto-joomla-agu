@@ -271,9 +271,11 @@ class StatisticModel extends AdminModel
 			return;
 		}
 
+		$baseName     = 'akeeba.' . $stat['tag'] . '.' . $stat['backupid'];
 		$logFileNames = [
-			'akeeba.' . $stat['tag'] . '.' . $stat['backupid'] . '.log',
-			'akeeba.' . $stat['tag'] . '.' . $stat['backupid'] . '.log.php',
+			$baseName . '.log',
+			$baseName . '.log.php',
+			$baseName . '.php',
 		];
 
 		foreach ($logFileNames as $logFileName)

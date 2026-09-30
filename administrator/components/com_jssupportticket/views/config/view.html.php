@@ -12,13 +12,11 @@
 
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
-
-jimport('joomla.application.component.view');
-jimport('joomla.html.pagination');
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Text;
 
-
+jimport('joomla.application.component.view');
+jimport('joomla.html.pagination');
 // Options button.
 if (Factory::getUser()->authorise('core.admin', 'com_jssupportticket')) {
     ToolbarHelper::preferences('com_jssupportticket');
@@ -38,7 +36,13 @@ class JSSupportticketViewConfig extends JSSupportTicketView
 
             $this->configuration = $result[0];
             $this->lists = $result[1];
-        }
+        }elseif ($layoutName == 'themes') {    //Themes
+            ToolbarHelper::title(Text::_('Themes'));
+            ToolbarHelper::cancel();
+		}elseif($layoutName == 'ticketviaemail'){
+			$result = $this->getJSModel('config')->getConfiguration();
+			$this->result = $result;
+		}
 
 		parent::display($tpl);
 	}

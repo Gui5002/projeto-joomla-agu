@@ -22,13 +22,21 @@ $document = Factory::getDocument();
 $document->addStyleSheet('components/com_jssupportticket/include/css/circle.css');
 $document->addScript('components/com_jssupportticket/include/js/circle.js');
 ?>
-<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"></script>
+<?php
+/*
+ * Google Charts loader - see the matching note in overallreport.php. The
+ * legacy www.google.com/jsapi loader has been retired, taking
+ * google.setOnLoadCallback() with it; the current entry point is
+ * gstatic.com/charts/loader.js.
+ */
+?>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
     });
 
     google.charts.load('current', {packages: ['corechart']});
-    google.setOnLoadCallback(drawBarChart);
+    google.charts.setOnLoadCallback(drawBarChart);
     function drawBarChart() {
         var data = google.visualization.arrayToDataTable([
          ['<?php echo Text::_('Status'); ?>', '<?php echo Text::_('Tickets By Status'); ?>', { role: 'style' }],
@@ -52,7 +60,7 @@ $document->addScript('components/com_jssupportticket/include/js/circle.js');
       chart.draw(view, options);        
     }
 
-    google.setOnLoadCallback(drawPie3d1Chart);
+    google.charts.setOnLoadCallback(drawPie3d1Chart);
     function drawPie3d1Chart() {
         var data = google.visualization.arrayToDataTable([
           ['<?php echo Text::_('Departments'); ?>', '<?php echo Text::_('Tickets by Departments'); ?>'],
@@ -69,7 +77,7 @@ $document->addScript('components/com_jssupportticket/include/js/circle.js');
         chart.draw(data, options);
     }   
     
-    google.setOnLoadCallback(drawPie3d2Chart);
+    google.charts.setOnLoadCallback(drawPie3d2Chart);
     function drawPie3d2Chart() {
         var data = google.visualization.arrayToDataTable([
           ['<?php echo Text::_('Priorities'); ?>', '<?php echo Text::_('Tickets by Priority'); ?>'],
@@ -86,8 +94,20 @@ $document->addScript('components/com_jssupportticket/include/js/circle.js');
         var chart = new google.visualization.PieChart(document.getElementById('pie3d_chart2'));
         chart.draw(data, options);
     }   
-    google.setOnLoadCallback(drawStackChartHorizontal);
+    google.charts.setOnLoadCallback(drawStackChartHorizontal);
     function drawStackChartHorizontal() {
+      var horizontalEl = document.getElementById('stack_chart_horizontal');
+      var hasPriorityStatusData = <?php echo !empty($this->result['has_priority_status_data']) ? 'true' : 'false'; ?>;
+      if (!hasPriorityStatusData) {
+        if (horizontalEl) {
+          if (horizontalEl.className.indexOf('jsst-report-empty-chart') === -1) {
+            horizontalEl.className = (horizontalEl.className ? horizontalEl.className + ' ' : '') + 'jsst-report-empty-chart';
+          }
+          horizontalEl.innerHTML = '<div class="jsst-report-empty-state"><strong><?php echo addslashes(Text::_('No priority status data available')); ?></strong><span><?php echo addslashes(Text::_('There is no priority status data for the selected report range.')); ?></span></div>';
+        }
+        return;
+      }
+
       var data = google.visualization.arrayToDataTable([
         <?php
             echo $this->result['stack_chart_horizontal']['title'].',';
@@ -107,42 +127,19 @@ $document->addScript('components/com_jssupportticket/include/js/circle.js');
       chart.draw(view, options);
     }
 </script>
-<div id="js-tk-admin-wrapper">
+<div id="js-tk-admin-wrapper" class="jsst-screen-report-v73">
     <div id="js-tk-leftmenu">
         <?php include_once('components/com_jssupportticket/views/menu.php'); ?>
     </div>
     <div id="js-tk-cparea">
-      <div id="jsstadmin-wrapper-top">
-            <div id="jsstadmin-wrapper-top-left">
-                <div id="jsstadmin-breadcrunbs">
-                    <ul>
-                        <li><a href="index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel" title="Dashboard"><?php echo Text::_('Dashboard'); ?></a></li>
-                        <li><?php echo Text::_('Overall Statistics'); ?></li>
-                    </ul>
-                </div>
-            </div>
-            <div id="jsstadmin-wrapper-top-right">
-                <div id="jsstadmin-config-btn">
-                    <a title="Configuration" href="index.php?option=com_jssupportticket&c=config&layout=config">
-                        <img alt="Configuration" src="components/com_jssupportticket/include/images/config.png">
-                    </a>
-                </div>
-                <div id="jsstadmin-vers-txt">
-                    <?php echo Text::_('Version').Text::_(' : '); ?>
-                    <span class="jsstadmin-ver"><?php
-                        $this->version = $this->getJSModel('config')->getConfigByFor('version'); $version = str_split($this->version['version']);
-                        $version = implode('.', $version);
-                        echo $version;?></span>
-                </div>
-            </div>
-        </div>
-        <div id="js-tk-heading">
-            <h1 class="jsstadmin-head-text"><?php echo Text::_('Overall Statistics'); ?></h1>
-            <?php $link = 'index.php?option='.$this->option.'&c=reports&task=reports'; ?>
-            <?php 
-            $link_exp = 'index.php?option='.$this->option.'&c=export&task=getoverallexport';
-            ?>
-        </div>
+      <?php
+$jsstPageTitle = 'Overall Statistics';
+$jsstBreadcrumb = array(
+    array('label' => 'Dashboard', 'link' => 'index.php?option=com_jssupportticket&c=jssupportticket&layout=controlpanel'),
+    array('label_raw' => Text::_('Overall Statistics'), 'link' => null),
+);
+include_once('components/com_jssupportticket/views/partials/pageheader.php');
+?>
         <?php 
         $open_percentage = 0;
         $close_percentage = 0;
@@ -224,7 +221,7 @@ $document->addScript('components/com_jssupportticket/include/js/circle.js');
                 </div>
             </div>
             <div class="js-admin-report">
-                <span class="js-admin-subtitle"><?php echo Text::_('Tickets By Status And Priorities'); ?></span>
+                <span class="js-admin-subtitle"><?php echo Text::_('Tickets By Status'); ?></span>
                 <div id="bar_chart" style="height:500px;width:100%; "></div>
             </div>
             <div class="js-admin-report halfwidth">
@@ -236,13 +233,17 @@ $document->addScript('components/com_jssupportticket/include/js/circle.js');
                 <div id="pie3d_chart2" style="height:400px;width:100%;"></div>
             </div>
             <div class="js-admin-report">
-                <span class="js-admin-subtitle"><?php echo Text::_('Tickets By Status And Priorities'); ?></span>
-                <div id="stack_chart_horizontal" style="height:400px;width:100%;"></div>
+                <span class="js-admin-subtitle"><?php echo Text::_('Tickets By Priority And Status'); ?></span>
+                <div id="stack_chart_horizontal" class="<?php echo empty($this->result['has_priority_status_data']) ? 'jsst-report-empty-chart' : ''; ?>" style="height:400px;width:100%;">
+                    <?php if(empty($this->result['has_priority_status_data'])){ ?>
+                        <div class="jsst-report-empty-state">
+                            <strong><?php echo Text::_('No priority status data available'); ?></strong>
+                            <span><?php echo Text::_('There is no priority status data for the selected report range.'); ?></span>
+                        </div>
+                    <?php } ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<div id="js-tk-copyright">
-    <img width="85" src="https://www.joomsky.com/logo/jssupportticket_logo_small.png">&nbsp;Powered by <a target="_blank" href="https://www.joomsky.com">Joom Sky</a><br/>
-    &copy;Copyright 2008 - <?php echo date('Y'); ?>, <a target="_blank" href="https://www.burujsolutions.com">Buruj Solutions</a>
-</div>
+<?php include_once('components/com_jssupportticket/views/partials/pagefooter.php'); ?>

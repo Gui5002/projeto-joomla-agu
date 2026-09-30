@@ -878,8 +878,10 @@ class ControlpanelModel extends BaseDatabaseModel
 			$config = Factory::getSecureSettings()->decryptSettings($profile->configuration, $key);
 			$sql    = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 				->update($db->qn('#__akeebabackup_profiles'))
-				->set($db->qn('configuration') . ' = ' . $db->q($config))
-				->where($db->qn('id') . ' = ' . $db->q($id));
+				->set($db->qn('configuration') . ' = :configuration')
+				->where($db->qn('id') . ' = :id')
+				->bind(':configuration', $config, ParameterType::STRING)
+				->bind(':id', $id, ParameterType::INTEGER);
 			$db->setQuery($sql);
 			$db->execute();
 		}
@@ -931,8 +933,10 @@ class ControlpanelModel extends BaseDatabaseModel
 			$config = Factory::getSecureSettings()->encryptSettings($profile->configuration, $key);
 			$sql    = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 				->update($db->qn('#__akeebabackup_profiles'))
-				->set($db->qn('configuration') . ' = ' . $db->q($config))
-				->where($db->qn('id') . ' = ' . $db->q($id));
+				->set($db->qn('configuration') . ' = :configuration')
+				->where($db->qn('id') . ' = :id')
+				->bind(':configuration', $config, ParameterType::STRING)
+				->bind(':id', $id, ParameterType::INTEGER);
 			$db->setQuery($sql);
 			$db->execute();
 		}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="6.0" group="system" method="upgrade">
+    <name>PLG_SYSTEM_JSSUPPORTTICKETICON</name>
+    <author>Joom Sky</author>
+    <creationDate>2026-07-03</creationDate>
+    <copyright>Copyright (C) 2015 - 2026 Joom Sky. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>ahmad@burujsolutions.com</authorEmail>
+    <authorUrl>https://www.burujsolutions.com</authorUrl>
+    <version>1.2.0</version>
+    <description>PLG_SYSTEM_JSSUPPORTTICKETICON_XML_DESCRIPTION</description>
+
+    <namespace path="src">JoomSky\Plugin\System\JSSupportTicketIcon</namespace>
+
+    <files>
+        <folder plugin="jssupportticketicon">services</folder>
+        <folder>src</folder>
+    </files>
+
+    <languages folder="language">
+        <language tag="en-GB">en-GB/plg_system_jssupportticketicon.ini</language>
+        <language tag="en-GB">en-GB/plg_system_jssupportticketicon.sys.ini</language>
+    </languages>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field
+                    name="position"
+                    type="list"
+                    default="1"
+                    label="PLG_SYSTEM_JSSUPPORTTICKETICON_FIELD_POSITION_LABEL"
+                    description="PLG_SYSTEM_JSSUPPORTTICKETICON_FIELD_POSITION_DESC"
+                    validate="options"
+                >
+                    <option value="1">PLG_SYSTEM_JSSUPPORTTICKETICON_POSITION_TOP_LEFT</option>
+                    <option value="2">PLG_SYSTEM_JSSUPPORTTICKETICON_POSITION_TOP_RIGHT</option>
+                    <option value="3">PLG_SYSTEM_JSSUPPORTTICKETICON_POSITION_MIDDLE_LEFT</option>
+                    <option value="4">PLG_SYSTEM_JSSUPPORTTICKETICON_POSITION_MIDDLE_RIGHT</option>
+                    <option value="5">PLG_SYSTEM_JSSUPPORTTICKETICON_POSITION_BOTTOM_LEFT</option>
+                    <option value="6">PLG_SYSTEM_JSSUPPORTTICKETICON_POSITION_BOTTOM_RIGHT</option>
+                </field>
+
+                <field
+                    name="label"
+                    type="text"
+                    default="Support"
+                    label="PLG_SYSTEM_JSSUPPORTTICKETICON_FIELD_LABEL_LABEL"
+                    description="PLG_SYSTEM_JSSUPPORTTICKETICON_FIELD_LABEL_DESC"
+                />
+
+                <field
+                    name="bgcolor"
+                    type="color"
+                    default="#2563EB"
+                    label="PLG_SYSTEM_JSSUPPORTTICKETICON_FIELD_BGCOLOR_LABEL"
+                    description="PLG_SYSTEM_JSSUPPORTTICKETICON_FIELD_BGCOLOR_DESC"
+                />
+            </fieldset>
+        </fields>
+    </config>
+</extension>

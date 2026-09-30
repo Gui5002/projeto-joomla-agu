@@ -11,15 +11,14 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Factory;
 
 jimport('joomla.application.component.controller');
-use Joomla\CMS\Factory;
 
 class JSSupportticketControllerUserFields extends JSSupportTicketController {
 
     function __construct() {
         parent::__construct();
-        $this->registerTask('add', 'edit');
     }
 
     function datafordepandantfield() {

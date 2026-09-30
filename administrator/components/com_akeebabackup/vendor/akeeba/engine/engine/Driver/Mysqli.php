@@ -257,6 +257,16 @@ class Mysqli extends Base
 			return 'NULL';
 		}
 
+		if (is_int($text))
+		{
+			return (string) $text;
+		}
+
+		if (is_float($text))
+		{
+			return $this->floatToSqlString($text);
+		}
+
 		$result = @mysqli_real_escape_string($this->getConnection(), $text);
 
 		if ($result === false)

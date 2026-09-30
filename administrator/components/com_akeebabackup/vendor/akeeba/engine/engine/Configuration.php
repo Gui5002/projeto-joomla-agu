@@ -161,11 +161,11 @@ class Configuration
 		// Post-process certain directory-containing variables
 		if ($process_special_vars && in_array($regpath, $this->directory_containing_keys))
 		{
-			if (!empty($stock_directories))
+			if (!empty($stock_directories) && !is_null($result))
 			{
 				foreach ($stock_directories as $tag => $content)
 				{
-					$result = str_replace($tag, $content, $result);
+					$result = str_replace($tag, (string) $content, $result);
 				}
 			}
 		}
@@ -254,9 +254,12 @@ class Configuration
 			{
 				$data = $value;
 
-				foreach ($stock_directories as $tag => $content)
+				if (!is_null($data))
 				{
-					$data = str_replace($tag, $content, $data);
+					foreach ($stock_directories as $tag => $content)
+					{
+						$data = str_replace($tag, (string) $content, $data);
+					}
 				}
 
 				$ns->{$nodes[$i]} = $data;

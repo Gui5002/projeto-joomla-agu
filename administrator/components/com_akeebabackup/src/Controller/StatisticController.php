@@ -9,6 +9,8 @@ namespace Akeeba\Component\AkeebaBackup\Administrator\Controller;
 
 defined('_JEXEC') || die;
 
+use Akeeba\Component\AkeebaBackup\Administrator\Mixin\ControllerCustomACLTrait;
+use Akeeba\Component\AkeebaBackup\Administrator\Mixin\ControllerEventsTrait;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Form\FormFactoryInterface;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -17,6 +19,9 @@ use Joomla\Input\Input;
 
 class StatisticController extends FormController
 {
+	use ControllerEventsTrait;
+	use ControllerCustomACLTrait;
+
 	protected $text_prefix = 'COM_AKEEBABACKUP_BUADMIN';
 
 	public function __construct($config = [], ?MVCFactoryInterface $factory = null, ?CMSApplication $app = null, ?Input $input = null, ?FormFactoryInterface $formFactory = null)

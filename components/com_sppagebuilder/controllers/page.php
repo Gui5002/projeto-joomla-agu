@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -160,8 +160,41 @@ class SppagebuilderControllerPage extends FormController
 		$id = $input->get('id', 0, 'INT');
 		$model = $this->getModel('Page');
 		$response = $model->checkOutPage($id);
-		
+
 		response()->json($response);
+	}
+
+	public function deletePageHits(){
+		$app = Factory::getApplication();
+
+		if (strtoupper($app->input->getMethod()) !== 'POST')
+		{
+			echo json_encode(['status' => false, 'message' => 'Method not allowed']);
+			die();
+		}
+
+		$input = $app->input;
+		$id = $input->get('id', 0, 'INT');
+
+		if (empty($id))
+		{
+			echo json_encode(['status' => false, 'message' => 'Invalid page id']);
+			die();
+		}
+
+		$model = $this->getModel('Page');
+
+		try
+		{
+			$result = (bool) $model->resetPageHits($id);
+		}
+		catch (Exception $e)
+		{
+			$result = false;
+		}
+
+		echo json_encode(['status' => $result]);
+		die();
 	}
 
 
@@ -191,7 +224,7 @@ class SppagebuilderControllerPage extends FormController
 		}
 		else
 		{
-			$authorised = $user->authorise('core.edit', 'com_sppagebuilder') || $user->authorise('core.edit', 'com_sppagebuilder.page.' . $recordId) || ($user->authorise('core.edit.own', 'com_sppagebuilder.page.' . $recordId) && $data['created_by'] == $user->id);
+			$authorised = $user->authorise('core.edit', 'com_sppagebuilder') || $user->authorise('core.edit', 'com_sppagebuilder.page.' . $recordId) || ($user->authorise('core.edit.own', 'com_sppagebuilder.page.' . $recordId) && $model->getPageCreatorId($recordId) == $user->id);
 		}
 
 		if ($authorised !== true)
@@ -493,6 +526,11 @@ class SppagebuilderControllerPage extends FormController
 		$link = 'index.php?option=com_sppagebuilder&view=page&id=' . (int) $pageId;
 		$component_id = ComponentHelper::getComponent('com_sppagebuilder')->id;
 
+		if (!SecurityHelper::canManageMenuItem($menuId, $menutype))
+		{
+			die(json_encode(['status' => false, 'error' => Text::_('JERROR_ALERTNOAUTHOR')]));
+		}
+
 		$menu = $formModel->getMenuById($menuId);
 		$home = (isset($menu->home) && $menu->home) ? $menu->home : 0;
 
@@ -600,6 +638,146 @@ class SppagebuilderControllerPage extends FormController
 		$output['message'] = Text::_('Page created successfully.');
 		$output['redirect'] = $redirect;
 		die(json_encode($output));
+	}
+
+	public function getOrCreateStorePage()
+	{
+		$input = Factory::getApplication()->input;
+		$type = $input->get('type', '', 'STRING');
+		$language = $input->get('langg', '*', 'STRING');
+
+		$user = Factory::getUser();
+
+		if (!in_array($type, ['single', 'storefront', 'collection'], true))
+		{
+			echo json_encode(['status' => false, 'message' => 'Invalid store page type']);
+			die();
+		}
+
+		if (!$user->authorise('core.edit', 'com_sppagebuilder') && !$user->authorise('core.create', 'com_sppagebuilder'))
+		{
+			echo json_encode(['status' => false, 'message' => Text::_('JERROR_ALERTNOAUTHOR')]);
+			die();
+		}
+
+		$model = $this->getModel('Form');
+		$id = $model->getOrCreateStorePage($type, $language);
+
+		// Derive the layout for the canvas: `content` is the real, current state of the page
+		// (regular saves only ever touch this column) - load it as-is, even if the page was
+		// deliberately cleared out to empty. `text` is only ever written once, at row
+		// creation, so it goes stale the moment the page is edited; it's a fallback purely
+		// for legacy rows where `content` was never populated at all (NULL), not a substitute
+		// for "content happens to be falsy" - `empty('[]')` is false, but an editor bug or an
+		// older row could still leave content as a genuine empty string, which must still be
+		// honoured rather than silently resurrecting whatever `text` last held.
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName(['content', 'text']))
+			->from($db->quoteName('#__sppagebuilder'))
+			->where($db->quoteName('id') . ' = ' . (int) $id);
+		$db->setQuery($query);
+		$row = $db->loadObject();
+
+		$rawContent = '[]';
+
+		if (!empty($row))
+		{
+			$rawContent = isset($row->content) ? $row->content : '[]';
+		}
+
+		$content = json_decode($rawContent);
+
+		if (!is_array($content))
+		{
+			$content = [];
+		}
+
+		$redirect = Uri::base() . 'index.php?option=com_sppagebuilder&view=form&layout=edit&tmpl=component&id=' . $id;
+
+		// The Preview button's link is otherwise only computed once, at initial page load -
+		// recompute it here so it targets this language's page after switching to it.
+		if (!class_exists('SppagebuilderModelEditor'))
+		{
+			require_once JPATH_ROOT . '/administrator/components/com_sppagebuilder/models/editor.php';
+		}
+
+		$previewModel = new SppagebuilderModelEditor();
+		$previewUrl = $previewModel->getPreviewUrl($id, $language)['url'] ?? '';
+
+		echo json_encode(['status' => true, 'id' => $id, 'content' => $content, 'redirect' => $redirect, 'preview_url' => $previewUrl]);
+		die();
+	}
+
+	public function getOrCreateDynamicContentPage()
+	{
+		$input = Factory::getApplication()->input;
+		$pageType = $input->get('page_type', '', 'STRING');
+		$collectionId = $input->getInt('collection_id', 0);
+		$title = $input->get('title', '', 'STRING');
+		$language = $input->get('langg', '*', 'STRING');
+
+		$user = Factory::getUser();
+
+		if (!in_array($pageType, ['dynamic_content:index', 'dynamic_content:detail'], true) || empty($collectionId))
+		{
+			echo json_encode(['status' => false, 'message' => 'Invalid dynamic content page type']);
+			die();
+		}
+
+		if (!$user->authorise('core.edit', 'com_sppagebuilder') && !$user->authorise('core.create', 'com_sppagebuilder'))
+		{
+			echo json_encode(['status' => false, 'message' => Text::_('JERROR_ALERTNOAUTHOR')]);
+			die();
+		}
+
+		$model = $this->getModel('Form');
+		$id = $model->getOrCreateDynamicContentPage($pageType, $collectionId, $title, $language);
+
+		// Derive the layout for the canvas: `content` is the real, current state of the page
+		// (regular saves only ever touch this column) - load it as-is, even if the page was
+		// deliberately cleared out to empty. `text` is only ever written once, at row
+		// creation, so it goes stale the moment the page is edited; it's a fallback purely
+		// for legacy rows where `content` was never populated at all (NULL), not a substitute
+		// for "content happens to be falsy" - `empty('[]')` is false, but an editor bug or an
+		// older row could still leave content as a genuine empty string, which must still be
+		// honoured rather than silently resurrecting whatever `text` last held.
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName(['content', 'text']))
+			->from($db->quoteName('#__sppagebuilder'))
+			->where($db->quoteName('id') . ' = ' . (int) $id);
+		$db->setQuery($query);
+		$row = $db->loadObject();
+
+		$rawContent = '[]';
+
+		if (!empty($row))
+		{
+			$rawContent = isset($row->content) ? $row->content : '[]';
+		}
+
+		$content = json_decode($rawContent);
+
+		if (!is_array($content))
+		{
+			$content = [];
+		}
+
+		$redirect = Uri::base() . 'index.php?option=com_sppagebuilder&view=form&layout=edit&tmpl=component&id=' . $id;
+
+		// The Preview button's link is otherwise only computed once, at initial page load -
+		// recompute it here so it targets this language's page after switching to it.
+		if (!class_exists('SppagebuilderModelEditor'))
+		{
+			require_once JPATH_ROOT . '/administrator/components/com_sppagebuilder/models/editor.php';
+		}
+
+		$previewModel = new SppagebuilderModelEditor();
+		$previewUrl = $previewModel->getPreviewUrl($id, $language)['url'] ?? '';
+
+		echo json_encode(['status' => true, 'id' => $id, 'content' => $content, 'redirect' => $redirect, 'preview_url' => $previewUrl]);
+		die();
 	}
 
 	public function deletePage()
@@ -1207,18 +1385,16 @@ class SppagebuilderControllerPage extends FormController
 		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
 
-		$pageTypes = array_map(
-			[$db, 'quote'],
-			[
-				Page::PAGE_TYPE_REGULAR,
-				Page::PAGE_TYPE_DYNAMIC_CONTENT_INDEX,
-				Page::PAGE_TYPE_DYNAMIC_CONTENT_DETAIL
-			]
-		);
+		$condRegular = $db->quoteName('extension_view') . ' = ' . $db->quote(Page::PAGE_TYPE_REGULAR);
+
+		$condDynamic = $db->quoteName('extension_view') . ' IN (' . 
+               $db->quote(Page::PAGE_TYPE_DYNAMIC_CONTENT_INDEX) . ',' . 
+               $db->quote(Page::PAGE_TYPE_DYNAMIC_CONTENT_DETAIL) . ')' . 
+               ' AND ' . $db->quoteName('language') . ' = ' . $db->quote('*');
 
 		$query->select(['id', 'title', 'extension_view', 'view_id'])
 			->from($db->quoteName('#__sppagebuilder'))
-			->where($db->quoteName('extension_view') . 'IN (' . implode(',', $pageTypes) . ')')
+			->where('(' . $condRegular . ' OR ' . $condDynamic . ')')
 			->where($db->quoteName('published') . ' = 1')
 			->order($db->quoteName('title') . ' ASC');
 

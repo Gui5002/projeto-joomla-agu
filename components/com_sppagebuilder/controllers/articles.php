@@ -2,7 +2,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 
@@ -25,6 +25,12 @@ class SppagebuilderControllerArticles extends FormController
 	 */
 	public function loadMoreArticles()
 	{
+		if (!\Joomla\CMS\Session\Session::checkToken())
+		{
+			$this->sendResponse(['error' => 'Invalid token'], 403);
+			return;
+		}
+
 		$app = Factory::getApplication();
 		$input = $app->input;
 
@@ -70,7 +76,8 @@ class SppagebuilderControllerArticles extends FormController
 			$this->sendResponse(['data' => $html, 'success' => true]);
 
 		} catch (Exception $e) {
-			$this->sendResponse(['error' => $e->getMessage()], 500);
+			\Joomla\CMS\Log\Log::add($e->getMessage(), \Joomla\CMS\Log\Log::ERROR, 'com_sppagebuilder');
+			$this->sendResponse(['error' => 'Unable to load articles'], 500);
 		}
 	}
 
@@ -97,6 +104,8 @@ class SppagebuilderControllerArticles extends FormController
 		$columns = !empty($settings['columns_original']['xs']) ? $settings['columns_original']['xs'] : 1;
 		
 		$article_heading_selector = $settings['article_heading_selector'] ?? 'h3';
+		// Used below as a raw HTML tag name — restrict to known heading tags.
+		$article_heading_selector = in_array($article_heading_selector, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p'], true) ? $article_heading_selector : 'h3';
 		$show_intro = (int) ($settings['show_intro'] ?? 1);
 		$intro_limit = (int) ($settings['intro_limit'] ?? 200);
 		$hide_thumbnail = (int) ($settings['hide_thumbnail'] ?? 0);

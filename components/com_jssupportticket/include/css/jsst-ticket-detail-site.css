@@ -1,0 +1,2969 @@
+/* =========================================================
+   JS Support Ticket - Site Ticket Detail Polish v266
+   Scope: frontend ticket detail / staff ticket detail only
+   Rules: CSS-only. ACL/PHP/if-else logic is not changed.
+   ========================================================= */
+
+#jsst-site .jsst-ticket-detail-page{
+  --td-card:#ffffff;
+  --td-bg:#f8fafc;
+  --td-line:#e6edf5;
+  --td-line-strong:#d8e2ee;
+  --td-text:#101828;
+  --td-muted:#64748b;
+  --td-soft:#f6f9fd;
+  --td-blue:#2563eb;
+  --td-blue-2:#4f66f5;
+  --td-green:#16a34a;
+  --td-dark:#0f172a;
+  --td-orange:#fff4e8;
+  --td-radius:18px;
+  --td-shadow:0 20px 50px rgba(15,23,42,.07);
+  --td-shadow-soft:0 10px 26px rgba(15,23,42,.055);
+  color:var(--td-text);
+}
+
+/* Page shell
+   Important: keep the legacy float behavior on the ticket detail wrappers/form.
+   Forcing float:none here can leave a transparent content layer over the frontend
+   menu and make Dashboard/My Tickets links unclickable after modal/detail actions. */
+#jsst-site .jsst-ticket-detail-page #tk-detail-wraper,
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper,
+#jsst-site .jsst-ticket-detail-page .js-ticket-detail-wrapper{
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  overflow:visible;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+
+/* Header/link safety. The form stays below the navigation and never becomes a
+   high z-index overlay. */
+#jsst-site .jsst-ticket-detail-page form#adminForm{
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  overflow:visible;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  position:relative;
+  z-index:0;
+}
+
+#jsst-site .jsst-ticket-detail-page #tk-detail-wraper{
+  clear:both;
+  position:relative;
+  z-index:0;
+}
+
+#jsst-site .jsst-ticket-detail-page #jsst-header-main-wrapper,
+#jsst-site .jsst-ticket-detail-page #jsst-header{
+  clear:both;
+  display:block;
+  width:100%;
+  max-width:100%;
+  position:relative;
+/*  z-index:30;*/
+  pointer-events:auto;
+}
+
+#jsst-site .jsst-ticket-detail-page #jsst-tabs-wrp{
+  float:none;
+  position:relative;
+/*  z-index:31;*/
+  pointer-events:auto;
+}
+
+#jsst-site .jsst-ticket-detail-page .jsst-header-tab,
+#jsst-site .jsst-ticket-detail-page .js-cp-menu-link,
+#jsst-site .jsst-ticket-detail-page #jsst-wrapper-top-left,
+#jsst-site .jsst-ticket-detail-page #jsst-breadcrunbs{
+  position:relative;
+/*  z-index:32;*/
+  pointer-events:auto;
+}
+
+#jsst-site .jsst-ticket-detail-page #jsst-wrapper-top-left,
+#jsst-site .jsst-ticket-detail-page #jsst-breadcrunbs{
+  clear:both;
+}
+
+#jsst-site .jsst-ticket-detail-page *,
+#jsst-site .jsst-ticket-detail-page *::before,
+#jsst-site .jsst-ticket-detail-page *::after{box-sizing:border-box;}
+
+/* Top ticket detail layout. Only the first/top detail box becomes two-column. */
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{
+  float:none;
+  display:grid;
+  grid-template-columns:minmax(540px,1fr) 300px;
+  gap:20px;
+  align-items:start;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  margin:0 0 26px;
+  padding:18px;
+  background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%);
+  border:1px solid var(--td-line);
+  border-radius:20px;
+  box-shadow:var(--td-shadow);
+  overflow:visible;
+}
+
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-left,
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+  float:none;
+  width:auto;
+  min-width:0;
+  max-width:100%;
+  margin:0;
+  padding:0;
+}
+
+/* Main ticket summary card */
+#jsst-site .jsst-ticket-detail-page .js-tkt-det-info-wrp{
+  float:none;
+  width:100%;
+  margin:0 0 5px;
+  padding:0;
+  overflow:hidden;
+  background:var(--td-card);
+  box-shadow:unset !important;
+  border: 1px solid var(--td-line);
+  border-radius: 15px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-det-user{
+  float:none;
+  display:grid;
+  grid-template-columns:58px minmax(0,1fr);
+  gap:14px;
+  align-items:start;
+  width:100%;
+  margin:0;
+  padding:18px 20px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-img-wrp,
+#jsst-site .jsst-ticket-detail-page .js-tkt-det-user-image{
+  float:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:58px;
+  height:58px;
+  min-width:58px;
+  margin:0;
+  padding:0;
+  border-radius:999px;
+  background:#fff7ed;
+  overflow:hidden;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-img-wrp img,
+#jsst-site .jsst-ticket-detail-page .js-ticket-staff-img,
+#jsst-site .jsst-ticket-detail-page .js-tkt-det-user-image img{
+  float:none;
+  position:static;
+  display:block;
+  width:48px;
+  height:48px;
+  max-width:48px;
+  max-height:48px;
+  margin:0;
+  border-radius:999px;
+  object-fit:cover;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-det-user-cnt,
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-name-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-subject-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-email-wrp{
+  float:none;
+  width:auto;
+  min-width:0;
+  margin:0;
+  padding:0;
+  text-align:start;
+  line-height:1.35;
+  background:transparent;
+  border:0;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-name-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-name-wrp a{
+  color:#344054;
+  font-size:13px;
+  font-weight:750;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-subject-wrp{
+  margin-top:2px;
+  color:var(--td-blue);
+  font-size:16px;
+  font-weight:900;
+  overflow-wrap:anywhere;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-email-wrp{
+  color:#475569;
+  font-size:12px;
+  font-weight:500;
+  overflow-wrap:anywhere;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-go-to-all-wrp{
+  float:none;
+  width:100%;
+  margin:0;
+  padding:11px 20px;
+  background:var(--td-orange);
+  border-top:1px solid #fde5c8;
+  border-bottom:1px solid #fde5c8;
+}
+
+#jsst-site .jsst-ticket-detail-page a.js-tkt-go-to-all{
+  float:none;
+  display:inline-flex;
+  width:auto;
+  color:var(--td-blue);
+  font-weight:900;
+  font-size:13px;
+  text-decoration:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-det-tkt-msg{
+  float:none;
+  width:100%;
+  margin:0;
+  padding:18px 20px;
+  color:#344054;
+  font-size:14px;
+  line-height:1.7;
+  border-bottom:1px solid var(--td-line);
+  overflow-wrap:anywhere;
+}
+
+/* Top action buttons */
+#jsst-site .jsst-ticket-detail-page .js-ticket-btn-box{
+  float:none;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  width:100%;
+  margin:0;
+  padding:16px 20px 20px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-btn-box .js-button,
+#jsst-site .jsst-ticket-detail-page .js-ticket-edit-options-wrp .js-button,
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread-add-btn-link{
+  float:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:7px;
+  width:100%;
+  min-width:0;
+  min-height:38px;
+  margin:0;
+  padding:9px 11px;
+  border:1px solid var(--td-line-strong);
+  border-radius:11px;
+  background:#ffffff;
+  color:#344054;
+  box-shadow:0 8px 18px rgba(15,23,42,.045);
+  text-decoration:none;
+  font-size:12px;
+  font-weight:850;
+  line-height:1.15;
+  white-space:normal;
+  cursor:pointer;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-btn-box .js-button:hover,
+#jsst-site .jsst-ticket-detail-page .js-ticket-edit-options-wrp .js-button:hover,
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread-add-btn-link:hover{
+  color:var(--td-blue);
+  background:#eef4ff;
+  border-color:#bfccff;
+  transform:translateY(-1px);
+}
+
+#jsst-site .jsst-ticket-detail-page .js-button img,
+#jsst-site .jsst-ticket-detail-page .js-button .js-button-icon,
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread-add-btn-link img{
+  width:23px;
+  height:23px;
+  max-width:23px;
+  max-height:23px;
+  margin:0;
+  object-fit:contain;
+  flex:0 0 auto;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-button span{display:inline;margin:0;}
+
+/* Section headings */
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread-heading,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-forms-heading{
+  float:none;
+  display:flex;
+  align-items:center;
+  width:100%;
+  min-height:42px;
+  margin:0;
+  padding:0 16px;
+  background:var(--td-dark);
+  color:#fff;
+  border-radius:14px 14px 0 0;
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:.01em;
+  line-height:1.2;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread-add-btn{
+  float:none;
+  display:block;
+  width:100%;
+  margin:0 0 16px;
+  padding:12px 0 0;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread-add-btn-link{width:auto;max-width:max-content;justify-content:center;}
+
+/* Timeline */
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline{
+  float:none;
+  width:100%;
+  margin:0 0 16px;
+  padding:16px 18px 14px 24px;
+  background:#fff;
+  border:1px solid var(--td-line);
+  border-top:0;
+  border-radius:0 0 14px 14px;
+  box-shadow:var(--td-shadow-soft);
+}
+
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline-item{
+  position:relative;
+  margin:0;
+  padding:0 0 15px 22px;
+  border:0;
+  border-left:2px solid #dbe7ff;
+  background:transparent;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline-item:last-child{padding-bottom:2px;border-left-color:transparent;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline-item:before{
+  content:"";position:absolute;left:-6px;top:2px;width:10px;height:10px;border-radius:999px;background:var(--td-blue);box-shadow:0 0 0 4px #eff5ff;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline-title{color:var(--td-text);font-size:12px;font-weight:900;line-height:1.25;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline-meta,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline-detail{color:var(--td-muted);font-size:11px;line-height:1.45;margin-top:3px;overflow-wrap:anywhere;}
+
+/* Thread cards: force clean left aligned cards for both original ticket and staff replies. */
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper{
+  float:none;
+  width:100%;
+  margin:0 0 16px;
+  padding:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-box{
+  float:none;
+  display:grid;
+  grid-template-columns:58px minmax(0,1fr);
+  gap:15px;
+  align-items:start;
+  width:100%;
+  min-width:0;
+  margin:0 0 15px;
+  padding:18px;
+  background:#fff;
+  border:1px solid var(--td-line);
+  border-radius:16px;
+  box-shadow:var(--td-shadow-soft);
+  overflow:hidden;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note{border-radius:0 0 16px 16px;border-top:0;}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-box > .js-ticket-detail-left,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-box > .js-ticket-detail-right,
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread-cnt,
+#jsst-site .jsst-ticket-detail-page .js-ticket-rows-wrapper,
+#jsst-site .jsst-ticket-detail-page .js-ticket-rows-wrp{
+  float:none;
+  width:auto;
+  max-width:100%;
+  min-width:0;
+  margin:0;
+  padding:0;
+  text-align:start;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-box > .js-ticket-detail-left{width:58px;}
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-box > .js-ticket-detail-right{display:block;}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread .js-ticket-user-name-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-box .js-ticket-field-value.name,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-box .js-ticket-user-name-wrp{
+  color:var(--td-blue);
+  font-size:13px;
+  font-weight:850;
+  text-decoration:underline;
+  text-underline-offset:2px;
+  margin:0 0 4px;
+  text-align:start;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread .js-ticket-user-email-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-box .js-ticket-field-value,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-box .js-ticket-row{
+  color:#344054;
+  font-size:13px;
+  line-height:1.6;
+  text-align:start;
+  overflow-wrap:anywhere;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-time-stamp-wrp{
+  float:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  width:100%;
+  margin-top:14px;
+  padding:10px 0 0;
+  border-top:1px solid #edf2f7;
+  color:var(--td-muted);
+  font-size:11px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-ticket-created-date{float:none;padding:0;color:var(--td-muted);font-size:11px;}
+#jsst-site .jsst-ticket-detail-page .js-ticket-edit-options-wrp{float:none;display:flex;gap:8px;flex-wrap:wrap;padding:0;}
+
+/* Reply form */
+#jsst-site .jsst-ticket-detail-page .js-ticket-tabs-wrapper,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-field-wrp{
+  float:none;
+  width:100%;
+  margin:0 0 18px;
+  padding:0;
+  background:#fff;
+  border:1px solid var(--td-line);
+  border-radius:16px;
+  box-shadow:var(--td-shadow);
+  overflow:hidden;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-tabs-body,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-field{
+  float:none;
+  width:100%;
+  margin:0;
+  padding:0;
+}
+
+#jsst-site .jsst-ticket-detail-page #postreply,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrp.selected{
+  padding:16px 18px 20px;
+  background:#fff;
+}
+
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-detail-timer-wrapper{
+  float:none;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+  width:100%;
+  margin:0 0 16px;
+  padding:12px;
+  background:#fbfdff;
+  border:1px solid var(--td-line);
+  border-radius:14px;
+}
+
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-detail-timer-wrapper .timer-right{float:none;width:auto;max-width:100%;display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:10px;}
+#jsst-site .jsst-ticket-detail-page .timer-total-time,
+#jsst-site .jsst-ticket-detail-page .timer{float:none;padding:0;color:#344054;font-size:12px;font-weight:750;white-space:nowrap;}
+#jsst-site .jsst-ticket-detail-page .timer{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 10px;border:1px solid var(--td-line);border-radius:8px;background:#fff;font-family:monospace;}
+#jsst-site .jsst-ticket-detail-page .timer-buttons{float:none;display:inline-flex;align-items:center;gap:6px;}
+#jsst-site .jsst-ticket-detail-page .timer-button{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:var(--td-dark);cursor:pointer;}
+#jsst-site .jsst-ticket-detail-page .timer-button img{width:15px;height:15px;object-fit:contain;}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-premade-msg-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-text-editor-wrp,
+#jsst-site .jsst-ticket-detail-page .js-attachment-wrp,
+#jsst-site .jsst-ticket-detail-page .js-attachment-files-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-assigntome-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-status-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-append-signature-wrp{
+  float:none;width:100%;margin:0 0 15px;padding:0;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-premade-field-title,
+#jsst-site .jsst-ticket-detail-page .js-ticket-text-editor-field-title,
+#jsst-site .jsst-ticket-detail-page .js-form-title,
+#jsst-site .jsst-ticket-detail-page .js-ticket-assigntome-field-title,
+#jsst-site .jsst-ticket-detail-page .js-ticket-status-field-title,
+#jsst-site .jsst-ticket-detail-page .js-ticket-append-field-title{
+  float:none;display:block;width:100%;margin:0 0 7px;padding:0;color:var(--td-text);font-size:12px;font-weight:900;line-height:1.25;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-premade-field-wrp{float:none;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;width:100%;margin:0;padding:0;}
+#jsst-site .jsst-ticket-detail-page .js-ticket-apend-radio-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid var(--td-line);border-radius:10px;background:#fff;color:#344054;font-size:12px;font-weight:750;white-space:nowrap;}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-text-editor-field,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-field{float:none;width:100%;min-height:260px;margin:0;padding:0;}
+#jsst-site .jsst-ticket-detail-page textarea,
+#jsst-site .jsst-ticket-detail-page iframe,
+#jsst-site .jsst-ticket-detail-page .tox-tinymce,
+#jsst-site .jsst-ticket-detail-page .js-editor-tinymce,
+#jsst-site .jsst-ticket-detail-page .mce-tinymce{max-width:100%;box-sizing:border-box;}
+#jsst-site .jsst-ticket-detail-page textarea{width:100%;min-height:230px;padding:12px;color:var(--td-text);background:#fff;border:1px solid var(--td-line-strong);border-radius:12px;}
+
+#jsst-site .jsst-ticket-detail-page select,
+#jsst-site .jsst-ticket-detail-page input[type="text"],
+#jsst-site .jsst-ticket-detail-page input[type="email"]{width:100%;max-width:100%;min-height:40px;padding:8px 12px;color:var(--td-text);background:#fff;border:1px solid var(--td-line-strong);border-radius:10px;font-size:13px;}
+
+#jsst-site .jsst-ticket-detail-page .js-attachment-files{float:none;width:100%;margin:0;padding:12px;background:#fbfdff;border:1px dashed #cbd8e8;border-radius:12px;}
+#jsst-site .jsst-ticket-detail-page .js-attachment-file-box{float:none;display:flex;align-items:center;width:100%;max-width:100%;min-height:38px;margin:0;padding:5px 38px 5px 6px;background:#fff;border:1px solid var(--td-line);border-radius:10px;}
+#jsst-site .jsst-ticket-detail-page #js-attachment-option{float:none;width:100%;margin:8px 0 0;color:var(--td-muted);font-size:11px;line-height:1.45;}
+
+#jsst-site .jsst-ticket-detail-page #js-attachment-add,
+#jsst-site .jsst-ticket-detail-page .js-ticket-save-button,
+#jsst-site .jsst-ticket-detail-page input.js-ticket-save-button{display:inline-flex;align-items:center;justify-content:center;width:auto;min-width:112px;min-height:40px;padding:9px 18px;border:0;border-radius:10px;background:var(--td-blue-2);color:#fff;font-size:13px;font-weight:900;line-height:1;text-align:center;box-shadow:0 12px 26px rgba(79,102,245,.22);cursor:pointer;}
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp{float:none;width:100%;display:flex;align-items:center;justify-content:center;margin:10px 0 0;padding:18px 0 0;border-top:1px solid var(--td-line);}
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp .js-ticket-save-button,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp input.js-ticket-save-button{background:var(--td-green);box-shadow:0 14px 28px rgba(22,163,74,.24);}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-assigntome-field-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-status-field-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-append-field-wrp{float:none;width:100%;margin:0;padding:0;}
+#jsst-site .jsst-ticket-detail-page .js-ticket-signature-radio-box,
+#jsst-site .jsst-ticket-detail-page .js-ticket-assigntome-field-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-status-field-wrp{display:inline-flex;align-items:center;gap:7px;min-height:38px;margin:0 8px 8px 0;padding:8px 12px;border:1px solid var(--td-line);border-radius:10px;background:#fff;color:#344054;font-size:12px;}
+
+/* Right sidebar - top level only */
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{display:block;font-size:12px;}
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right > .js-ticket-rows-wrp {
+  float:none;width:100%;margin:0 0 14px;padding:0;overflow:hidden;
+}
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right > .jsst-frontend-feature-panel{
+  float:none;width:100%;margin:0 0 14px;padding:0;background:#fff;border:1px solid var(--td-line);border-radius:16px;box-shadow:var(--td-shadow-soft);overflow:hidden;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-status{float:none;display:flex;align-items:center;justify-content:center;width:auto;min-width:86px;max-width:max-content;min-height:32px;margin:0 0 10px;padding:8px 16px;color:#fff;border-radius:999px;font-size:16px;font-weight:900;line-height:1;box-shadow:0 10px 20px rgba(22,163,74,.22);transform:none;}
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-info-cnt{float:none;width:100%;margin:0;padding:12px 16px 14px;}
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-row,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row{float:none;display:grid;grid-template-columns:minmax(100px,42%) minmax(0,1fr);align-items:start;gap:8px;width:100%;margin:0;padding:8px 0;border-bottom:1px solid #edf2f7;line-height:1.35;}
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-row:last-child,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row:last-child{border-bottom:0;}
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-field-title,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row strong{float:none;width:auto;margin:0;padding:0;color:#64748b;font-size:12px;font-weight:900;overflow-wrap:normal;}
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-field-value,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row span{float:none;width:auto;min-width:0;margin:0;padding:0;color:var(--td-text);font-size:12px;font-weight:850;text-align:end;overflow-wrap:anywhere;}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-det-hdg,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-head{float:none;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;margin:0;padding:0 14px;background:var(--td-dark);color:#fff;border-radius:0;}
+#jsst-site .jsst-ticket-detail-page .js-tkt-det-hdg-txt,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-head span{float:none;color:#fff;font-size:13px;font-weight:900;line-height:1.2;}
+#jsst-site .jsst-ticket-detail-page .js-tkt-det-hdg-btn,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-btn.is-light{float:none;color:#38bdf8;background:transparent;border:0;padding:0;min-height:auto;box-shadow:none;font-size:11px;font-weight:900;text-decoration:none;}
+#jsst-site .jsst-ticket-detail-page .js-ticket-priorty{float:none;display:flex;align-items:center;justify-content:center;width:100%;min-height:34px;margin:0;padding:8px 12px;border-radius:0 0 14px 14px;color:#fff;font-size:13px;font-weight:900;text-align:center;}
+#jsst-site .jsst-ticket-detail-page .timer-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-detail-right .timer_1,
+#jsst-site .jsst-ticket-detail-page .js-ticket-detail-right .timer{text-align:center;}
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right .timer,
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right .timer_1{width:100%;min-height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:var(--td-text);letter-spacing:.04em;}
+
+/* Feature panels: tags, SLA and watchers */
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-body{padding:12px 14px 14px;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-muted{color:#64748b;font-size:11px;line-height:1.4;margin:0 0 8px;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-tag-pill,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-watcher-pill{display:inline-flex;align-items:center;gap:6px;max-width:100%;min-height:24px;margin:0 6px 8px 0;padding:4px 8px;border-radius:999px;background:#f1f6ff;border:1px solid #d8e5ff;color:#344054;font-size:11px;font-weight:800;overflow-wrap:anywhere;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-tag-pill .dot{width:8px;height:8px;border-radius:999px;display:inline-block;flex:0 0 auto;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-remove{color:#dc2626;font-weight:900;text-decoration:none;margin-left:2px;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-panel select,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-panel input{min-height:34px;margin:0 0 8px;font-size:11px;border-radius:8px;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-btn{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:8px 12px;border:0;border-radius:8px;background:var(--td-blue);color:#fff;font-size:11px;font-weight:900;text-decoration:none;box-shadow:0 8px 18px rgba(37,99,235,.18);cursor:pointer;}
+
+/* Popups and hidden forms should not inherit page card layout. */
+#jsst-site .jsst-ticket-detail-page #js-history-popup,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup,
+#jsst-site .jsst-ticket-detail-page .jsst-popup-wrapper,
+#jsst-site .jsst-ticket-detail-page .jsst-merge-popup-wrapper,
+#jsst-site .jsst-ticket-detail-page #userpopupforchangepriority,
+#jsst-site .jsst-ticket-detail-page #popupforagenttransfer,
+#jsst-site .jsst-ticket-detail-page #popupfordepartmenttransfer,
+#jsst-site .jsst-ticket-detail-page #popupforinternalnote{box-sizing:border-box;}
+
+/* Desktop narrow guard. Mobile pass will be tested later, but this prevents breaking tablets. */
+@media (max-width:1100px){
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{grid-template-columns:minmax(0,1fr) 280px;gap:16px;padding:16px;}
+  #jsst-site .jsst-ticket-detail-page .js-ticket-btn-box{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:900px){
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{grid-template-columns:1fr;}
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right > *{margin:0;}
+}
+
+/* =========================================================
+   v184 corrective pass
+   - keep ticket status inside the right card
+   - cap long timeline with an internal scroll area
+   - normalize ticket thread/reply cards to left-aligned message cards
+   - style attachment area as a drag/drop dropzone
+   ========================================================= */
+
+/* Right status pill must never float outside / overlap the sidebar card. */
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt{
+  position:relative;
+  overflow:hidden;
+}
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-status{
+  position:static;
+  inset:auto;
+  top:auto;
+  right:auto;
+  bottom:auto;
+  left:auto;
+  float:none;
+  transform:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:calc(100% - 24px);
+  max-width:none;
+  min-width:0;
+  min-height:34px;
+  margin:12px 12px 6px;
+  padding:8px 14px;
+  border-radius:999px;
+  color:#ffffff;
+  font-size:15px;
+  font-weight:900;
+  line-height:1;
+  white-space:nowrap;
+  box-shadow:0 12px 22px rgba(22,163,74,.20);
+  z-index:auto;
+}
+
+/* Timeline: keep useful history visible, but do not let it make the page huge. */
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline{
+  max-height:286px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  padding-right:14px;
+  scrollbar-width:thin;
+  scrollbar-color:#b8c7dc #f3f7fc;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline::-webkit-scrollbar{width:8px;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline::-webkit-scrollbar-track{background:#f3f7fc;border-radius:999px;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline::-webkit-scrollbar-thumb{background:#b8c7dc;border-radius:999px;}
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline::-webkit-scrollbar-thumb:hover{background:#94a9c5;}
+
+/* Thread cards: remove legacy centering/min-height and make every reply readable. */
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box{
+  position:relative;
+  float:none;
+  clear:both;
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr);
+  gap:14px;
+  align-items:flex-start;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  min-height:0;
+  height:auto;
+  margin:0 0 14px;
+  padding:17px 18px;
+  background:#ffffff;
+  border:1px solid var(--td-line);
+  border-radius:16px;
+  box-shadow:0 12px 30px rgba(15,23,42,.055);
+  overflow:hidden;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note > .js-ticket-user-img-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-post-reply-box > .js-ticket-user-img-wrp{
+  grid-column:1;
+  grid-row:1;
+  width:46px;
+  height:46px;
+  min-width:46px;
+  margin:0;
+  align-self:flex-start;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note > .js-ticket-thread-cnt,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-post-reply-box > .js-ticket-thread-cnt{
+  grid-column:2;
+  grid-row:1;
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  min-height:0;
+  height:auto;
+  margin:0;
+  padding:0;
+  text-align:start;
+  align-self:flex-start;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note .js-ticket-thread-cnt *,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-thread-cnt *,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-rows-wrapper *,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-row *,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-field-value{
+  text-align:start;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note .js-ticket-user-name-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-user-name-wrp{
+  display:block;
+  width:100%;
+  margin:0 0 3px;
+  padding:0;
+  color:var(--td-blue);
+  font-size:13px;
+  font-weight:900;
+  line-height:1.25;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note .js-ticket-user-email-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-user-email-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-field-value{
+  display:block;
+  width:100%;
+  margin:0 0 5px;
+  padding:0;
+  color:#344054;
+  font-size:13px;
+  font-weight:500;
+  line-height:1.55;
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-rows-wrapper,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-row{
+  display:block;
+  width:100%;
+  min-height:0;
+  height:auto;
+  margin:0;
+  padding:0;
+  background:transparent;
+  border:0;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note .js-ticket-time-stamp-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-time-stamp-wrp{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  width:100%;
+  min-height:0;
+  margin:12px 0 0;
+  padding:10px 0 0;
+  border-top:1px solid #edf2f7;
+  text-align:start;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note .js-ticket-ticket-created-date,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-ticket-created-date,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-thread-time{
+  display:inline-flex;
+  width:auto;
+  margin:0;
+  padding:0;
+  color:#64748b;
+  font-size:11px;
+  font-weight:600;
+  line-height:1.4;
+  text-align:start;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-edit-options-wrp{
+  justify-content:flex-start;
+  margin-left:12px;
+}
+
+/* Attachment dropzone visual polish. The original input remains; this adds drag/drop support and clearer UI. */
+#jsst-site .jsst-ticket-detail-page .js-attachment-files{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-height:116px;
+  padding:14px;
+  background:#fbfdff;
+  border:1.5px dashed #c9d8ee;
+  border-radius:14px;
+  transition:border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+#jsst-site .jsst-ticket-detail-page .js-attachment-files:before{
+  content:"Drop files here or use Browse";
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:46px;
+  padding:10px 12px;
+  color:#475569;
+  background:linear-gradient(180deg,#ffffff 0%,#f6f9ff 100%);
+  border:1px dashed #d8e2ee;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:.01em;
+  text-align:center;
+}
+#jsst-site .jsst-ticket-detail-page .js-attachment-files.is-dragover{
+  background:#eff6ff;
+  border-color:#2563eb;
+  box-shadow:0 12px 28px rgba(37,99,235,.12);
+}
+#jsst-site .jsst-ticket-detail-page .js-attachment-files.is-dragover:before{
+  content:"Release to attach files";
+  color:#1d4ed8;
+  border-color:#93b4ff;
+  background:#ffffff;
+}
+#jsst-site .jsst-ticket-detail-page .js-attachment-files .js-attachment-file-box{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  min-height:42px;
+  padding:7px 42px 7px 8px;
+  background:#ffffff;
+  border:1px solid #e1e9f3;
+  border-radius:12px;
+}
+#jsst-site .jsst-ticket-detail-page .js-attachment-files input[type="file"]{
+  width:100%;
+  max-width:100%;
+  min-height:30px;
+  color:#344054;
+  font-size:12px;
+}
+#jsst-site .jsst-ticket-detail-page .js-attachment-remove{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  width:20px;
+  height:20px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Small desktop guard for the two-column ticket detail. */
+@media (max-width:1180px){
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{
+    grid-template-columns:minmax(0,1fr) 260px;
+  }
+  #jsst-site .jsst-ticket-detail-page .js-ticket-btn-box{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+
+/* =========================================================
+   v185 micro-polish
+   - slightly wider right column on desktop
+   - status badge becomes a clean card header
+   - timeline gets a safer max area
+   - ticket thread/reply cards get stronger left-aligned readable layout
+   - attachment dropzone is cleaner and less busy
+   ========================================================= */
+
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{
+  grid-template-columns:minmax(0,1fr) 340px;
+  gap:18px;
+  padding:16px;
+  align-items:flex-start;
+}
+
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+  min-width:340px;
+}
+
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-left{
+  min-width:0;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt{
+  border-radius:16px;
+  overflow:hidden;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-status{
+  width:100%;
+  max-width:100%;
+  min-height:34px;
+  margin:0;
+  padding:8px 12px;
+  border-radius:16px 16px 0 0;
+  box-shadow:none;
+  font-size:14px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-info-cnt{
+  padding:13px 15px 14px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-row,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row{
+  grid-template-columns:minmax(100px,42%) minmax(0,1fr);
+  gap:10px;
+  padding:8px 0;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-field-title,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row strong{
+  font-size:11.5px;
+  line-height:1.35;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-field-value,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row span{
+  font-size:11.5px;
+  line-height:1.45;
+  word-break:break-word;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-priorty{
+  border-radius:0 0 16px 16px;
+}
+
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline{
+  max-height:236px;
+  padding-top:14px;
+  padding-bottom:12px;
+}
+
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline-item{
+  padding-bottom:13px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box{
+  grid-template-columns:46px minmax(0,1fr);
+  gap:13px;
+  padding:16px;
+  border-radius:14px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note > .js-ticket-user-img-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-post-reply-box > .js-ticket-user-img-wrp{
+  width:42px;
+  height:42px;
+  min-width:42px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note > .js-ticket-user-img-wrp img,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-post-reply-box > .js-ticket-user-img-wrp img{
+  width:38px;
+  height:38px;
+  max-width:38px;
+  max-height:38px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper .js-ticket-field-value,
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note .js-ticket-user-email-wrp{
+  color:#243044;
+  font-size:13px;
+  line-height:1.62;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-time-stamp-wrp{
+  margin-top:12px;
+  padding-top:9px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-tabs-wrapper,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-field-wrp{
+  border-radius:16px;
+}
+
+#jsst-site .jsst-ticket-detail-page #postreply,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrp.selected{
+  padding:16px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-text-editor-field,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-field{
+  min-height:238px;
+}
+
+#jsst-site .jsst-ticket-detail-page textarea{
+  min-height:220px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-attachment-files{
+  min-height:96px;
+  gap:8px;
+  padding:12px;
+  border-radius:14px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-attachment-files:before{
+  min-height:36px;
+  padding:8px 10px;
+  border:1px dashed #d7e3f2;
+  border-radius:10px;
+  font-size:11.5px;
+  background:#ffffff;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-attachment-files .js-attachment-file-box{
+  min-height:40px;
+  padding:6px 42px 6px 8px;
+}
+
+#jsst-site .jsst-ticket-detail-page #js-attachment-option{
+  margin-top:7px;
+  font-size:10.8px;
+  line-height:1.45;
+}
+
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-detail-timer-wrapper{
+  padding:10px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp{
+  padding-top:16px;
+}
+
+@media (max-width:1180px){
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{
+    grid-template-columns:minmax(0,1fr) 320px;
+  }
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+    min-width:320px;
+  }
+}
+
+@media (max-width:1020px){
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{
+    grid-template-columns:minmax(0,1fr) 292px;
+  }
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+    min-width:292px;
+  }
+}
+
+@media (max-width:900px){
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+    min-width:0;
+  }
+}
+
+
+/* =========================================================
+   v186 micro-polish
+   - fixes reply-card child alignment for existing left/right markup
+   - improves mobile stacking and overflow safety
+   - keeps timeline/attachments controlled without workflow changes
+   ========================================================= */
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box > .js-ticket-detail-left{
+  grid-column:1;
+  grid-row:1;
+  float:none;
+  width:46px;
+  min-width:46px;
+  max-width:46px;
+  margin:0;
+  padding:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box > .js-ticket-detail-right{
+  grid-column:2;
+  grid-row:1;
+  float:none;
+  display:block;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  margin:0;
+  padding:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js-ticket-rows-wrapper,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js-ticket-rows-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js-ticket-row{
+  float:none;
+  display:block;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  margin:0;
+  padding:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js-ticket-field-value.name{
+  display:block;
+  width:100%;
+  margin:0 0 5px;
+  color:var(--td-blue);
+  font-size:13px;
+  font-weight:900;
+  line-height:1.25;
+  text-align:start;
+  text-decoration:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js-ticket-field-value{
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  color:#243044;
+  font-size:13px;
+  line-height:1.62;
+  text-align:start;
+  overflow-wrap:anywhere;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js-ticket-attachments-wrp{
+  float:none;
+  width:100%;
+  margin:12px 0 0;
+  padding:10px;
+  background:#f8fbff;
+  border:1px solid var(--td-line);
+  border-radius:12px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js_ticketattachment{
+  float:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  width:100%;
+  margin:0 0 8px;
+  padding:8px 10px;
+  background:#fff;
+  border:1px solid #e3ebf5;
+  border-radius:10px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js-ticket-download-file-title{
+  min-width:0;
+  color:#344054;
+  font-size:12px;
+  font-weight:750;
+  overflow-wrap:anywhere;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js-download-button,
+#jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box .js-all-download-button{
+  flex:0 0 auto;
+  min-height:30px;
+  padding:7px 10px;
+  border-radius:8px;
+  background:#0f172a;
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+  text-decoration:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note > .js-ticket-thread-cnt .js-ticket-attachments-wrp .js-download-button {
+  margin: 0 10px;
+  flex:0 0 auto;
+  min-height:30px;
+  padding:7px 10px;
+  border-radius:8px;
+  background:#0f172a;
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+  text-decoration:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note > .js-ticket-thread-cnt .js-ticket-attachments-wrp .js-all-download-button {
+  margin: 10px 0;
+  display: inline-block;
+  min-height:40px;
+  padding:10px 15px;
+  border-radius:10px;
+  background:#0f172a;
+  color:#fff;
+  text-decoration:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-time-stamp-wrp{
+  flex-wrap:wrap;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-edit-options-wrp{
+  min-width:0;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-edit-options-wrp .js-button {
+  width: auto !important;
+}
+
+@media (max-width:760px){
+  #jsst-site .jsst-ticket-detail-page{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{
+    display:block;
+    padding:12px;
+    border-radius:16px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+    display:block;
+    min-width:0;
+    width:100%;
+    margin-top:14px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-btn-box{
+    grid-template-columns:1fr;
+    padding:14px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-tkt-det-user,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box{
+    grid-template-columns:38px minmax(0,1fr);
+    gap:10px;
+    padding:13px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-user-img-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-tkt-det-user-image,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note > .js-ticket-user-img-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-post-reply-box > .js-ticket-detail-left,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box > .js-ticket-detail-left{
+    width:38px;
+    height:38px;
+    min-width:38px;
+    max-width:38px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-user-img-wrp img,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-staff-img,
+  #jsst-site .jsst-ticket-detail-page .js-tkt-det-user-image img{
+    width:34px;
+    height:34px;
+    max-width:34px;
+    max-height:34px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box > .js-ticket-detail-right{
+    grid-column:2;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-time-stamp-wrp{
+    display:block;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-edit-options-wrp{
+    margin:8px 0 0;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-edit-options-wrp .js-button,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-thread-time{
+    width:100%;
+    justify-content:center;
+    margin:7px 0 0;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .jsst-ticket-detail-timer-wrapper,
+  #jsst-site .jsst-ticket-detail-page .jsst-ticket-detail-timer-wrapper .timer-right{
+    display:block;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .timer,
+  #jsst-site .jsst-ticket-detail-page .timer-buttons{
+    width:100%;
+    margin-top:8px;
+    justify-content:center;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline{
+    max-height:220px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-row,
+  #jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row{
+    grid-template-columns:1fr;
+    gap:3px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-field-value,
+  #jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row span{
+    text-align:start;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-attachment-files:before{
+    content:"Attach files";
+  }
+}
+
+/* =========================================================
+   JS Support Ticket - Site Ticket Detail Polish v187
+   From screenshot QA: mobile ordering, overflow safety, cleaner forms.
+   Scope: frontend ticket detail only. No workflow/ACL changes.
+   ========================================================= */
+
+#jsst-site .jsst-ticket-detail-page,
+#jsst-site .jsst-ticket-detail-page #tk-detail-wraper,
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper,
+#jsst-site .jsst-ticket-detail-page .js-ticket-detail-wrapper,
+#jsst-site .jsst-ticket-detail-page .js-ticket-detail-box{
+  min-width:0;
+}
+
+#jsst-site .jsst-ticket-detail-page img,
+#jsst-site .jsst-ticket-detail-page iframe,
+#jsst-site .jsst-ticket-detail-page table,
+#jsst-site .jsst-ticket-detail-page .mce-tinymce,
+#jsst-site .jsst-ticket-detail-page .tox-tinymce{
+  max-width:100%;
+}
+
+/* Keep editor chrome from inheriting dark template/admin colors. */
+#jsst-site .jsst-ticket-detail-page .mce-panel,
+#jsst-site .jsst-ticket-detail-page .mce-container,
+#jsst-site .jsst-ticket-detail-page .mce-stack-layout,
+#jsst-site .jsst-ticket-detail-page .mce-edit-area,
+#jsst-site .jsst-ticket-detail-page .tox,
+#jsst-site .jsst-ticket-detail-page .tox-editor-container,
+#jsst-site .jsst-ticket-detail-page .tox-edit-area,
+#jsst-site .jsst-ticket-detail-page iframe{
+  background:#ffffff;
+  color:#0f172a;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-field-wrp .js-ticket-reply-field,
+#jsst-site .jsst-ticket-detail-page .js-ticket-text-editor-field{
+  overflow:hidden;
+  border-radius:14px;
+}
+
+/* Summary card: remove hidden empty phone line spacing. */
+#jsst-site .jsst-ticket-detail-page .js-ticket-user-email-wrp:empty{
+  display:none;
+}
+
+/* Sidebar/status panels: keep compact and readable. */
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-row,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-row,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-kv{
+  min-width:0;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-field-title,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-kv strong{
+  overflow-wrap:break-word;
+  word-break:normal;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-field-value,
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-feature-kv span{
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+/* Better form rhythm on staff and user reply forms. */
+#jsst-site .jsst-ticket-detail-page .js-ticket-premade-msg-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-closeonreply-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-append-signature-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-assigntome-wrp,
+#jsst-site .jsst-ticket-detail-page .js-attachment-wrp{
+  clear:both;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-append-field-wrp,
+#jsst-site .jsst-ticket-detail-page .js-form-title-position-reletive-left,
+#jsst-site .jsst-ticket-detail-page .js-ticket-assigntome-field,
+#jsst-site .jsst-ticket-detail-page .replyFormStatus{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  min-width:0;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-signature-radio-box,
+#jsst-site .jsst-ticket-detail-page .js-ticket-closeonreply-wrp label,
+#jsst-site .jsst-ticket-detail-page .js-ticket-assigntome-wrp label,
+#jsst-site .jsst-ticket-detail-page .jsst-formfield-radio-button-wrp{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+
+/* Timeline is useful, but should not take the whole page. */
+#jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline{
+  max-height:280px;
+  overflow:auto;
+}
+
+/* Mobile: show the ticket summary, then status/sidebar, then notes/timeline/thread/reply.
+   This avoids the important status cards being buried after the reply form. */
+@media (max-width:760px){
+  #jsst-site,
+  #jsst-site .jsst-ticket-detail-page,
+  #jsst-site .jsst-ticket-detail-page #tk-detail-wraper,
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper,
+  #jsst-site .jsst-ticket-detail-page form#adminForm,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-detail-wrapper{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    margin-left:0;
+    margin-right:0;
+    overflow-x:hidden;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:10px;
+    overflow:hidden;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-left{
+    display:contents;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-tkt-det-info-wrp{
+    order:1;
+    margin-bottom:0;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+    order:2;
+    margin:0;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right > .js-ticket-rows-wrp,
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right > .jsst-frontend-feature-panel{
+    margin:0 0 10px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-thread-heading,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-thread-add-btn,
+  #jsst-site .jsst-ticket-detail-page .jsst-frontend-timeline,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-tabs-wrapper,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-forms-heading,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-field-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-attachment-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-tabs-body{
+    order:3;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-tkt-det-user{
+    grid-template-columns:36px minmax(0,1fr);
+    gap:9px;
+    padding:12px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-user-img-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-tkt-det-user-image{
+    width:36px;
+    height:36px;
+    min-width:36px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-user-img-wrp img,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-staff-img,
+  #jsst-site .jsst-ticket-detail-page .js-tkt-det-user-image img{
+    width:32px;
+    height:32px;
+    max-width:32px;
+    max-height:32px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-user-subject-wrp{
+    font-size:14px;
+    line-height:1.25;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-tkt-go-to-all-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-tkt-det-tkt-msg,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-btn-box{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-btn-box .js-button{
+    min-height:34px;
+    padding:8px 10px;
+    font-size:11px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-thread-heading,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-forms-heading{
+    min-height:38px;
+    border-radius:12px 12px 0 0;
+    padding:0 12px;
+    font-size:12px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-thread,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box{
+    grid-template-columns:34px minmax(0,1fr);
+    gap:9px;
+    padding:11px;
+    border-radius:12px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #postreply,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrp.selected,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-field{
+    padding:12px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-field-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-tabs-wrapper{
+    border-radius:0 0 14px 14px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-premade-msg-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-text-editor-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-attachment-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-assigntome-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-closeonreply-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-append-signature-wrp{
+    padding:10px;
+    border-radius:12px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page select,
+  #jsst-site .jsst-ticket-detail-page input[type="text"],
+  #jsst-site .jsst-ticket-detail-page input[type="email"],
+  #jsst-site .jsst-ticket-detail-page textarea{
+    min-height:36px;
+    font-size:12px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .mce-tinymce,
+  #jsst-site .jsst-ticket-detail-page .tox-tinymce,
+  #jsst-site .jsst-ticket-detail-page iframe{
+    min-height:190px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-attachment-files{
+    padding:8px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-attachment-files .js-attachment-file-box,
+  #jsst-site .jsst-ticket-detail-page .js-attachment-file-box{
+    display:flex;
+    min-width:0;
+    padding-right:34px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-attachment-files input[type="file"]{
+    width:100%;
+    min-width:0;
+    font-size:11px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-save-button,
+  #jsst-site .jsst-ticket-detail-page input.js-ticket-save-button{
+    min-width:104px;
+    min-height:40px;
+  }
+}
+
+@media (max-width:420px){
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box{
+    padding:8px;
+    border-radius:14px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-btn-box{
+    gap:8px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .jsst-ticket-detail-timer-wrapper,
+  #jsst-site .jsst-ticket-detail-page .jsst-ticket-detail-timer-wrapper .timer-right,
+  #jsst-site .jsst-ticket-detail-page .timer-buttons{
+    gap:6px;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .timer-button{
+    width:28px;
+    height:28px;
+  }
+}
+
+/* =========================================================
+   JS Support Ticket - Site Ticket Detail Polish v188
+   Screenshot QA:
+   - fix clipped/overlapping top status badge (Open/Replied/etc.)
+   - keep mobile order deterministic: summary, sidebar/status, then notes/timeline/thread/reply
+   - prevent early thread/internal-note cards from jumping above the ticket summary on mobile
+   ========================================================= */
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt{
+  overflow:hidden;
+  padding-top:0;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-status{
+  position:relative;
+  top:auto;
+  right:auto;
+  bottom:auto;
+  left:auto;
+  float:none;
+  transform:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  min-height:40px;
+  height:auto;
+  margin:0;
+  padding:10px 14px;
+  border-radius:16px 16px 0 0;
+  color:#ffffff;
+  font-size:14px;
+  font-weight:900;
+  line-height:1.25;
+  letter-spacing:.01em;
+  text-align:center;
+  white-space:normal;
+  overflow:visible;
+  box-shadow:none;
+  z-index:1;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-status-note{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:20px;
+  line-height:1.25;
+  text-align:center;
+  color:#ffffff;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-info-cnt{
+  clear:both;
+}
+
+@media (max-width:760px){
+  /* display:contents is useful here, but every exposed child needs a safe order. */
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-left > *{
+    order:3;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-left > .js-tkt-det-info-wrp{
+    order:1;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+    order:2;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-tabs-wrapper,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-forms-heading,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-field-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-attachment-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp{
+    order:3;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-ticket-post-reply-wrapper > .js-ticket-detail-box.js-ticket-post-reply-box,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-thread.internal-note,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-thread{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-status{
+    min-height:38px;
+    padding:9px 12px;
+    border-radius:14px 14px 0 0;
+    font-size:13px;
+    line-height:1.25;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-info-cnt{
+    padding-top:12px;
+  }
+}
+
+/* =========================================================
+   JS Support Ticket - Site Ticket Detail Polish v189
+   Screenshot QA: final status header normalization and mobile card safety.
+   CSS-only. No workflow, ACL, PHP conditions, controller, model, or DB changes.
+   ========================================================= */
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt{
+  overflow:hidden;
+  border-radius:16px;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-status{
+  position:static;
+  float:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  min-height:36px;
+  margin:0;
+  padding:9px 12px;
+  border-radius:16px 16px 0 0;
+  color:#ffffff;
+  font-size:14px;
+  font-weight:900;
+  line-height:1.15;
+  text-align:center;
+  letter-spacing:.01em;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.18);
+  transform:none;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-ticket-status-note{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:18px;
+  margin:0;
+  color:inherit;
+  font-size:inherit;
+  font-weight:inherit;
+  line-height:1.15;
+  text-align:center;
+}
+
+#jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+  align-self:start;
+}
+
+@media (max-width:900px){
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+    min-width:0;
+  }
+}
+
+@media (max-width:520px){
+  #jsst-site .jsst-ticket-detail-page .js-tkt-detail-cnt .js-tkt-det-status{
+    min-height:32px;
+    padding:7px 10px;
+    font-size:12px;
+    border-radius:14px 14px 0 0;
+  }
+}
+
+
+/* v195: stronger visible drag/drop attachment target for frontend ticket detail */
+#jsst-site .jsst-ticket-detail-page .js-attachment-files.jsst-dragdrop-enabled{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-height:144px;
+  padding:12px;
+  background:#fbfdff;
+  border:1.5px dashed #c9d8ee;
+  border-radius:14px;
+}
+#jsst-site .jsst-ticket-detail-page .js-attachment-files.jsst-dragdrop-enabled:before{
+  content:none;
+  display:none;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-dropzone-message{
+  order:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  width:100%;
+  min-height:70px;
+  margin:0;
+  padding:14px 16px;
+  color:#334155;
+  background:linear-gradient(180deg,#ffffff 0%,#f5f8ff 100%);
+  border:1px dashed #cbd8e8;
+  border-radius:13px;
+  cursor:pointer;
+  text-align:start;
+  box-sizing:border-box;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-dropzone-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  border-radius:12px;
+  color:#1d4ed8;
+  background:#eef5ff;
+  font-size:19px;
+  line-height:1;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-dropzone-copy{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:3px;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-dropzone-copy strong{
+  display:block;
+  color:#0f172a;
+  font-size:13px;
+  font-weight:900;
+  line-height:1.2;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-dropzone-copy small{
+  display:block;
+  color:#64748b;
+  font-size:11.5px;
+  font-weight:700;
+  line-height:1.3;
+}
+#jsst-site .jsst-ticket-detail-page .js-attachment-files.is-dragover .jsst-dropzone-message{
+  color:#1d4ed8;
+  background:#ffffff;
+  border-color:#2563eb;
+  box-shadow:0 0 0 4px rgba(37,99,235,.10);
+}
+#jsst-site .jsst-ticket-detail-page .js-attachment-files .js-attachment-file-box.is-file-attached{
+  border-color:#93c5fd;
+  background:#f8fbff;
+}
+@media (max-width:760px){
+  #jsst-site .jsst-ticket-detail-page .js-attachment-files.jsst-dragdrop-enabled{
+    min-height:128px;
+    padding:10px;
+  }
+  #jsst-site .jsst-ticket-detail-page .jsst-dropzone-message{
+    min-height:58px;
+    gap:9px;
+    padding:11px;
+  }
+  #jsst-site .jsst-ticket-detail-page .jsst-dropzone-icon{
+    width:30px;
+    height:30px;
+    flex-basis:30px;
+    font-size:17px;
+  }
+  #jsst-site .jsst-ticket-detail-page .jsst-dropzone-copy strong{
+    font-size:12px;
+  }
+  #jsst-site .jsst-ticket-detail-page .jsst-dropzone-copy small{
+    font-size:10.5px;
+  }
+}
+
+
+/* v265 frontend ticket detail final spacing polish
+   - aligns the attachment title and attachment counter with the dropzone body.
+   - gives the reply action proper bottom breathing room.
+   - keeps Normal priority green when legacy theme colors are inconsistent. */
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .js-attachment-wrp,
+#jsst-site .jsst-ticket-detail-page .js-attachment-wrp{
+  float:none;
+  width:100%;
+  max-width:100%;
+  margin:18px 0 0;
+  padding:0 20px;
+  box-sizing:border-box;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .js-attachment-wrp > .js-form-title,
+#jsst-site .jsst-ticket-detail-page .js-attachment-wrp > .js-form-title{
+  float:none;
+  display:block;
+  width:100%;
+  margin:0 0 8px;
+  padding:0 0 0 2px;
+  color:#0f172a;
+  font-size:13px;
+  font-weight:900;
+  line-height:1.35;
+  text-align:start;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .js-attachment-files-wrp,
+#jsst-site .jsst-ticket-detail-page .js-attachment-files-wrp{
+  float:none;
+  display:block;
+  width:100%;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .js-attachment-files.jsst-dragdrop-enabled,
+#jsst-site .jsst-ticket-detail-page .js-attachment-files.jsst-dragdrop-enabled{
+  min-height:132px;
+  margin:0;
+  padding:14px;
+  border-radius:16px;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .jsst-dropzone-message,
+#jsst-site .jsst-ticket-detail-page .jsst-dropzone-message{
+  min-height:74px;
+  border-radius:14px;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-attachment-option,
+#jsst-site .jsst-ticket-detail-page #js-attachment-option{
+  float:none;
+  display:block;
+  width:100%;
+  margin:10px 0 0;
+  padding:0 0 0 2px;
+  color:#475569;
+  font-size:12px;
+  font-weight:600;
+  line-height:1.55;
+  text-align:start;
+  box-sizing:border-box;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .jsst-attachment-counter,
+#jsst-site .jsst-ticket-detail-page .jsst-attachment-counter{
+  display:block;
+  margin:0 0 5px;
+  padding:0;
+  color:#0f172a;
+  font-size:13px;
+  font-weight:900;
+  line-height:1.35;
+  text-align:start;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp{
+  float:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  margin:18px 0 0;
+  padding:22px 20px 30px;
+  border-top:1px solid #e6edf5;
+  box-sizing:border-box;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp .js-ticket-save-button,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp input.js-ticket-save-button,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp .js-ticket-save-button,
+#jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp input.js-ticket-save-button{
+  min-width:128px;
+  min-height:46px;
+  margin:0;
+  padding:12px 24px;
+  border-radius:13px;
+  background:#16a34a;
+  color:#ffffff;
+  box-shadow:0 16px 34px rgba(22,163,74,.24);
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page .js-ticket-priorty,
+#jsst-site .jsst-ticket-detail-page .js-ticket-priorty{
+  color:#ffffff;
+}
+
+@media (max-width:760px){
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page .js-attachment-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-attachment-wrp{
+    padding:0 12px;
+  }
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-reply-form-button-wrp{
+    padding:18px 12px 24px;
+  }
+}
+
+
+/* =========================================================
+   JS Support Ticket - Ticket Detail Modal Polish v266
+   Scope: only ticket detail popups: ticket history + private credentials.
+   Keep this block separate for easy future updates/removal.
+   ========================================================= */
+#jsst-site .jsst-ticket-detail-page #js-history-back,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-back,
+#jsst-site .jsst-ticket-detail-page #userpopupblack,
+#jsst-site .jsst-ticket-detail-page #agenttransferblack,
+#jsst-site .jsst-ticket-detail-page #departmenttransferblack,
+#jsst-site .jsst-ticket-detail-page #internalnoteblack,
+#jsst-site .jsst-ticket-detail-page .jsst-popup-background{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  background:rgba(15,23,42,.72);
+  backdrop-filter:blur(2px);
+  z-index:99990;
+}
+
+#jsst-site .jsst-ticket-detail-page #js-history-popup,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(980px,calc(100vw - 36px));
+  max-width:980px;
+  max-height:calc(100vh - 72px);
+  margin:0;
+  padding:0;
+  background:#ffffff;
+  border:1px solid #dbe7f5;
+  border-radius:20px;
+  box-shadow:0 32px 90px rgba(15,23,42,.34);
+  overflow:hidden;
+  z-index:99999;
+  color:#0f172a;
+}
+
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup{
+  width:min(860px,calc(100vw - 36px));
+}
+
+#jsst-site .jsst-ticket-detail-page #js-history-head,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  min-height:72px;
+  margin:0;
+  padding:18px 24px;
+  background:linear-gradient(135deg,#4f66f5 0%,#2563eb 100%);
+  color:#ffffff;
+  border:0;
+}
+
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-title,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-title{
+  display:block;
+  margin:0;
+  color:#ffffff;
+  font-size:22px;
+  font-weight:900;
+  line-height:1.2;
+}
+
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image,
+#jsst-site .jsst-ticket-detail-page span.close-history{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 46px;
+  width:46px;
+  height:46px;
+  margin:0;
+  padding:0;
+  border-radius:14px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.22);
+  cursor:pointer;
+  opacity:1;
+}
+
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image::before,
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image::after,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image::before,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image::after,
+#jsst-site .jsst-ticket-detail-page span.close-history::before,
+#jsst-site .jsst-ticket-detail-page span.close-history::after{
+  content:"";
+  position:absolute;
+  width:24px;
+  height:3px;
+  border-radius:999px;
+  background:#ffffff;
+}
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image::before,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image::before,
+#jsst-site .jsst-ticket-detail-page span.close-history::before{transform:rotate(45deg);}
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image::after,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image::after,
+#jsst-site .jsst-ticket-detail-page span.close-history::after{transform:rotate(-45deg);}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap{
+  float:none;
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  max-height:calc(100vh - 168px);
+  margin:0;
+  padding:24px;
+  overflow:auto;
+  box-sizing:border-box;
+  background:#ffffff;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp table,
+#jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp .table{
+  width:100%;
+  margin:0;
+  border-collapse:separate;
+  border-spacing:0;
+  border:1px solid #e5edf7;
+  border-radius:14px;
+  overflow:hidden;
+  background:#ffffff;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp th,
+#jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp td{
+  padding:15px 16px;
+  border:0;
+  border-bottom:1px solid #e5edf7;
+  color:#0f172a;
+  font-size:14px;
+  line-height:1.45;
+  text-align:start;
+  vertical-align:middle;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp th{
+  background:#f8fafc;
+  color:#334155;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp tr:last-child td{border-bottom:0;}
+#jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp .js-ticket-textalign-center{text-align:center;}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-priorty-btn-wrp,
+#jsst-site .jsst-ticket-detail-page .private-crendentials-add-new-popup .js-ticket-edit-form-wrp{
+  float:none;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  margin:22px 0 0;
+  padding:18px 0 0;
+  border-top:1px solid #e5edf7;
+  box-sizing:border-box;
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-priorty-cancel,
+#jsst-site .jsst-ticket-detail-page input.js-ticket-priorty-cancel,
+#jsst-site .jsst-ticket-detail-page button.js-ticket-priorty-cancel{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:150px;
+  min-height:46px;
+  margin:0;
+  padding:12px 22px;
+  border:0;
+  border-radius:13px;
+  background:#0f172a;
+  color:#ffffff;
+  font-size:14px;
+  font-weight:900;
+  line-height:1;
+  text-decoration:none;
+  box-shadow:0 14px 28px rgba(15,23,42,.16);
+  cursor:pointer;
+}
+
+#jsst-site .jsst-ticket-detail-page .private-crendentials-add-new-popup{
+  float:none;
+  width:100%;
+  padding:0 24px 24px;
+  margin:0;
+  background:#ffffff;
+  box-sizing:border-box;
+}
+#jsst-site .jsst-ticket-detail-page .private-crendentials-add-new-popup input.js-ticket-priorty-cancel{
+  background:#2563eb;
+  box-shadow:0 14px 28px rgba(37,99,235,.18);
+}
+
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp > div,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap > div{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp .js-ticket-edit-form-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap .js-ticket-edit-form-wrp,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap form,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp form{
+  float:none;
+  display:block;
+  width:100%;
+  max-width:100%;
+  margin:0 0 18px;
+  padding:20px;
+  background:#ffffff;
+  border:1px solid #e5edf7;
+  border-radius:16px;
+  box-shadow:0 12px 28px rgba(15,23,42,.055);
+  box-sizing:border-box;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp input,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp select,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp textarea,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap input,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap select,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap textarea{
+  width:100%;
+  max-width:100%;
+  min-height:48px;
+  margin:6px 0 14px;
+  padding:12px 14px;
+  border:1px solid #dbe7f5;
+  border-radius:12px;
+  background:#ffffff;
+  color:#0f172a;
+  box-sizing:border-box;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp label,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap label,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp .js-form-title,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap .js-form-title{
+  display:block;
+  margin:0 0 6px;
+  color:#0f172a;
+  font-size:14px;
+  font-weight:900;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp .js-ticket-usercredentails-data,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp .js-ticket-usercredentials-data,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp .js-ticket-credential-data{
+  padding:18px;
+  margin:0 0 18px;
+  border:1px solid #e5edf7;
+  border-radius:16px;
+  background:#ffffff;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp input[type="button"],
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp input[type="submit"],
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap input[type="button"],
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap input[type="submit"],
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp button,
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap button{
+  width:auto;
+  min-width:92px;
+  min-height:42px;
+  margin:8px 8px 0 0;
+  padding:10px 16px;
+  border:0;
+  border-radius:11px;
+  background:#2563eb;
+  color:#ffffff;
+  font-weight:900;
+  cursor:pointer;
+}
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp input[value="Delete"],
+#jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp button[value="Delete"]{
+  background:#0f172a;
+}
+
+@media (max-width:700px){
+  #jsst-site .jsst-ticket-detail-page #js-history-popup,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup{
+    width:calc(100vw - 22px);
+    max-height:calc(100vh - 44px);
+    border-radius:16px;
+  }
+  #jsst-site .jsst-ticket-detail-page #js-history-head,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-head{
+    min-height:62px;
+    padding:14px 16px;
+  }
+  #jsst-site .jsst-ticket-detail-page #js-history-head .js-title,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-title{
+    font-size:18px;
+  }
+  #jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-credentails-wrp,
+  #jsst-site .jsst-ticket-detail-page .js-ticket-usercredentails-form-wrap{
+    padding:16px;
+  }
+  #jsst-site .jsst-ticket-detail-page .js-ticket-history-table-wrp table{
+    min-width:620px;
+  }
+  #jsst-site .jsst-ticket-detail-page .private-crendentials-add-new-popup{
+    padding:0 16px 16px;
+  }
+}
+
+
+/* =========================================================
+   JS Support Ticket - Ticket Detail Modal Final Polish v267
+   Scope: ticket detail modals only.
+   Notes:
+   - Fixes close icon rendering.
+   - Keeps private credentials detail/list/add form in clean vertical layout.
+   - No broad wrapper float reset, so top navigation links remain clickable.
+   ========================================================= */
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-popup,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup,
+#jsst-site .jsst-ticket-detail-page #js-history-popup,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup{
+  overflow:hidden;
+  isolation:isolate;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-head,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-head,
+#jsst-site .jsst-ticket-detail-page #js-history-head,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:72px;
+  padding:18px 26px;
+  overflow:hidden;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-head .js-image,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-head .js-image,
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 44px;
+  width:44px;
+  height:44px;
+  min-width:44px;
+  min-height:44px;
+  max-width:44px;
+  max-height:44px;
+  margin:0;
+  padding:0;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;
+  background:rgba(255,255,255,.14);
+  background-image:none;
+  color:transparent;
+  font-size:0;
+  line-height:0;
+  text-indent:-9999px;
+  opacity:1;
+  cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-head .js-image::before,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-head .js-image::after,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-head .js-image::before,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-head .js-image::after,
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image::before,
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image::after,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image::before,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  display:block;
+  width:24px;
+  height:3px;
+  margin:0;
+  padding:0;
+  border:0;
+  border-radius:999px;
+  background:#ffffff;
+  opacity:1;
+  transform-origin:center center;
+  text-indent:0;
+}
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-head .js-image::before,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-head .js-image::before,
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image::before,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image::before{
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-head .js-image::after,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-head .js-image::after,
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image::after,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image::after{
+  transform:translate(-50%,-50%) rotate(-45deg);
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-head .js-image:hover,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-head .js-image:hover,
+#jsst-site .jsst-ticket-detail-page #js-history-head .js-image:hover,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image:hover{
+  background:rgba(255,255,255,.22);
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-credentails-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-credentails-wrp{
+  display:block;
+  width:100%;
+  padding:22px 24px;
+  overflow:auto;
+  background:#ffffff;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-detail-popup,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-detail-popup{
+  display:block;
+  width:100%;
+  margin:0 0 18px;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-detail-popup .js-ticket-edit-form-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-detail-popup .js-ticket-edit-form-wrp{
+  display:block;
+  width:100%;
+  margin:0;
+  padding:18px;
+  border:1px solid #dbe7f5;
+  border-radius:16px;
+  background:#ffffff;
+  box-shadow:0 14px 32px rgba(15,23,42,.06);
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-wrp{
+  display:block;
+  width:100%;
+  padding:0;
+  margin:0;
+  border:0;
+  background:transparent;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-head,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-head{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px;
+  margin:0 0 12px;
+  padding:0;
+  border:0;
+  color:#0f172a;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-head .js-ticket-title,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-head .js-ticket-title{
+  color:#0f172a;
+  font-size:15px;
+  font-weight:900;
+  line-height:1.35;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-head .js-ticket-value,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-head .js-ticket-value,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-rows-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-rows-wrp{
+  color:#334155;
+  font-size:14px;
+  line-height:1.55;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-rows-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-rows-wrp{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  gap:4px 8px;
+  width:100%;
+  margin:2px 0;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-rows-wrp .js-ticket-title,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-rows-wrp .js-ticket-title{
+  color:#475569;
+  font-weight:700;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-rows-wrp .js-ticket-value,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-rows-wrp .js-ticket-value{
+  color:#334155;
+  overflow-wrap:anywhere;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-footer,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-crendential-detail-footer{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:16px 0 0;
+  padding:0;
+  border:0;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup{
+  display:block;
+  width:100%;
+  margin:0;
+  padding:18px 24px 24px;
+  border-top:1px solid #e6edf5;
+  background:#fbfdff;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup > .js-ticket-edit-form-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup > .js-ticket-edit-form-wrp{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  width:100%;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap{
+  display:block;
+  width:100%;
+  max-height:calc(100vh - 150px);
+  padding:22px 24px 26px;
+  overflow:auto;
+  background:#ffffff;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup #js-ticket-usercredentails-form,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup #js-ticket-usercredentails-form{
+  display:block;
+  width:100%;
+  max-width:100%;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup > .js-ticket-edit-form-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup > .js-ticket-edit-form-wrp{
+  display:block;
+  float:none;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-edit-field-title,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-edit-field-title{
+  display:block;
+  float:none;
+  width:100%;
+  max-width:100%;
+  margin:0 0 7px;
+  padding:0;
+  color:#0f172a;
+  font-size:14px;
+  font-weight:900;
+  line-height:1.35;
+  text-align:start;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-edit-field-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-edit-field-wrp{
+  display:block;
+  float:none;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  margin:0 0 16px;
+  padding:0;
+  clear:both;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-edit-field-input,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-edit-field-input,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup input[type="text"],
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup input[type="password"],
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup select,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup textarea,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup input[type="text"],
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup input[type="password"],
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup select,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup textarea{
+  display:block;
+  float:none;
+  width:100%;
+  max-width:100%;
+  min-height:48px;
+  margin:0;
+  padding:11px 14px;
+  border:1px solid #dbe7f5;
+  border-radius:12px;
+  background:#ffffff;
+  color:#0f172a;
+  font-size:14px;
+  font-weight:650;
+  line-height:1.45;
+  box-shadow:0 1px 0 rgba(15,23,42,.02);
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup iframe,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .tox-tinymce,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .mce-tinymce,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup iframe,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .tox-tinymce,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .mce-tinymce{
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-height:150px;
+  border-radius:12px;
+  box-sizing:border-box;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-btn-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-btn-wrp{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  margin:18px 0 0;
+  padding:18px 0 0;
+  border-top:1px solid #e6edf5;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-save,
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-cancel,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-save,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-cancel{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:auto;
+  min-width:118px;
+  min-height:44px;
+  margin:0;
+  padding:12px 20px;
+  border:0;
+  border-radius:12px;
+  color:#ffffff;
+  font-size:14px;
+  font-weight:900;
+  line-height:1;
+  text-align:center;
+  cursor:pointer;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-save,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-save{
+  background:#4f66f5;
+  box-shadow:0 14px 28px rgba(79,102,245,.20);
+}
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-cancel,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-cancel{
+  background:#0f172a;
+  box-shadow:0 14px 28px rgba(15,23,42,.14);
+}
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup .js-ticket-priorty-cancel,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup .js-ticket-priorty-cancel{
+  background:#4f66f5;
+  box-shadow:0 14px 28px rgba(79,102,245,.20);
+}
+
+@media (max-width:700px){
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-head,
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-head,
+  #jsst-site .jsst-ticket-detail-page #js-history-head,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-head{
+    min-height:64px;
+    padding:14px 16px;
+  }
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-history-head .js-image,
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-head .js-image,
+  #jsst-site .jsst-ticket-detail-page #js-history-head .js-image,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-head .js-image{
+    flex-basis:40px;
+    width:40px;
+    height:40px;
+    min-width:40px;
+    min-height:40px;
+    max-width:40px;
+    max-height:40px;
+  }
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-credentails-wrp,
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap,
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-credentails-wrp,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup{
+    padding-left:16px;
+    padding-right:16px;
+  }
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-btn-wrp,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-btn-wrp{
+    justify-content:stretch;
+  }
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-save,
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-cancel,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-save,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-priorty-cancel{
+    flex:1 1 100%;
+    width:100%;
+  }
+}
+
+/* =========================================================
+   JS Support Ticket - Ticket Detail Modal Visibility Fix v268
+   Scope: private credentials modal only.
+   Reason: allow JavaScript .hide()/.show() to control the list, add button,
+   and edit form. Earlier forced display:block made the form appear under the
+   credential list and pushed Save/Cancel below the visible modal area.
+   ========================================================= */
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-credentails-wrp[style*="display:none"],
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-credentails-wrp[style*="display: none"],
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap[style*="display:none"],
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap[style*="display: none"],
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup[style*="display:none"],
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup[style*="display: none"],
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-credentails-wrp[style*="display:none"],
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-credentails-wrp[style*="display: none"],
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap[style*="display:none"],
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap[style*="display: none"],
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup[style*="display:none"],
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-add-new-popup[style*="display: none"]{
+  display:none;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .js-ticket-usercredentails-form-wrap{
+  padding:22px 24px 0;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup textarea,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup textarea{
+  min-height:110px;
+  max-height:150px;
+  resize:vertical;
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-btn-wrp,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-btn-wrp{
+  position:sticky;
+  bottom:0;
+  z-index:8;
+  margin:10px -24px 0;
+  padding:14px 24px 18px;
+  justify-content:flex-end;
+  background:linear-gradient(180deg,rgba(255,255,255,.88),#ffffff 42%);
+  border-top:1px solid #e6edf5;
+  box-shadow:0 -18px 38px rgba(15,23,42,.07);
+}
+
+#jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-save,
+#jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-save{
+  background:#16a34a;
+  box-shadow:0 14px 28px rgba(22,163,74,.22);
+}
+
+@media (max-width:700px){
+  #jsst-site.jsst-site-root .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-btn-wrp,
+  #jsst-site .jsst-ticket-detail-page #js-private-crendentials-popup .private-crendentials-form-popup .js-ticket-priorty-btn-wrp{
+    margin-left:-16px;
+    margin-right:-16px;
+    padding-left:16px;
+    padding-right:16px;
+  }
+}
+
+/* Ticket detail custom fields
+   Keep user-defined data out of the narrow status sidebar. The dedicated
+   main-column grid remains readable regardless of field count or value length. */
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-fields-panel{
+  margin:0 0 14px;
+  border:1px solid var(--td-line);
+  border-radius:16px;
+  background:#fff;
+  box-shadow:var(--td-shadow-soft);
+  overflow:hidden;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-fields-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0;
+  border-radius:0;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-fields-count{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:26px;
+  height:24px;
+  padding:0 8px;
+  border:1px solid rgba(255,255,255,.24);
+  border-radius:999px;
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+  line-height:1;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-fields-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  padding:14px;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-field{
+  min-width:0;
+  padding:12px 14px;
+  border:1px solid #e4ebf5;
+  border-radius:12px;
+  background:#f8fafc;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-field.is-wide{
+  grid-column:1 / -1;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-field-label{
+  margin:0 0 6px;
+  color:#64748b;
+  font-size:11px;
+  font-weight:900;
+  line-height:1.35;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-field-value{
+  min-width:0;
+  color:var(--td-text);
+  font-size:12px;
+  font-weight:750;
+  line-height:1.55;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-field-value ul,
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-field-value ol{
+  margin:0;
+  padding-inline-start:20px;
+}
+#jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-field-value a{
+  overflow-wrap:anywhere;
+}
+@media (max-width:760px){
+  #jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-fields-grid{
+    grid-template-columns:minmax(0,1fr);
+  }
+  #jsst-site .jsst-ticket-detail-page .jsst-ticket-custom-field.is-wide{
+    grid-column:auto;
+  }
+}
+
+
+/* Ticket detail flow
+   Keep the summary/custom fields beside the compact sidebar, then allow the
+   working sections to use the complete page width below both columns. */
+@media (min-width:901px){
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-left{
+    display:contents;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-left > .js-tkt-det-info-wrp{
+    grid-column:1;
+    grid-row:1;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-left > .jsst-ticket-custom-fields-panel{
+    grid-column:1;
+    grid-row:2;
+    align-self:start;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-right{
+    grid-column:2;
+    grid-row:1 / span 2;
+  }
+
+  #jsst-site .jsst-ticket-detail-page #tk_detail_content_wraper > .js-ticket-detail-wrapper > .js-ticket-detail-box > .js-ticket-detail-left > .jsst-ticket-workflow-sections{
+    grid-column:1 / -1;
+    grid-row:3;
+    display:block;
+    width:100%;
+    max-width:none;
+    min-width:0;
+  }
+
+  #jsst-site .jsst-ticket-detail-page .jsst-ticket-workflow-sections > *{
+    clear:both;
+    float:none;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+}

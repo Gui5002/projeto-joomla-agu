@@ -54,10 +54,10 @@ trait ControllerFrontEndPermissionsTrait
 			$this->app->close();
 		}
 
-		// Is the key good?
+		// Is the key good? Use a constant-time comparison to avoid leaking the Secret Word through timing attacks.
 		$key = $this->input->get('key', '', 'raw');
 
-		if (!$febEnabled || ($key != $validKey) || (empty($validKeyTrim)))
+		if (!$febEnabled || (empty($validKeyTrim)) || !hash_equals($validKey, (string) $key))
 		{
 			@ob_end_clean();
 			echo sprintf("403 %s", Text::_('COM_AKEEBABACKUP_COMMON_ERR_NOT_ENABLED'));

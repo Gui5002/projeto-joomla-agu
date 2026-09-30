@@ -10,10 +10,10 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
+use Joomla\CMS\Language\Text;
 
 jimport('joomla.application.component.model');
 jimport('joomla.html.html');
-use Joomla\CMS\Language\Text;
 
 class JSSupportticketMessage{
 
@@ -84,7 +84,7 @@ class JSSupportticketMessage{
             case LIMIT_EXCEED:$msg = Text::_('Limit exceeds maximum tickets');break;
             case LIMIT_EXCEED_OPEN:$msg = Text::_('Limit exceeds maximum open tickets');break;
             case FILE_RW_ERROR:
-                $msg = Text::_('Files cannot be upload due to read write permissions');
+                $msg = Text::_('File read write issue files cannot upload');
             break;
             case MAIL_MARKED:
                 switch ($entity) {
@@ -124,16 +124,16 @@ class JSSupportticketMessage{
             case SAVED:
                 switch ($entity) {
                     case 'DEPARTMENT':$msg = Text::_('Department has been stored');break;
-                    case 'EMAIL':$msg = Text::_('The email has been stored');break;
+                    case 'EMAIL':$msg = Text::_('Email has been stored');break;
                     case 'EMAIL_TEMPLATE':$msg = Text::_('Email template has been stored');break;
                     case 'PRIORITY':$msg = Text::_('Priority has been stored');break;
                     case 'TICKET':$msg = Text::_('Ticket has been created');break;
                     case 'USER_FIELD':$msg = Text::_('Field has been stored');break;
                     case 'MESSAGE':$msg = Text::_('Reply has been posted');break;
-                    case 'ANNOUNCEMENT':$msg = Text::_('Announcement has been stored');break;
+                    case 'ANNOUNCEMENT':$msg = Text::_('The announcement has been stored');break;
                     case 'DEPARTMENT':$msg = Text::_('Department has been stored');break;
                     case 'DOWNLOAD':$msg = Text::_('Download has been stored');break;
-                    case 'EMAIL':$msg = Text::_('The email has been stored');break;
+                    case 'EMAIL':$msg = Text::_('Email has been stored');break;
                     case 'BAN_EMAIL':$msg = Text::_('Ban Email has been stored');break;
                     case 'EMAIL_TEMPLATE':$msg = Text::_('Email template has been stored');break;
                     case 'FAQ':$msg = Text::_('FAQ has been stored');break;
@@ -155,7 +155,7 @@ class JSSupportticketMessage{
                     case 'TICKET':$msg = Text::_('Ticket has not been stored');break;
                     case 'USER_FIELD':$msg = Text::_('User field has not been stored');break;
                     case 'MESSAGE':$msg = Text::_('Mail has not been send');break;
-                    case 'ANNOUNCEMENT':$msg = Text::_('Announcement has not been stored');break;
+                    case 'ANNOUNCEMENT':$msg = Text::_('The announcement has not been stored');break;
                     case 'DEPARTMENT':$msg = Text::_('Department has not been stored');break;
                     case 'DOWNLOAD':$msg = Text::_('Download has not been stored');break;
                     case 'EMAIL':$msg = Text::_('Email has not been stored');break;
@@ -185,7 +185,7 @@ class JSSupportticketMessage{
                     case 'TICKET':$msg = Text::_('Ticket has been deleted');break;
                     case 'USER_FIELD':$msg = Text::_('User field has been deleted');break;
                     case 'MESSAGE':$msg = Text::_('Mail Has Been Deleted');break;
-                    case 'ANNOUNCEMENT':$msg = Text::_('Announcement has been deleted');break;
+                    case 'ANNOUNCEMENT':$msg = Text::_('The announcement has been deleted');break;
                     case 'DEPARTMENT':$msg = Text::_('Department has been deleted');break;
                     case 'DOWNLOAD':$msg = Text::_('Download has been deleted');break;
                     case 'EMAIL':$msg = Text::_('Email has been deleted');break;
@@ -198,6 +198,8 @@ class JSSupportticketMessage{
                     case 'DEPARTMENT_PREMADE':$msg = Text::_('Premade department message has been deleted');break;
                     case 'ROLE':$msg = Text::_('The role has been deleted');break;
                     case 'STAFF':$msg = Text::_('Staff member has been deleted');break;
+                    case 'ATTACHMENT':$msg = Text::_('Attachment has been deleted');break;
+                    case 'TICKETVIAEMAIL':$msg = Text::_('Email has been deleted');break;
                     case 'GDPR':$msg = Text::_('Erase data request has been deleted');break;
                     case 'ERASED':$msg = Text::_('User identifying data has been erased');break;
                 }
@@ -210,7 +212,7 @@ class JSSupportticketMessage{
                     case 'TICKET':$msg = Text::_('Ticket has not been deleted');break;
                     case 'USER_FIELD':$msg = Text::_('User field has not been deleted');break;
                     case 'MESSAGE':$msg = Text::_('Mail has not been deleted');break;
-                    case 'ANNOUNCEMENT':$msg = Text::_('Announcement has not been deleted');break;
+                    case 'ANNOUNCEMENT':$msg = Text::_('The announcement has not been deleted');break;
                     case 'DEPARTMENT':$msg = Text::_('Department has not been deleted');break;
                     case 'DOWNLOAD':$msg = Text::_('Download has not been deleted');break;
                     case 'EMAIL':$msg = Text::_('Email has not been deleted');break;
@@ -223,6 +225,8 @@ class JSSupportticketMessage{
                     case 'DEPARTMENT_PREMADE':$msg = Text::_('Premade department message has not been deleted');break;
                     case 'ROLE':$msg = Text::_('Role has not been deleted');break;
                     case 'STAFF':$msg = Text::_('Staff member has not been deleted');break;
+                    case 'ATTACHMENT':$msg = Text::_('Attachment has not been deleted');break;
+                    case 'TICKETVIAEMAIL':$msg = Text::_('Email has not been deleted');break;
                     case 'GDPR':$msg = Text::_('Erase data request has not been deleted');break;
                 }
             break;
@@ -232,6 +236,8 @@ class JSSupportticketMessage{
                     case 'CATEGORY':$msg = Text::_('Category in use cannot deleted');break;
                     case 'STAFF':$msg = Text::_('Staff member in use cannot deleted');break;
                     case 'TICKET':$msg = Text::_('Ticket in use cannot be deleted');break;
+                    case 'HELP_TOPIC':$msg = Text::_('Help topic in use cannot deleted');break;
+                    case 'ROLE':$msg = Text::_('Role in use cannot deleted');break;
                     case 'USER_FIELD':$msg = Text::_('User field in use cannot deleted');break;
                 }
             break;

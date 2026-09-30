@@ -185,7 +185,7 @@ if (substr($relativePath, 0, 2) === './')
 	<?php elseif($showUploadRemote): ?>
 		<button type="button"
 				class="btn btn-primary akeeba_upload"
-				data-upload="index.php?option=com_akeebabackup&view=Upload&tmpl=component&task=start&id=<?= (int) $record['id'] ?>"
+				data-upload="index.php?option=com_akeebabackup&view=Upload&tmpl=component&task=start&id=<?= (int) $record['id'] ?>&<?= \Joomla\CMS\Factory::getApplication()->getFormToken() ?>=1"
 				data-reload="index.php?option=com_akeebabackup&view=Manage"
 				title="<?= Text::sprintf('COM_AKEEBABACKUP_TRANSFER_DESC', Text::_("ENGINE_POSTPROC_{$postProcEngine}_TITLE")) ?>">
 			<span class="fa fa-cloud-upload-alt"></span>

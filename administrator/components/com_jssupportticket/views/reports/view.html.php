@@ -11,26 +11,27 @@
 */
  
 defined('_JEXEC') or die('Restricted access');
-
-jimport('joomla.application.component.view');
-jimport('joomla.html.pagination');
+use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Text;
 
+jimport('joomla.application.component.view');
+jimport('joomla.html.pagination');
 
-class JSSupportTicketViewReports extends JSSupportticketView
+class JSSupportticketViewReports extends JSSupportTicketView
 {
-	function display($tpl = null)
-	{
-		require_once(JPATH_COMPONENT."/views/common.php");                
+	function display($tpl = null){
 
-		ToolbarHelper::title(Text::_('Reports'));
-		if($layoutName == 'overallreports'){
-            $result = $this->getJSModel('reports')->getOverallReportsData();
+        require_once(JPATH_COMPONENT_ADMINISTRATOR."/views/common.php");
+        if($layoutName == 'reports'){
+            ToolbarHelper::title(Text::_('Reports'));
+        }elseif($layoutName == 'overallreport'){
+            ToolbarHelper::title(Text::_('Overall Report'));
+            $result = $this->getJSModel('reports')->getOverallReportData();
             $this->result=$result;
         }
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }
 ?>

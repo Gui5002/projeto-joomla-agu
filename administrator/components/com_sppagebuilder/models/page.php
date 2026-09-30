@@ -3,7 +3,7 @@
 /**
  * @package SP Page Builder
  * @author JoomShaper http://www.joomshaper.com
- * @copyright Copyright (c) 2010 - 2025 JoomShaper
+ * @copyright Copyright (c) 2010 - 2026 JoomShaper
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 or later
  */
 //no direct access
@@ -186,6 +186,27 @@ class SppagebuilderModelPage extends AdminModel
         return $result;
     }
 
+    public function getPageCreatorId($pageId)
+    {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select('created_by')
+            ->from($db->quoteName('#__sppagebuilder'))
+            ->where($db->quoteName('id') . ' = ' . (int)$pageId);
+
+        $db->setQuery($query);
+
+        try
+        {
+            return $db->loadResult();
+        }
+        catch (\Exception $e)
+        {
+            return 0;
+        }
+    }
+
     public function getMySections()
     {
         $db = Factory::getDbo();
@@ -219,7 +240,7 @@ class SppagebuilderModelPage extends AdminModel
 
         // delete all custom keys for user 1001.
         $conditions = array(
-            $db->quoteName('id') . ' = ' . $id
+            $db->quoteName('id') . ' = ' . (int)$id
         );
 
         $query->delete($db->quoteName('#__sppagebuilder_sections'));
@@ -295,7 +316,7 @@ class SppagebuilderModelPage extends AdminModel
 
         // delete all custom keys for user 1001.
         $conditions = array(
-            $db->quoteName('id') . ' = ' . $id
+            $db->quoteName('id') . ' = ' . (int)$id
         );
 
         $query->delete($db->quoteName('#__sppagebuilder_addons'));

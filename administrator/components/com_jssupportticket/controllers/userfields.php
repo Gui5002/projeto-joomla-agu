@@ -11,10 +11,10 @@
   ^
  */
 defined('_JEXEC') or die('Not Allowed');
-
-jimport('joomla.application.component.controller');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+
+jimport('joomla.application.component.controller');
 
 class JSSupportticketControllerUserFields extends JSSupportTicketController {
 
@@ -63,6 +63,26 @@ class JSSupportticketControllerUserFields extends JSSupportTicketController {
         $cid = Factory::getApplication()->input->get('cid', array(), '', 'array');
         $fieldid = $cid[0];
         $result = $this->getJSModel('userfields')->fieldPublished($fieldid, 0); // unpublished
+        $link = 'index.php?option=com_jssupportticket&c=userfields&layout=fieldsordering';
+        $msg = Text::_('Field mark as unpublished');
+        $this->setRedirect($link, $msg);
+    }
+
+    function visitorfieldpublished() {
+        Factory::getSession()->checkToken('post') or Factory::getSession()->checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+        $cid = Factory::getApplication()->input->get('cid', array(), '', 'array');
+        $fieldid = $cid[0];
+        $result = $this->getJSModel('userfields')->visitorFieldPublished($fieldid, 1); // published
+        $link = 'index.php?option=com_jssupportticket&c=userfields&layout=fieldsordering';
+        $msg = Text::_('Field mark as published');
+        $this->setRedirect($link, $msg);
+    }
+
+    function visitorfieldunpublished() {
+        Factory::getSession()->checkToken('post') or Factory::getSession()->checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+        $cid = Factory::getApplication()->input->get('cid', array(), '', 'array');
+        $fieldid = $cid[0];
+        $result = $this->getJSModel('userfields')->visitorFieldPublished($fieldid, 0); // unpublished
         $link = 'index.php?option=com_jssupportticket&c=userfields&layout=fieldsordering';
         $msg = Text::_('Field mark as unpublished');
         $this->setRedirect($link, $msg);
